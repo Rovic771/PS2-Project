@@ -33,6 +33,12 @@ public class PlayerController : MonoBehaviour
     public void OnMove(InputAction.CallbackContext context)
     {
         moveInput = context.ReadValue<Vector2>();
+        //rb.linearVelocity = new Vector3(moveInput.x * speed, rb.linearVelocity.y, moveInput.y * speed);
+        rb.AddForce(new Vector2(moveInput.x * speed, moveInput.y * speed));
+        if (context.canceled && isGrounded)
+        {
+            rb.linearVelocity = Vector2.zero;
+        }
     }
 
     public void OnJump(InputAction.CallbackContext context)
@@ -42,7 +48,7 @@ public class PlayerController : MonoBehaviour
             if (context.performed) // à la base ct started
             {
                 //isCharging = true;
-                gameObject.GetComponent<Rigidbody2D>().AddForce(Vector2.up * jumpStrength, ForceMode2D.Force);
+                rb.AddForce(Vector2.up * jumpStrength, ForceMode2D.Force);
                 //Debug.Log(isGrounded);
             }
             if (context.canceled)
@@ -53,8 +59,16 @@ public class PlayerController : MonoBehaviour
         }
         else if (!isGrounded && isWall)
         {
-            gameObject.GetComponent<Rigidbody2D>().AddForce(new Vector2(-transform.localScale.x * jumpStrength * 10, 300));
-            Debug.Log("caca boudin qui pu");
+            if (context.performed)
+            {
+                rb.linearVelocity = Vector2.zero;
+                Vector2 Force = new Vector2(transform.localScale.x * 5, 10);
+                Debug.Log(Force);
+                rb.AddForce(Force, ForceMode2D.Impulse);
+                Debug.Log("wall jump effectué");
+                IsWalled();
+            }
+
         }
 
     }
@@ -62,8 +76,6 @@ public class PlayerController : MonoBehaviour
     public void FixedUpdate()
     {
         //transform.Translate(moveInput * speed * Time.deltaTime, Space.World); -> Je sais pas quelle méthode elle la meilleure pour le déplacement du perso
-        Vector3 direction = new Vector3(moveInput.x, 0, moveInput.y);
-        rb.linearVelocity = new Vector3(moveInput.x * speed, rb.linearVelocity.y, moveInput.y * speed);
         if (isCharging == true && jumpStrength <= 10.0f)
         {
             jumpStrength += 30.0f * Time.deltaTime;
