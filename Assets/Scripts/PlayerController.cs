@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Numerics;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -9,22 +10,34 @@ using Vector3 = UnityEngine.Vector3;
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] private float speed = 5.0f;
-    [SerializeField] private float jumpStrength = 1.0f;
+    [SerializeField] private float airControlIntensity = 5.0f;
+    [SerializeField] private float airControlX = 1.0f;
+    [SerializeField] private float jumpStrength = 300.0f;
+    [SerializeField] private float doubleJumpStrength = 150.0f;
+    [SerializeField] private float forceWallJumpX = 2f;
+    [SerializeField] private float forceWallJumpY = 5f;
     [SerializeField] private Rigidbody2D rb;
+    [SerializeField] private float coyoteTime = 0.1f;
+    [SerializeField] private Transform wallCheck;
+    [SerializeField] private LayerMask wallLayer;
     
     private Vector2 moveInput;
     private bool isGrounded = true;
     private bool isWall;
     private bool isCharging = false;
     private bool isFacingRight = true;
+    private bool mouvement = false;
+    private bool canDoubleJump = true;
     
     private bool isWallSliding;
     private float wallSlidingSpeed = 0.2f;
-    [SerializeField] private Transform wallCheck;
-    [SerializeField] private LayerMask wallLayer;
-    //[SerializeField] private Vector2 wallJumpDirection = new Vector2();
-    
 
+    IEnumerator CoyoteTime()
+    {
+        yield return new WaitForSeconds(coyoteTime);
+        isGrounded = false;
+    }
+    
     void Awake()
     {
         rb.GetComponent<Rigidbody2D>();
@@ -34,48 +47,62 @@ public class PlayerController : MonoBehaviour
     {
         moveInput = context.ReadValue<Vector2>();
         //rb.linearVelocity = new Vector3(moveInput.x * speed, rb.linearVelocity.y, moveInput.y * speed);
-        rb.AddForce(new Vector2(moveInput.x * speed, moveInput.y * speed));
+        if (context.started)
+        {
+            mouvement = true;
+        }
+        else if (context.canceled)
+        {
+            mouvement = false;
+        }
         if (context.canceled && isGrounded)
         {
-            rb.linearVelocity = Vector2.zero;
+           rb.linearVelocity = Vector2.zero;
         }
+        
     }
 
     public void OnJump(InputAction.CallbackContext context)
     {
-        if (isGrounded == true)
+        if (context.performed)
         {
-            if (context.performed) // à la base ct started
+            if (isGrounded)
             {
-                //isCharging = true;
                 rb.AddForce(Vector2.up * jumpStrength, ForceMode2D.Force);
-                //Debug.Log(isGrounded);
+                isGrounded = false;
             }
-            if (context.canceled)
-            {
-                //isCharging = false;
-                Debug.Log("Jump");
-            }
-        }
-        else if (!isGrounded && isWall)
-        {
-            if (context.performed)
+            else if (!isGrounded && IsWalled())
             {
                 rb.linearVelocity = Vector2.zero;
-                Vector2 Force = new Vector2(transform.localScale.x * 5, 10);
+                Vector2 Force = new Vector2(-transform.localScale.x * forceWallJumpX, forceWallJumpY);
                 Debug.Log(Force);
                 rb.AddForce(Force, ForceMode2D.Impulse);
                 Debug.Log("wall jump effectué");
                 IsWalled();
             }
-
+            else if (!isGrounded && canDoubleJump)
+            {
+                rb.AddForce(Vector2.up * doubleJumpStrength, ForceMode2D.Force);
+                canDoubleJump = false;
+            }
         }
 
     }
 
     public void FixedUpdate()
-    {
+    { 
         //transform.Translate(moveInput * speed * Time.deltaTime, Space.World); -> Je sais pas quelle méthode elle la meilleure pour le déplacement du perso
+        if (mouvement == true && isGrounded && rb.linearVelocity.magnitude < 1f)
+        {
+            rb.AddForce(new Vector2(moveInput.x * speed, moveInput.y * speed));
+            Debug.Log("Mouvement au sol: " + moveInput.x);
+        }
+        else if (mouvement == true && !isGrounded)
+        {
+            rb.AddForce(new Vector2(Mathf.Clamp(moveInput.x * airControlIntensity, -airControlX, airControlX), rb.linearVelocity.y));
+            Debug.Log("Mouvement en l'air: " + moveInput.x);
+        }
+        
         if (isCharging == true && jumpStrength <= 10.0f)
         {
             jumpStrength += 30.0f * Time.deltaTime;
@@ -95,7 +122,9 @@ public class PlayerController : MonoBehaviour
     {
         if (other.gameObject.CompareTag("ground"))
         {
+            rb.linearVelocity = Vector2.zero;
             isGrounded = true;
+            canDoubleJump = true;
             Debug.Log(isGrounded);
         }
 
@@ -109,7 +138,7 @@ public class PlayerController : MonoBehaviour
     {
         if (other.gameObject.CompareTag("ground"))
         {
-            isGrounded = false;
+            StartCoroutine(CoyoteTime());
             //jumpStrength = 1.0f;
             Debug.Log(isGrounded);
         }
@@ -144,8 +173,7 @@ public class PlayerController : MonoBehaviour
         if (IsWalled() && isGrounded == false && moveInput.x != 0)
         {
             isWallSliding = true;
-            rb.linearVelocity = new Vector2(rb.linearVelocity.x,
-                Mathf.Clamp(rb.linearVelocity.y, -wallSlidingSpeed, float.MaxValue));
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, Mathf.Clamp(rb.linearVelocity.y, -wallSlidingSpeed, float.MaxValue));
         }
         else
         {
