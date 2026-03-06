@@ -306,7 +306,8 @@ MonoBehaviour:
   speed: 300
   airControlIntensity: 5
   airControlX: 4.5
-  jumpStrength: 300
+  jumpStrengthHorizontal: 300
+  jumpStrengthVertical: 425
   doubleJumpStrength: 150
   forceWallJumpX: 4
   forceWallJumpY: 7
@@ -1869,7 +1870,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 10.8
+  orthographic size: 5
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
