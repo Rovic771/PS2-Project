@@ -12,7 +12,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float speed = 5.0f;
     [SerializeField] private float airControlIntensity = 5.0f;
     [SerializeField] private float airControlX = 1.0f;
-    [SerializeField] private float jumpStrength = 300.0f;
+    [SerializeField] private float jumpStrengthHorizontal = 300.0f;
+    [SerializeField] private float jumpStrengthVertical = 300.0f;
     [SerializeField] private float doubleJumpStrength = 150.0f;
     [SerializeField] private float forceWallJumpX = 2f;
     [SerializeField] private float forceWallJumpY = 5f;
@@ -68,8 +69,15 @@ public class PlayerController : MonoBehaviour
         {
             if (isGrounded)
             {
-                rb.AddForce(Vector2.up * jumpStrength, ForceMode2D.Force);
-                isGrounded = false;
+                if (moveInput.x != 0)
+                {
+                 rb.AddForce(Vector2.up * jumpStrengthHorizontal, ForceMode2D.Force);   
+                }
+                else
+                {
+                    rb.AddForce(Vector2.up * jumpStrengthVertical, ForceMode2D.Force);
+                    isGrounded = false;
+                }
             }
             else if (!isGrounded && IsWalled())
             {
@@ -102,11 +110,11 @@ public class PlayerController : MonoBehaviour
             rb.AddForce(new Vector2(Mathf.Clamp(moveInput.x * airControlIntensity, -airControlX, airControlX), rb.linearVelocity.y));
             Debug.Log("Mouvement en l'air: " + moveInput.x);
         }
-        
+        /*
         if (isCharging == true && jumpStrength <= 10.0f)
         {
             jumpStrength += 30.0f * Time.deltaTime;
-        }
+        }*/
         if (moveInput.x > 0 && !isFacingRight)
         {
             flip();
@@ -170,7 +178,7 @@ public class PlayerController : MonoBehaviour
 
     private void WallSlide()
     {
-        if (IsWalled() && isGrounded == false && moveInput.x != 0)
+        if (IsWalled() && isGrounded == false)
         {
             isWallSliding = true;
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, Mathf.Clamp(rb.linearVelocity.y, -wallSlidingSpeed, float.MaxValue));
