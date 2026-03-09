@@ -9,6 +9,7 @@ using Vector3 = UnityEngine.Vector3;
 
 public class PlayerController : MonoBehaviour
 {
+    [SerializeField] private float gravity = -12f;
     [SerializeField] private float speed = 5.0f;
     [SerializeField] private float airControlIntensity = 5.0f;
     [SerializeField] private float airControlX = 1.0f;
@@ -21,6 +22,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float coyoteTime = 0.1f;
     [SerializeField] private Transform wallCheck;
     [SerializeField] private LayerMask wallLayer;
+    [SerializeField] private GameObject croche;
+    [SerializeField] private Transform crocheSpawn;
     
     private Vector2 moveInput;
     private bool isGrounded = true;
@@ -29,9 +32,9 @@ public class PlayerController : MonoBehaviour
     private bool isFacingRight = true;
     private bool mouvement = false;
     private bool canDoubleJump = true;
-    
     private bool isWallSliding;
     private float wallSlidingSpeed = 0.2f;
+    public bool directionTir;
 
     IEnumerator CoyoteTime()
     {
@@ -42,6 +45,7 @@ public class PlayerController : MonoBehaviour
     void Awake()
     {
         rb.GetComponent<Rigidbody2D>();
+        Physics2D.gravity = new Vector2(0, gravity);
     }
     
     public void OnMove(InputAction.CallbackContext context)
@@ -97,9 +101,25 @@ public class PlayerController : MonoBehaviour
 
     }
 
+    public void onAttack(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            if (isGrounded)
+            {
+                Instantiate(croche, transform.position + new Vector3(crocheSpawn.transform.position.x,0,0), croche.transform.rotation);
+            }
+            else
+            {
+                Instantiate(croche, transform.position + new Vector3(0,-2,0), croche.transform.rotation);
+            }
+            
+        }
+    }
+    
     public void FixedUpdate()
-    { 
-        //transform.Translate(moveInput * speed * Time.deltaTime, Space.World); -> Je sais pas quelle méthode elle la meilleure pour le déplacement du perso
+    {
+        //transform.Translate(moveInput * speed * Time.deltaTime, Space.World);  Je sais pas quelle méthode elle la meilleure pour le déplacement du perso
         if (mouvement == true && isGrounded && rb.linearVelocity.magnitude < 1f)
         {
             rb.AddForce(new Vector2(moveInput.x * speed, moveInput.y * speed));
@@ -123,6 +143,16 @@ public class PlayerController : MonoBehaviour
         {
             flip();
         }
+
+        if (crocheSpawn.transform.localScale.x > 0)
+        {
+            directionTir = true;
+        }
+        else if (croche.transform.localScale.x < 0)
+        {
+            directionTir = false;
+        }
+        
         WallSlide();
     }
 
@@ -169,6 +199,7 @@ public class PlayerController : MonoBehaviour
         Vector3 localScale = transform.localScale;
         localScale.x *= -1;
         transform.localScale = localScale;
+        crocheSpawn.transform.localScale = localScale;
     }
 
     private bool IsWalled()
