@@ -8,9 +8,11 @@ public class crocheScipt : MonoBehaviour
     [SerializeField] private float speed = 5f;
     [SerializeField] private float timeBeforeDestroy = 3f;
     [SerializeField] private LayerMask _layerMask;
+    private Transform viseur;
     private Transform crocheSpawn;
     private PlayerController _playerController;
-    private string directionTir;
+    private Vector3 directionTir;
+    private GameObject player;
 
     IEnumerator DestroyTime()
     {
@@ -20,16 +22,19 @@ public class crocheScipt : MonoBehaviour
     
     public void Start()
     {
+        viseur = GameObject.Find("viseur").transform;
+        directionTir = (viseur.transform.position - player.transform.position).normalized;
         crocheSpawn = GameObject.FindWithTag("crocheSpawn").transform;
-        GameObject Player = GameObject.FindWithTag("Player");
-        _playerController = Player.GetComponent<PlayerController>();
+        player = GameObject.FindWithTag("Player");
+        _playerController = player.GetComponent<PlayerController>();
         Debug.Log(crocheSpawn);
-        ChangeShotState();
+        //ChangeShotState();
         StartCoroutine(DestroyTime());
     }
 
     public void ChangeShotState()
     {
+        /*
         if (crocheSpawn.transform.localPosition.x > 0 && _playerController.isGrounded == true)
         {
             directionTir = "droite";
@@ -43,6 +48,7 @@ public class crocheScipt : MonoBehaviour
         {
             directionTir = "bas";
         }
+        */
     }
     
 
@@ -53,19 +59,22 @@ public class crocheScipt : MonoBehaviour
 
     public void FixedUpdate()
     {
+        transform.position += new Vector3(directionTir.x * speed, directionTir.y * speed, 0) * Time.deltaTime;
+        
+        /*
         switch (directionTir)
         {
             case "droite":
                 transform.position += new Vector3(speed,0,0) * Time.deltaTime;
                 break;
-            
+
             case "gauche":
                 transform.position += new Vector3(-speed,0,0) * Time.deltaTime;
                 break;
             case "bas":
                 transform.position += new Vector3(0,-speed, 0) * Time.deltaTime;
                 break;
-        }
+        }*/
     }
 
     public void OnCollisionEnter2D(Collision2D other)

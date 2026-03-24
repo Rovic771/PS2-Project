@@ -27,7 +27,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private GameObject croche;
     [SerializeField] private Transform crocheSpawn;
     [SerializeField] private crocheScipt _crocheScipt;
-    [SerializeField] private GameObject viseurTest;
+    [SerializeField] public GameObject viseurTest;
     
     private Vector2 moveInput;
     private Vector2 inputRotation;
@@ -59,19 +59,23 @@ public class PlayerController : MonoBehaviour
     {
         moveInput = context.ReadValue<Vector2>();
         //rb.linearVelocity = new Vector3(moveInput.x * speed, rb.linearVelocity.y, moveInput.y * speed);
-        if (context.started)
+        if (isGrounded)
         {
-            mouvement = true;
+            if (context.performed)
+            {
+                rb.linearVelocity = new Vector2(moveInput.x * speed, rb.linearVelocity.y);
+            }
+            else if (context.canceled)
+            {
+                rb.linearVelocity = new Vector2(0, rb.linearVelocity.y);
+            }
         }
-        else if (context.canceled)
+        else
         {
-            mouvement = false;
-        }
-        else if (context.performed)
-        {
-            //Debug.Log(context.ReadValue<Vector2>());
-            inputRotation = context.ReadValue<Vector2>();
-            Aim();
+            if (context.performed)
+            {
+                rb.AddForce(new Vector2(Mathf.Clamp(moveInput.x * airControlIntensity, -airControlX, airControlX), 0));
+            }
         }
         if (context.canceled && isGrounded)
         {
@@ -98,11 +102,17 @@ public class PlayerController : MonoBehaviour
             }
             else if (!isGrounded && IsWalled())
             {
+                Vector2 Force = new Vector2(0,0);
                 rb.linearVelocity = Vector2.zero;
-                Vector2 Force = new Vector2(-transform.localScale.x * forceWallJumpX, forceWallJumpY);
-                //Debug.Log(Force);
+                if (isFacingRight)
+                {
+                    Force = new Vector2(-transform.localScale.x * forceWallJumpX, forceWallJumpY);
+                }
+                else
+                {
+                    Force = new Vector2(transform.localScale.x * forceWallJumpX, forceWallJumpY);
+                }
                 rb.AddForce(Force, ForceMode2D.Impulse);
-                //Debug.Log("wall jump effectué");
                 IsWalled();
             }
             else if (!isGrounded && canDoubleJump)
@@ -131,38 +141,26 @@ public class PlayerController : MonoBehaviour
         }
     }
     
-    private void Aim()
+    public void OnAim(InputAction.CallbackContext context)
     {
-        
-        if (inputRotation.x < 0.1 && inputRotation.y < 0.1 && inputRotation.x > -0.1 && inputRotation.y > -0.1) // si le joystick est pas touché
+        Vector2 inputRotationJSD = context.ReadValue<Vector2>(); // JSD = joystick droit
+        if (context.performed)
         {
-            _currentAimAngle = _lastAimAngle; // le dernier input donné
+            if (inputRotationJSD.x < 0.1 && inputRotationJSD.y < 0.1 && inputRotationJSD.x > -0.1 && inputRotationJSD.y > -0.1) // si le joystick est pas touché
+            {
+                _currentAimAngle = _lastAimAngle; // le dernier input donné
+            }
+            else
+            {
+                _currentAimAngle = Mathf.Atan2(inputRotationJSD.y, inputRotationJSD.x) * Mathf.Rad2Deg;
+                _lastAimAngle = _currentAimAngle;
+            }
+            viseurTest.transform.rotation = Quaternion.Euler(0, 0, _currentAimAngle);
         }
-        else
-        {
-            _currentAimAngle = Mathf.Atan2(inputRotation.y, inputRotation.x) * Mathf.Rad2Deg; // calcul de fou là
-            _lastAimAngle = _currentAimAngle;
-        }
-        viseurTest.transform.rotation = Quaternion.Euler(0, 0, _currentAimAngle);
     }
     
     public void FixedUpdate()
     {
-        if (mouvement == true && isGrounded && rb.linearVelocity.magnitude < 1f)
-        {
-            rb.AddForce(new Vector2(moveInput.x * speed, 0));
-            //Debug.Log("Mouvement au sol: " + moveInput.x);
-        }
-        else if (mouvement == true && !isGrounded)
-        {
-            rb.AddForce(new Vector2(Mathf.Clamp(moveInput.x * airControlIntensity, -airControlX, airControlX), 0));
-            //Debug.Log("Mouvement en l'air: " + moveInput.x);
-        }
-        /*
-        if (isCharging == true && jumpStrength <= 10.0f)
-        {
-            jumpStrength += 30.0f * Time.deltaTime;
-        }*/
         if (moveInput.x > 0 && !isFacingRight)
         {
             flip();
@@ -213,10 +211,15 @@ public class PlayerController : MonoBehaviour
 
     private void flip()
     {
+        if (isGrounded)
+        {
+            rb.linearVelocity= new Vector2(0, rb.linearVelocity.y);
+        }
         isFacingRight = !isFacingRight;
         _flipValue += 180;
-        Debug.Log(_flipValue);
+        //Debug.Log(_flipValue);
         transform.rotation = Quaternion.Euler(0, _flipValue, 0);
+        Debug.Log("flip :" + isFacingRight);
         crocheSpawn.transform.localPosition *= -1;
     }
 
