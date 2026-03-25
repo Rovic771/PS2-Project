@@ -12,12 +12,11 @@ using Vector3 = UnityEngine.Vector3;
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] private float gravity = -12f;
-    [SerializeField] private float speed = 5.0f;
-    [SerializeField] private float airControlIntensity = 5.0f;
+    [SerializeField] private float speed = 5f;
+    [SerializeField] private float airControlIntensity = 5f;
     [SerializeField] private float airControlX = 1.0f;
-    [SerializeField] private float jumpStrengthHorizontal = 300.0f;
-    [SerializeField] private float jumpStrengthVertical = 300.0f;
-    [SerializeField] private float doubleJumpStrength = 150.0f;
+    [SerializeField] private float jumpStrength = 8f;
+    [SerializeField] private float doubleJumpStrength = 5f;
     [SerializeField] private float forceWallJumpX = 2f;
     [SerializeField] private float forceWallJumpY = 5f;
     [SerializeField] private Rigidbody2D rb;
@@ -58,30 +57,6 @@ public class PlayerController : MonoBehaviour
     public void OnMove(InputAction.CallbackContext context)
     {
         moveInput = context.ReadValue<Vector2>();
-        //rb.linearVelocity = new Vector3(moveInput.x * speed, rb.linearVelocity.y, moveInput.y * speed);
-        if (isGrounded)
-        {
-            if (context.performed)
-            {
-                rb.linearVelocity = new Vector2(moveInput.x * speed, rb.linearVelocity.y);
-            }
-            else if (context.canceled)
-            {
-                rb.linearVelocity = new Vector2(0, rb.linearVelocity.y);
-            }
-        }
-        else
-        {
-            if (context.performed)
-            {
-                rb.AddForce(new Vector2(Mathf.Clamp(moveInput.x * airControlIntensity, -airControlX, airControlX), 0));
-            }
-        }
-        if (context.canceled && isGrounded)
-        {
-           rb.linearVelocity = Vector2.zero;
-        }
-        
     }
 
     public void OnJump(InputAction.CallbackContext context)
@@ -90,15 +65,7 @@ public class PlayerController : MonoBehaviour
         {
             if (isGrounded)
             {
-                if (moveInput.x != 0)
-                {
-                 rb.AddForce(Vector2.up * jumpStrengthHorizontal, ForceMode2D.Force);   
-                }
-                else
-                {
-                    rb.AddForce(Vector2.up * jumpStrengthVertical, ForceMode2D.Force);
-                    isGrounded = false;
-                }
+                rb.AddForce(Vector2.up * jumpStrength, ForceMode2D.Impulse);
             }
             else if (!isGrounded && IsWalled())
             {
@@ -113,13 +80,14 @@ public class PlayerController : MonoBehaviour
                     Force = new Vector2(transform.localScale.x * forceWallJumpX, forceWallJumpY);
                 }
                 rb.AddForce(Force, ForceMode2D.Impulse);
-                IsWalled();
+                //IsWalled();
             }
             else if (!isGrounded && canDoubleJump)
             {
-                rb.AddForce(Vector2.up * doubleJumpStrength, ForceMode2D.Force);
+                rb.AddForce(Vector2.up * doubleJumpStrength, ForceMode2D.Impulse);
                 canDoubleJump = false;
             }
+            isGrounded = false;
         }
 
     }
@@ -161,11 +129,30 @@ public class PlayerController : MonoBehaviour
     
     public void FixedUpdate()
     {
-        if (moveInput.x > 0 && !isFacingRight)
+        if (isGrounded)
+        {
+            if (Mathf.Abs(moveInput.x) > 0.05f) 
+            {
+                rb.linearVelocity = new Vector2(moveInput.x * speed, rb.linearVelocity.y);
+            }
+            else 
+            {
+                rb.linearVelocity = new Vector2(0, rb.linearVelocity.y);
+            }
+        }
+        else
+        {
+            if (Mathf.Abs(moveInput.x) > 0.05f)
+            {
+                rb.AddForce(new Vector2(Mathf.Clamp(moveInput.x * airControlIntensity, -airControlX, airControlX), 0));
+            }
+        }
+        
+        if (moveInput.x > 0.2f && !isFacingRight)
         {
             flip();
         }
-        else if (moveInput.x < 0 && isFacingRight)
+        else if (moveInput.x < -0.2f && isFacingRight)
         {
             flip();
         }
@@ -176,7 +163,6 @@ public class PlayerController : MonoBehaviour
     {
         if (other.gameObject.CompareTag("ground"))
         {
-            rb.linearVelocity = Vector2.zero;
             isGrounded = true;
             canDoubleJump = true;
             //Debug.Log(isGrounded);
