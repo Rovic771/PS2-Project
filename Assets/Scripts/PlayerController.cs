@@ -1,8 +1,4 @@
-using System;
 using System.Collections;
-using System.Numerics;
-using Unity.Jobs.LowLevel.Unsafe;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Quaternion = UnityEngine.Quaternion;
@@ -43,7 +39,14 @@ public class PlayerController : MonoBehaviour
     IEnumerator CoyoteTime()
     {
         yield return new WaitForSeconds(coyoteTime);
-        isGrounded = false;
+        if (isGrounded)
+        {
+            isGrounded = false;
+        }
+        else if (!isGrounded && IsWalled())
+        {
+            isWall = false;
+        }
     }
 
     IEnumerator ShootDelay()
@@ -233,6 +236,7 @@ public class PlayerController : MonoBehaviour
     public void Die()//c temporaire je la mettrais autre part plus tard
     {
         transform.position = posInit;
+        rb.linearVelocity = Vector2.zero;
     }
     
 }
