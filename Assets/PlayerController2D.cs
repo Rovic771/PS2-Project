@@ -39,9 +39,9 @@ using UnityEngine.InputSystem;
 
     private int wallDirection;
 
-    
-    [SerializeField] GameObject NotePrefab;
-    [SerializeField] Transform NoteSpawn;
+    [Header("Tir")]
+    [SerializeField] GameObject notePrefab;
+    [SerializeField] Transform noteSpawn;
     [SerializeField] float ProjectileSpeed = 15f;
     [SerializeField] float fireRate = 0.5f;
 
@@ -77,17 +77,16 @@ using UnityEngine.InputSystem;
         HandleTimers();
         HandleJump();
         HandleWallSlide();
-
-        if (Input.GetKeyDown(KeyCode.Mouse0) && Time.time >= nextFireTime)
-        {
-            Shoot();
-            nextFireTime = Time.time + fireRate;
-        }
     }
 
     private void FixedUpdate()
     {
         Move();
+        if (input.Player.Shoot.IsPressed() && Time.time >= nextFireTime)
+        {
+            Shoot();
+            nextFireTime = Time.time + fireRate;
+        }
     }
 
     void Move()
@@ -163,9 +162,10 @@ using UnityEngine.InputSystem;
 
     void Shoot()
     {
+        Debug.Log("tir");
         GameObject bullet = Instantiate(
-            NotePrefab,
-            NoteSpawn.position,
+            notePrefab,
+            noteSpawn.position,
             Quaternion.identity
         );
 
