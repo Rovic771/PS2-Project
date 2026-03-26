@@ -11,7 +11,6 @@ using Vector3 = UnityEngine.Vector3;
 
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField] private float gravity = -12f;
     [SerializeField] private float speed = 5f;
     [SerializeField] private float airControlIntensity = 5f;
     [SerializeField] private float airControlX = 1.0f;
@@ -24,36 +23,45 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Transform wallCheck;
     [SerializeField] private LayerMask wallLayer;
     [SerializeField] private GameObject croche;
-    [SerializeField] private Transform crocheSpawn;
-    [SerializeField] private crocheScipt _crocheScipt;
-    [SerializeField] public GameObject viseurTest;
+    [SerializeField] private GameObject viseurAncragePoint;
+    [SerializeField] private GameObject viseurStartProjectile;
     
     private Vector2 moveInput;
     private Vector2 inputRotation;
     public bool isGrounded = true;
     private bool isWall;
-    private bool isCharging = false;
     private bool isFacingRight = true;
-    private bool mouvement = false;
     private bool canDoubleJump = true;
     private bool isWallSliding;
     private float wallSlidingSpeed = 0.2f;
     private float _currentAimAngle;
     private float _lastAimAngle;
+    public bool canShoot = true;
     float _flipValue = 0;
+    private Vector3 posInit;
 
     IEnumerator CoyoteTime()
     {
         yield return new WaitForSeconds(coyoteTime);
         isGrounded = false;
     }
+
+    IEnumerator ShootDelay()
+    {
+        yield return new WaitForSeconds(1);
+        canShoot = true;
+    }
     
     void Awake()
     {
         rb.GetComponent<Rigidbody2D>();
-        Physics2D.gravity = new Vector2(0, gravity);
     }
-    
+
+    private void Start()
+    {
+        posInit = transform.position;
+    }
+
     public void OnMove(InputAction.CallbackContext context)
     {
         moveInput = context.ReadValue<Vector2>();
@@ -67,45 +75,41 @@ public class PlayerController : MonoBehaviour
             {
                 rb.AddForce(Vector2.up * jumpStrength, ForceMode2D.Impulse);
             }
-            else if (!isGrounded && IsWalled())
+            else
             {
-                Vector2 Force = new Vector2(0,0);
-                rb.linearVelocity = Vector2.zero;
-                if (isFacingRight)
+                if (IsWalled())
                 {
-                    Force = new Vector2(-transform.localScale.x * forceWallJumpX, forceWallJumpY);
+                    Vector2 Force = new Vector2(0,0);
+                    rb.linearVelocity = Vector2.zero;
+                    if (isFacingRight)
+                    {
+                        Force = new Vector2(-transform.localScale.x * forceWallJumpX, forceWallJumpY);
+                    }
+                    else
+                    {
+                        Force = new Vector2(transform.localScale.x * forceWallJumpX, forceWallJumpY);
+                    }
+                    rb.AddForce(Force, ForceMode2D.Impulse);
                 }
-                else
+                if (canDoubleJump)
                 {
-                    Force = new Vector2(transform.localScale.x * forceWallJumpX, forceWallJumpY);
+                    {
+                        rb.AddForce(Vector2.up * doubleJumpStrength, ForceMode2D.Impulse);
+                        canDoubleJump = false;
+                    }
+                    isGrounded = false;
                 }
-                rb.AddForce(Force, ForceMode2D.Impulse);
-                //IsWalled();
             }
-            else if (!isGrounded && canDoubleJump)
-            {
-                rb.AddForce(Vector2.up * doubleJumpStrength, ForceMode2D.Impulse);
-                canDoubleJump = false;
-            }
-            isGrounded = false;
         }
-
     }
 
     public void onAttack(InputAction.CallbackContext context)
     {
-        if (context.performed)
+        if (context.performed && canShoot)
         {
-            if (isGrounded)
-            {
-                //_crocheScipt.ChangeShotState();
-                Instantiate(croche, transform.position + new Vector3(crocheSpawn.transform.localPosition.x,crocheSpawn.transform.localPosition.y,0), croche.transform.rotation);
-            }
-            else
-            {
-                Instantiate(croche, transform.position + new Vector3(0,-2,0), croche.transform.rotation);
-            }
-            
+            Instantiate(croche, viseurStartProjectile.transform.position, viseurStartProjectile.transform.rotation);
+            canShoot = false;
+            StartCoroutine(ShootDelay());
         }
     }
     
@@ -123,7 +127,7 @@ public class PlayerController : MonoBehaviour
                 _currentAimAngle = Mathf.Atan2(inputRotationJSD.y, inputRotationJSD.x) * Mathf.Rad2Deg;
                 _lastAimAngle = _currentAimAngle;
             }
-            viseurTest.transform.rotation = Quaternion.Euler(0, 0, _currentAimAngle);
+            viseurAncragePoint.transform.rotation = Quaternion.Euler(0, 0, _currentAimAngle);
         }
     }
     
@@ -142,9 +146,9 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            if (Mathf.Abs(moveInput.x) > 0.05f)
+            if (Mathf.Abs(moveInput.x) > 0.05f && Mathf.Abs(rb.linearVelocity.x) < 5f)
             {
-                rb.AddForce(new Vector2(Mathf.Clamp(moveInput.x * airControlIntensity, -airControlX, airControlX), 0));
+                rb.AddForce(new Vector2(moveInput.x * airControlIntensity, 0));
             }
         }
         
@@ -203,10 +207,8 @@ public class PlayerController : MonoBehaviour
         }
         isFacingRight = !isFacingRight;
         _flipValue += 180;
-        //Debug.Log(_flipValue);
         transform.rotation = Quaternion.Euler(0, _flipValue, 0);
         Debug.Log("flip :" + isFacingRight);
-        crocheSpawn.transform.localPosition *= -1;
     }
 
     private bool IsWalled()
@@ -226,4 +228,10 @@ public class PlayerController : MonoBehaviour
             isWallSliding = false;
         }
     }
+
+    public void Die()//c temporaire je la mettrais autre part plus tard
+    {
+        transform.position = posInit;
+    }
+    
 }
