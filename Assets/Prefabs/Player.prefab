@@ -434,10 +434,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbf82bd2405506d49a9b5a6a22e8b7c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gravity: -15
   speed: 8
   airControlIntensity: 5
-  airControlX: 10
+  airControlLimit: 5
   jumpStrength: 8
   doubleJumpStrength: 5
   forceWallJumpX: 4
@@ -449,10 +448,10 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   croche: {fileID: 40574452540280323, guid: ea57713d97de73a4cae3d95af014490c, type: 3}
-  crocheSpawn: {fileID: 6646818176215406879}
-  _crocheScipt: {fileID: -3629035939022456863, guid: ea57713d97de73a4cae3d95af014490c, type: 3}
-  viseurTest: {fileID: 3760928333613560874}
+  viseurAncragePoint: {fileID: 3760928333613560874}
+  viseurStartProjectile: {fileID: 7653517577002050919}
   isGrounded: 1
+  canShoot: 1
 --- !u!50 &8851412501983536408
 Rigidbody2D:
   serializedVersion: 5
@@ -646,7 +645,7 @@ GameObject:
   - component: {fileID: 5648226311951061521}
   m_Layer: 0
   m_Name: Circle
-  m_TagString: Untagged
+  m_TagString: Viseur
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
