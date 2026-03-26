@@ -11,6 +11,7 @@ public class crocheScipt : MonoBehaviour
     private Vector3 viseurPos;
     private Vector3 directionTir;
     private GameObject player;
+    private PlayerController playerController;
 
     IEnumerator DestroyTime()
     {
@@ -21,10 +22,21 @@ public class crocheScipt : MonoBehaviour
     public void Start()
     {
         player = GameObject.FindWithTag("Player");
+        playerController = player.GetComponent<PlayerController>();
         rbProjectile = GetComponent<Rigidbody2D>();
         viseurPos = GameObject.FindWithTag("Viseur").transform.position;
         directionTir = (viseurPos - player.transform.position).normalized;
         StartCoroutine(DestroyTime());
+        if (playerController.zoneActive)
+        {
+            Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Projectile"), LayerMask.NameToLayer("DoObject"), true);
+            Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Projectile"), LayerMask.NameToLayer("ReObject"), false);
+        }
+        else
+        {
+            Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Projectile"), LayerMask.NameToLayer("DoObject"), false);
+            Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Projectile"), LayerMask.NameToLayer("ReObject"), true);
+        }
     }
 
     public void FixedUpdate()
@@ -34,7 +46,7 @@ public class crocheScipt : MonoBehaviour
 
     public void OnCollisionEnter2D(Collision2D other)
     {
-        if (other.gameObject.layer == 3)
+        if (other.gameObject.CompareTag("Destructable"))
         {
             Destroy(other.gameObject);
         }
