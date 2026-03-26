@@ -13,7 +13,7 @@ public class PlayerController : MonoBehaviour
 {
     [SerializeField] private float speed = 5f;
     [SerializeField] private float airControlIntensity = 5f;
-    [SerializeField] private float airControlX = 1.0f;
+    [SerializeField] private float airControlLimit = 5f;
     [SerializeField] private float jumpStrength = 8f;
     [SerializeField] private float doubleJumpStrength = 5f;
     [SerializeField] private float forceWallJumpX = 2f;
@@ -69,36 +69,37 @@ public class PlayerController : MonoBehaviour
 
     public void OnJump(InputAction.CallbackContext context)
     {
-        if (context.performed)
+        if (!context.performed)
         {
-            if (isGrounded)
+            return;
+        }
+        if (isGrounded)
             {
                 rb.AddForce(Vector2.up * jumpStrength, ForceMode2D.Impulse);
             }
-            else
+        else
+        {
+            if (IsWalled())
             {
-                if (IsWalled())
+                Vector2 Force = new Vector2(0,0);
+                rb.linearVelocity = Vector2.zero;
+                if (isFacingRight)
                 {
-                    Vector2 Force = new Vector2(0,0);
-                    rb.linearVelocity = Vector2.zero;
-                    if (isFacingRight)
-                    {
-                        Force = new Vector2(-transform.localScale.x * forceWallJumpX, forceWallJumpY);
-                    }
-                    else
-                    {
-                        Force = new Vector2(transform.localScale.x * forceWallJumpX, forceWallJumpY);
-                    }
-                    rb.AddForce(Force, ForceMode2D.Impulse);
+                    Force = new Vector2(-transform.localScale.x * forceWallJumpX, forceWallJumpY);
                 }
-                if (canDoubleJump)
+                else
                 {
-                    {
-                        rb.AddForce(Vector2.up * doubleJumpStrength, ForceMode2D.Impulse);
-                        canDoubleJump = false;
-                    }
-                    isGrounded = false;
+                    Force = new Vector2(transform.localScale.x * forceWallJumpX, forceWallJumpY);
                 }
+                rb.AddForce(Force, ForceMode2D.Impulse);
+            }
+            if (canDoubleJump && !IsWalled())
+            {
+                {
+                    rb.AddForce(Vector2.up * doubleJumpStrength, ForceMode2D.Impulse);
+                    canDoubleJump = false;
+                }
+                isGrounded = false;
             }
         }
     }
@@ -146,7 +147,7 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            if (Mathf.Abs(moveInput.x) > 0.05f && Mathf.Abs(rb.linearVelocity.x) < 5f)
+            if (Mathf.Abs(moveInput.x) > 0.05f && Mathf.Abs(rb.linearVelocity.x) < airControlLimit)
             {
                 rb.AddForce(new Vector2(moveInput.x * airControlIntensity, 0));
             }
