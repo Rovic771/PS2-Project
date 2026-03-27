@@ -243,7 +243,6 @@ public class PlayerController : MonoBehaviour
         isFacingRight = !isFacingRight;
         _flipValue += 180;
         transform.rotation = Quaternion.Euler(0, _flipValue, 0);
-        Debug.Log("flip :" + isFacingRight);
     }
 
     private bool IsWalled()

@@ -491,8 +491,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-    m_ActionId: cbfa4e27-a793-4776-99c2-9556625adc7d
-    m_ActionName: 'Player/DoZoneProtection[/XInputControllerWindows/rightTrigger,/Mouse/rightButton]'
+    m_ActionId: b92bf87a-fe45-4ce8-b81d-30a5bbf9e127
+    m_ActionName: 'Player/DoActiveZone[/Mouse/leftButton,/XInputControllerWindows/leftTrigger]'
   - m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 10052844}
@@ -507,8 +507,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-    m_ActionId: 433784fe-056e-4a52-8607-99869ff93da6
-    m_ActionName: 'Player/ReZoneProtection[/XInputControllerWindows/leftTrigger,/Mouse/leftButton]'
+    m_ActionId: 6b79c68e-8105-4f7d-9ed1-03ac94cced61
+    m_ActionName: 'Player/ReActiveZone[/Mouse/rightButton,/XInputControllerWindows/rightTrigger]'
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: 
@@ -1597,6 +1597,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1144118686}
   - component: {fileID: 1144118687}
+  - component: {fileID: 1144118688}
+  - component: {fileID: 1144118689}
   m_Layer: 0
   m_Name: ReZone
   m_TagString: Untagged
@@ -1678,6 +1680,55 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+--- !u!114 &1144118688
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1144118685}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5245517a6b4dd464893d270ef8a29178, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ZonePlayer
+  zoneActiveSys: {fileID: 10052844}
+--- !u!58 &1144118689
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1144118685}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: 0}
+  m_Radius: 0.5
 --- !u!1 &1475082080
 GameObject:
   m_ObjectHideFlags: 0
@@ -2482,6 +2533,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1706877480}
   - component: {fileID: 1706877481}
+  - component: {fileID: 1706877483}
+  - component: {fileID: 1706877482}
   m_Layer: 0
   m_Name: DoZone
   m_TagString: Untagged
@@ -2563,6 +2616,55 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+--- !u!58 &1706877482
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1706877479}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: 0}
+  m_Radius: 0.5
+--- !u!114 &1706877483
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1706877479}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5245517a6b4dd464893d270ef8a29178, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+  zoneActiveSys: {fileID: 10052844}
 --- !u!1 &1850791634
 GameObject:
   m_ObjectHideFlags: 0
