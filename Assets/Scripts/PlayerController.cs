@@ -1,8 +1,4 @@
-using System;
 using System.Collections;
-using System.Numerics;
-using Unity.Jobs.LowLevel.Unsafe;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Quaternion = UnityEngine.Quaternion;
@@ -22,9 +18,12 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float coyoteTime = 0.1f;
     [SerializeField] private Transform wallCheck;
     [SerializeField] private LayerMask wallLayer;
-    [SerializeField] private GameObject croche;
     [SerializeField] private GameObject viseurAncragePoint;
     [SerializeField] private GameObject viseurStartProjectile;
+    [SerializeField] private GameObject doZone;
+    [SerializeField] private GameObject reZone;
+    [SerializeField] private GameObject doProjectile;
+    [SerializeField] private GameObject reProjectile;
     
     private Vector2 moveInput;
     private Vector2 inputRotation;
@@ -39,11 +38,20 @@ public class PlayerController : MonoBehaviour
     public bool canShoot = true;
     float _flipValue = 0;
     private Vector3 posInit;
+    public bool zoneActive = true; // true c do et false c re
 
     IEnumerator CoyoteTime()
     {
         yield return new WaitForSeconds(coyoteTime);
-        isGrounded = false;
+        if (isGrounded)
+        {
+            isGrounded = false;
+        }
+        /*
+        else if (!isGrounded && IsWalled())
+        {
+            isWall = false;
+        }*/
     }
 
     IEnumerator ShootDelay()
@@ -92,10 +100,12 @@ public class PlayerController : MonoBehaviour
                     Force = new Vector2(transform.localScale.x * forceWallJumpX, forceWallJumpY);
                 }
                 rb.AddForce(Force, ForceMode2D.Impulse);
+                Debug.Log("WallJump");
             }
             if (canDoubleJump && !IsWalled())
             {
                 {
+                    Debug.Log("Double Jump");
                     rb.AddForce(Vector2.up * doubleJumpStrength, ForceMode2D.Impulse);
                     canDoubleJump = false;
                 }
@@ -104,14 +114,25 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void onAttack(InputAction.CallbackContext context)
+    public void DoProtectionZone(InputAction.CallbackContext context)
     {
-        if (context.performed && canShoot)
+        if (context.performed)
         {
-            Instantiate(croche, viseurStartProjectile.transform.position, viseurStartProjectile.transform.rotation);
-            canShoot = false;
-            StartCoroutine(ShootDelay());
+            zoneActive = true;
+            reZone.SetActive(false);
+            doZone.SetActive(true);
         }
+    }
+    
+    public void ReProtectionZone(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            zoneActive = false;
+            doZone.SetActive(false);
+            reZone.SetActive(true);
+        }
+
     }
     
     public void OnAim(InputAction.CallbackContext context)
@@ -127,6 +148,19 @@ public class PlayerController : MonoBehaviour
             {
                 _currentAimAngle = Mathf.Atan2(inputRotationJSD.y, inputRotationJSD.x) * Mathf.Rad2Deg;
                 _lastAimAngle = _currentAimAngle;
+                if(canShoot)
+                {
+                    if (zoneActive)
+                    {
+                        Instantiate(doProjectile, transform.position, viseurStartProjectile.transform.rotation);
+                    }
+                    else
+                    {
+                        Instantiate(reProjectile, transform.position, viseurStartProjectile.transform.rotation);
+                    }
+                    canShoot = false;
+                    StartCoroutine(ShootDelay());
+                }
             }
             viseurAncragePoint.transform.rotation = Quaternion.Euler(0, 0, _currentAimAngle);
         }
@@ -233,6 +267,7 @@ public class PlayerController : MonoBehaviour
     public void Die()//c temporaire je la mettrais autre part plus tard
     {
         transform.position = posInit;
+        rb.linearVelocity = Vector2.zero;
     }
     
 }
