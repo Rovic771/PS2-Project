@@ -527,7 +527,7 @@ Transform:
   m_GameObject: {fileID: 4002888876160658015}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -21, y: 3.469, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 2.0375, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -658,14 +658,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 8
-  airControlIntensity: 10
-  airControlLimit: 10
+  airControlIntensity: 12
+  airControlLimit: 12
   jumpStrength: 8
   doubleJumpStrength: 8
-  forceWallJumpX: 4
-  forceWallJumpY: 7
+  forceWallJumpX: 5
+  forceWallJumpY: 8
   rb: {fileID: 6378990399197014200}
-  coyoteTime: 0.1
+  coyoteTime: 0.3
   wallCheck: {fileID: 4625451287311482075}
   wallLayer:
     serializedVersion: 2
