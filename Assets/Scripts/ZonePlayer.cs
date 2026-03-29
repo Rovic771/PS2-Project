@@ -9,14 +9,14 @@ public class ZonePlayer : MonoBehaviour
     {
         if (zoneActiveSys.zoneActive)
         {
-            if (other.gameObject.layer == LayerMask.NameToLayer("DoObject"))
+            if (other.gameObject.layer == LayerMask.NameToLayer("ReObject"))
             {
                 Destroy(other.gameObject);
             }
         }
         else 
         {
-            if (other.gameObject.layer == LayerMask.NameToLayer("ReObject"))
+            if (other.gameObject.layer == LayerMask.NameToLayer("DoObject"))
             {
                 Destroy(other.gameObject);
             }
