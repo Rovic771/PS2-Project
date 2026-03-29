@@ -122,7 +122,8 @@ public class PlayerController : MonoBehaviour
             reZone.SetActive(false);
             doZone.SetActive(true);
         }
-        if (!context.performed) {
+        if (!context.performed) //quand on relache la touche la zone s'arrête
+        {
             doZone.SetActive(false);
         }
     }
@@ -135,7 +136,7 @@ public class PlayerController : MonoBehaviour
             doZone.SetActive(false);
             reZone.SetActive(true);
         }
-        if (!context.performed)
+        if (!context.performed) //quand on relache la touche la zone s'arrête
         {
             reZone.SetActive(false);
         }
