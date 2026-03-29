@@ -122,6 +122,9 @@ public class PlayerController : MonoBehaviour
             reZone.SetActive(false);
             doZone.SetActive(true);
         }
+        if (!context.performed) {
+            doZone.SetActive(false);
+        }
     }
     
     public void ReProtectionZone(InputAction.CallbackContext context)
@@ -132,7 +135,10 @@ public class PlayerController : MonoBehaviour
             doZone.SetActive(false);
             reZone.SetActive(true);
         }
-
+        if (!context.performed)
+        {
+            reZone.SetActive(false);
+        }
     }
     
     public void OnAim(InputAction.CallbackContext context)
