@@ -1,4 +1,5 @@
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Quaternion = UnityEngine.Quaternion;
@@ -24,22 +25,26 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private GameObject reZone;
     [SerializeField] private GameObject doProjectile;
     [SerializeField] private GameObject reProjectile;
+    [SerializeField] private float wallSlidingSpeed = 0.2f;
     
     private Vector2 moveInput;
     private Vector2 inputRotation;
     public bool isGrounded = true;
     private bool isWall;
     private bool isFacingRight = true;
-    private bool canDoubleJump = true;
+    private bool isFacingRightAim = true;
+    public bool canDoubleJump = false;
     private bool isWallSliding;
-    private float wallSlidingSpeed = 0.2f;
     private float _currentAimAngle;
     private float _lastAimAngle;
     public bool canShoot = true;
     float _flipValue = 0;
     private Vector3 posInit;
     public bool zoneActive = true; // true c do et false c re
-
+    public bool isJump = false;
+    private bool isWalking = false;
+    
+    
     IEnumerator CoyoteTime()
     {
         yield return new WaitForSeconds(coyoteTime);
@@ -73,6 +78,14 @@ public class PlayerController : MonoBehaviour
     public void OnMove(InputAction.CallbackContext context)
     {
         moveInput = context.ReadValue<Vector2>();
+        if (context.performed)
+        {
+            isWalking = true;
+        }
+        else
+        {
+            isWalking = false;
+        }
     }
 
     public void OnJump(InputAction.CallbackContext context)
@@ -84,6 +97,7 @@ public class PlayerController : MonoBehaviour
         if (isGrounded)
             {
                 rb.AddForce(Vector2.up * jumpStrength, ForceMode2D.Impulse);
+                isJump = true;
             }
         else
         {
@@ -99,10 +113,11 @@ public class PlayerController : MonoBehaviour
                 {
                     Force = new Vector2(transform.localScale.x * forceWallJumpX, forceWallJumpY);
                 }
-                rb.AddForce(Force, ForceMode2D.Impulse);
+                Flip();
+                rb.AddForce(Force, ForceMode2D.Impulse); ;
                 Debug.Log("WallJump");
             }
-            if (canDoubleJump && !IsWalled())
+            if (canDoubleJump && !IsWalled() && !isGrounded)
             {
                 {
                     Debug.Log("Double Jump");
@@ -155,6 +170,17 @@ public class PlayerController : MonoBehaviour
             {
                 _currentAimAngle = Mathf.Atan2(inputRotationJSD.y, inputRotationJSD.x) * Mathf.Rad2Deg;
                 _lastAimAngle = _currentAimAngle;
+                if (!isWalking && isGrounded)
+                {
+                    if ((_currentAimAngle > 90 || _currentAimAngle < -90) && isFacingRight)
+                    {
+                        Flip();
+                    }
+                    else if ((_currentAimAngle < 90 && _currentAimAngle > -90) && !isFacingRight)
+                    {
+                        Flip();
+                    }
+                }
                 if(canShoot)
                 {
                     if (zoneActive)
@@ -194,13 +220,14 @@ public class PlayerController : MonoBehaviour
             }
         }
         
+        
         if (moveInput.x > 0.2f && !isFacingRight)
         {
-            flip();
+            Flip();
         }
         else if (moveInput.x < -0.2f && isFacingRight)
         {
-            flip();
+            Flip();
         }
         WallSlide();
     }
@@ -211,7 +238,7 @@ public class PlayerController : MonoBehaviour
         {
             isGrounded = true;
             canDoubleJump = true;
-            //Debug.Log(isGrounded);
+            isJump = false;
         }
 
         if (IsWalled())
@@ -222,30 +249,30 @@ public class PlayerController : MonoBehaviour
 
     private void OnCollisionExit2D(Collision2D other)
     {
-        if (other.gameObject.CompareTag("ground"))
+        if (other.gameObject.CompareTag("ground") && !isJump)
         {
+            isGrounded = false;
             StartCoroutine(CoyoteTime());
-            //jumpStrength = 1.0f;
-            //Debug.Log(isGrounded);
+        }
+        else if (other.gameObject.CompareTag("ground"))
+        {
+            isGrounded = false;
         }
         if (!IsWalled())
         {
             isWall = false;
         }
-        /*
-        if (other.gameObject.CompareTag("Wall"))
-        {
-            isGrounded = false;
-            jumpStrength = 1.0f;
-        }
-        */
     }
 
-    private void flip()
+    private void Flip()
     {
         if (isGrounded)
         {
             rb.linearVelocity= new Vector2(0, rb.linearVelocity.y);
+        }
+        else
+        {
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, rb.linearVelocity.y);
         }
         isFacingRight = !isFacingRight;
         _flipValue += 180;
