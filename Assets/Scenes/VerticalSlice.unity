@@ -1896,8 +1896,28 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 102611434420189142, guid: 9f98966c54664764dbced10b68399c55, type: 3}
+      propertyPath: groundCheck
+      value: 
+      objectReference: {fileID: 1832816814}
+    - target: {fileID: 102611434420189142, guid: 9f98966c54664764dbced10b68399c55, type: 3}
+      propertyPath: jumpStrength
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 102611434420189142, guid: 9f98966c54664764dbced10b68399c55, type: 3}
+      propertyPath: forceWallJumpY
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 102611434420189142, guid: 9f98966c54664764dbced10b68399c55, type: 3}
       propertyPath: wallSlidingSpeed
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 102611434420189142, guid: 9f98966c54664764dbced10b68399c55, type: 3}
+      propertyPath: doubleJumpStrength
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 102611434420189142, guid: 9f98966c54664764dbced10b68399c55, type: 3}
+      propertyPath: groundLayer.m_Bits
+      value: 128
       objectReference: {fileID: 0}
     - target: {fileID: 1261848698640126490, guid: 9f98966c54664764dbced10b68399c55, type: 3}
       propertyPath: m_LocalScale.x
@@ -1975,6 +1995,10 @@ PrefabInstance:
       propertyPath: m_LocalPosition.y
       value: -1.41
       objectReference: {fileID: 0}
+    - target: {fileID: 4625451287311482075, guid: 9f98966c54664764dbced10b68399c55, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.575
+      objectReference: {fileID: 0}
     - target: {fileID: 5652953175151142431, guid: 9f98966c54664764dbced10b68399c55, type: 3}
       propertyPath: speed
       value: 7
@@ -1993,7 +2017,13 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 4327689986159363173, guid: 9f98966c54664764dbced10b68399c55, type: 3}
+      insertIndex: 1
+      addedObject: {fileID: 1832816814}
+    - targetCorrespondingSourceObject: {fileID: 4625451287311482075, guid: 9f98966c54664764dbced10b68399c55, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1370319632}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9f98966c54664764dbced10b68399c55, type: 3}
 --- !u!1001 &699849224
@@ -2904,6 +2934,37 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dd32873f5d34b9c44bf3462ef676c236, type: 3}
+--- !u!1 &1370319631
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1370319632}
+  m_Layer: 0
+  m_Name: WallCheck (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1370319632
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1370319631}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: -0.617, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1731278055}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1400264357
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3565,6 +3626,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7ce5268227214fd40b33c2e6d49b17d8, type: 3}
+--- !u!4 &1731278055 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4625451287311482075, guid: 9f98966c54664764dbced10b68399c55, type: 3}
+  m_PrefabInstance: {fileID: 662594098}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1731685894
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3961,6 +4027,37 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dd32873f5d34b9c44bf3462ef676c236, type: 3}
+--- !u!1 &1832816813
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1832816814}
+  m_Layer: 0
+  m_Name: GroundCheck
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1832816814
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1832816813}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: -0.501, z: -5.3045692}
+  m_LocalScale: {x: 1, y: 0.49079755, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 487270410}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1877010606
 PrefabInstance:
   m_ObjectHideFlags: 0

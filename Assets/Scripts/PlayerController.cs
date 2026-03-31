@@ -19,6 +19,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float coyoteTime = 0.1f;
     [SerializeField] private Transform wallCheck;
     [SerializeField] private LayerMask wallLayer;
+    [SerializeField] private Transform groundCheck;
+    [SerializeField] private LayerMask groundLayer;
     [SerializeField] private GameObject viseurAncragePoint;
     [SerializeField] private GameObject viseurStartProjectile;
     [SerializeField] private GameObject doZone;
@@ -29,8 +31,8 @@ public class PlayerController : MonoBehaviour
     
     private Vector2 moveInput;
     private Vector2 inputRotation;
-    public bool isGrounded = true;
-    private bool isWall;
+    public bool isGround; 
+    public bool isWall;
     private bool isFacingRight = true;
     private bool isFacingRightAim = true;
     public bool canDoubleJump = false;
@@ -43,17 +45,18 @@ public class PlayerController : MonoBehaviour
     public bool zoneActive = true; // true c do et false c re
     public bool isJump = false;
     private bool isWalking = false;
+
     
     
     IEnumerator CoyoteTime()
     {
         yield return new WaitForSeconds(coyoteTime);
-        if (isGrounded)
+        if (isGround)
         {
-            isGrounded = false;
+            isGround = false;
         }
         /*
-        else if (!isGrounded && IsWalled())
+        else if (!isGrounded && isWall)
         {
             isWall = false;
         }*/
@@ -94,11 +97,11 @@ public class PlayerController : MonoBehaviour
         {
             return;
         }
-        if (isGrounded)
-            {
-                rb.AddForce(Vector2.up * jumpStrength, ForceMode2D.Impulse);
-                isJump = true;
-            }
+        if (isGround)
+        {
+            rb.AddForce(Vector2.up * jumpStrength, ForceMode2D.Impulse);
+            isJump = true;
+        }
         else
         {
             if (IsWalled())
@@ -117,14 +120,14 @@ public class PlayerController : MonoBehaviour
                 rb.AddForce(Force, ForceMode2D.Impulse); ;
                 Debug.Log("WallJump");
             }
-            if (canDoubleJump && !IsWalled() && !isGrounded)
+            if (canDoubleJump && !isGround && !isWall)
             {
                 {
                     Debug.Log("Double Jump");
                     rb.AddForce(Vector2.up * doubleJumpStrength, ForceMode2D.Impulse);
                     canDoubleJump = false;
                 }
-                isGrounded = false;
+                isGround = false;
             }
         }
     }
@@ -137,7 +140,7 @@ public class PlayerController : MonoBehaviour
             reZone.SetActive(false);
             doZone.SetActive(true);
         }
-        if (!context.performed) //quand on relache la touche la zone s'arrête
+        if (context.canceled) 
         {
             doZone.SetActive(false);
         }
@@ -151,7 +154,7 @@ public class PlayerController : MonoBehaviour
             doZone.SetActive(false);
             reZone.SetActive(true);
         }
-        if (!context.performed) //quand on relache la touche la zone s'arrête
+        if (context.canceled)
         {
             reZone.SetActive(false);
         }
@@ -170,7 +173,7 @@ public class PlayerController : MonoBehaviour
             {
                 _currentAimAngle = Mathf.Atan2(inputRotationJSD.y, inputRotationJSD.x) * Mathf.Rad2Deg;
                 _lastAimAngle = _currentAimAngle;
-                if (!isWalking && isGrounded)
+                if (!isWalking && isGround)
                 {
                     if ((_currentAimAngle > 90 || _currentAimAngle < -90) && isFacingRight)
                     {
@@ -201,8 +204,29 @@ public class PlayerController : MonoBehaviour
     
     public void FixedUpdate()
     {
-        if (isGrounded)
+        if (IsGrounded())
         {
+            isGround = true;
+            canDoubleJump = true;
+            isJump = false;
+        }
+        else
+        {
+            if (!isJump)
+            {
+                StartCoroutine(CoyoteTime());
+            }
+        }
+
+        if (IsWalled())
+        {
+            isWall = true;
+        }
+        
+        if (isGround)
+        {
+            //Debug.Log("Vitesse X" + rb.linearVelocity.x);
+
             if (Mathf.Abs(moveInput.x) > 0.05f) 
             {
                 rb.linearVelocity = new Vector2(moveInput.x * speed, rb.linearVelocity.y);
@@ -214,6 +238,7 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
+            //Debug.Log("Vitesse Y" + rb.linearVelocity.y);
             if (Mathf.Abs(moveInput.x) > 0.05f && Mathf.Abs(rb.linearVelocity.x) < airControlLimit)
             {
                 rb.AddForce(new Vector2(moveInput.x * airControlIntensity, 0));
@@ -232,41 +257,22 @@ public class PlayerController : MonoBehaviour
         WallSlide();
     }
 
-    void OnCollisionEnter2D(Collision2D other)
-    {
-        if (other.gameObject.CompareTag("ground"))
-        {
-            isGrounded = true;
-            canDoubleJump = true;
-            isJump = false;
-        }
-
-        if (IsWalled())
-        {
-            isWall = true;
-        }
-    }
-
     private void OnCollisionExit2D(Collision2D other)
     {
-        if (other.gameObject.CompareTag("ground") && !isJump)
+        /*if (other.gameObject.CompareTag("ground") && !isJump)
         {
-            isGrounded = false;
             StartCoroutine(CoyoteTime());
-        }
-        else if (other.gameObject.CompareTag("ground"))
-        {
-            isGrounded = false;
-        }
+        }*/
         if (!IsWalled())
         {
+            //tartCoroutine(CoyoteTime());
             isWall = false;
         }
     }
 
     private void Flip()
     {
-        if (isGrounded)
+        if (isGround)
         {
             rb.linearVelocity= new Vector2(0, rb.linearVelocity.y);
         }
@@ -284,9 +290,14 @@ public class PlayerController : MonoBehaviour
         return Physics2D.OverlapCircle(wallCheck.position, 0.2f, wallLayer); //(où est le truc qui détecte, la taille du rayon de cercle, avec quoi il intéragit) cépadélia
     }
 
+    private bool IsGrounded()
+    {
+        return Physics2D.OverlapCircle(groundCheck.position, 0.2f, groundLayer);
+    }
+
     private void WallSlide()
     {
-        if (IsWalled() && isGrounded == false)
+        if (IsWalled() && isGround == false)
         {
             isWallSliding = true;
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, Mathf.Clamp(rb.linearVelocity.y, -wallSlidingSpeed, float.MaxValue));
