@@ -1,5 +1,4 @@
 using System.Collections;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Quaternion = UnityEngine.Quaternion;
@@ -35,7 +34,7 @@ public class PlayerController : MonoBehaviour
     public bool isWall;
     private bool isFacingRight = true;
     private bool isFacingRightAim = true;
-    public bool canDoubleJump = false;
+    public bool canDoubleJump;
     private bool isWallSliding;
     private float _currentAimAngle;
     private float _lastAimAngle;
@@ -43,24 +42,9 @@ public class PlayerController : MonoBehaviour
     float _flipValue = 0;
     private Vector3 posInit;
     public bool zoneActive = true; // true c do et false c re
-    public bool isJump = false;
-    private bool isWalking = false;
-
-    
-    
-    IEnumerator CoyoteTime()
-    {
-        yield return new WaitForSeconds(coyoteTime);
-        if (isGround)
-        {
-            isGround = false;
-        }
-        /*
-        else if (!isGrounded && isWall)
-        {
-            isWall = false;
-        }*/
-    }
+    private bool isWalking;
+    private bool isJump;
+    private float coyoteTimer;
 
     IEnumerator ShootDelay()
     {
@@ -76,6 +60,7 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         posInit = transform.position;
+        
     }
 
     public void OnMove(InputAction.CallbackContext context)
@@ -98,10 +83,12 @@ public class PlayerController : MonoBehaviour
             return;
         }
         if (isGround)
-        {
-            rb.AddForce(Vector2.up * jumpStrength, ForceMode2D.Impulse);
-            isJump = true;
-        }
+            {
+                rb.AddForce(Vector2.up * jumpStrength, ForceMode2D.Impulse);
+                isGround = false;
+                Debug.Log("isGround" + isGround);
+                isJump = true;
+            }
         else
         {
             if (IsWalled())
@@ -204,23 +191,33 @@ public class PlayerController : MonoBehaviour
     
     public void FixedUpdate()
     {
+        
         if (IsGrounded())
         {
+            Debug.Log("isGround" + isGround);
+            coyoteTimer = coyoteTime;
             isGround = true;
             canDoubleJump = true;
             isJump = false;
         }
-        else
+        else if(!isJump)
         {
-            if (!isJump)
+            Debug.Log("isGround" + isGround);
+            coyoteTimer -= Time.deltaTime;
+            if (coyoteTimer <= 0)
             {
-                StartCoroutine(CoyoteTime());
+                Debug.Log("isGround" + isGround);
+                isGround = false;
             }
         }
 
         if (IsWalled())
         {
             isWall = true;
+        }
+        else
+        {
+            isWall = false;
         }
         
         if (isGround)
@@ -256,19 +253,9 @@ public class PlayerController : MonoBehaviour
         }
         WallSlide();
     }
+    
 
-    private void OnCollisionExit2D(Collision2D other)
-    {
-        /*if (other.gameObject.CompareTag("ground") && !isJump)
-        {
-            StartCoroutine(CoyoteTime());
-        }*/
-        if (!IsWalled())
-        {
-            //tartCoroutine(CoyoteTime());
-            isWall = false;
-        }
-    }
+
 
     private void Flip()
     {
@@ -287,12 +274,12 @@ public class PlayerController : MonoBehaviour
 
     private bool IsWalled()
     {
-        return Physics2D.OverlapCircle(wallCheck.position, 0.2f, wallLayer); //(où est le truc qui détecte, la taille du rayon de cercle, avec quoi il intéragit) cépadélia
+        return Physics2D.OverlapBox(wallCheck.position, new Vector2(0.2f, 2f), 0f,wallLayer); //(où est le truc qui détecte, la taille du rayon de cercle, avec quoi il intéragit) cépadélia
     }
 
     private bool IsGrounded()
     {
-        return Physics2D.OverlapCircle(groundCheck.position, 0.2f, groundLayer);
+        return Physics2D.OverlapBox(groundCheck.position, new Vector2(0.4f, 0.1f), 0f, groundLayer);
     }
 
     private void WallSlide()
@@ -313,5 +300,23 @@ public class PlayerController : MonoBehaviour
         transform.position = posInit;
         rb.linearVelocity = Vector2.zero;
     }
+
+    [SerializeField] private float test = 2f;
     
+    private void OnDrawGizmosSelected()
+    {
+        if (groundCheck != null)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireCube(groundCheck.position, new Vector3(1f, 0.1f,0)); 
+        }
+        
+        if (wallCheck != null)
+        {
+            Gizmos.color = Color.blue;
+            Gizmos.DrawWireCube(wallCheck.position, new Vector3(0.2f, 2, 0));
+        }
+    }
 }
+
+
