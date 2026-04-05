@@ -1,4 +1,5 @@
 using System.Collections;
+using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Quaternion = UnityEngine.Quaternion;
@@ -43,7 +44,7 @@ public class PlayerController : MonoBehaviour
     private Vector3 posInit;
     public bool zoneActive = true; // true c do et false c re
     private bool isWalking;
-    private bool isJump;
+    public bool isJump;
     private float coyoteTimer;
 
     IEnumerator ShootDelay()
@@ -86,7 +87,8 @@ public class PlayerController : MonoBehaviour
             {
                 rb.AddForce(Vector2.up * jumpStrength, ForceMode2D.Impulse);
                 isGround = false;
-                Debug.Log("isGround" + isGround);
+                Debug.Log("je saute");
+                coyoteTimer = 0;
                 isJump = true;
             }
         else
@@ -191,24 +193,24 @@ public class PlayerController : MonoBehaviour
     
     public void FixedUpdate()
     {
-        
-        if (IsGrounded())
+        if (IsGrounded() && !isJump)
         {
-            Debug.Log("isGround" + isGround);
             coyoteTimer = coyoteTime;
             isGround = true;
             canDoubleJump = true;
-            isJump = false;
         }
-        else if(!isJump)
+        else
         {
-            Debug.Log("isGround" + isGround);
             coyoteTimer -= Time.deltaTime;
             if (coyoteTimer <= 0)
             {
-                Debug.Log("isGround" + isGround);
                 isGround = false;
             }
+        }
+
+        if (rb.linearVelocity.y <= 0)
+        {
+            isJump = false;
         }
 
         if (IsWalled())
@@ -279,7 +281,7 @@ public class PlayerController : MonoBehaviour
 
     private bool IsGrounded()
     {
-        return Physics2D.OverlapBox(groundCheck.position, new Vector2(0.4f, 0.1f), 0f, groundLayer);
+        return Physics2D.OverlapBox(groundCheck.position, new Vector2(1f, 0.05f), 0f, groundLayer);
     }
 
     private void WallSlide()
@@ -308,7 +310,7 @@ public class PlayerController : MonoBehaviour
         if (groundCheck != null)
         {
             Gizmos.color = Color.red;
-            Gizmos.DrawWireCube(groundCheck.position, new Vector3(1f, 0.1f,0)); 
+            Gizmos.DrawWireCube(groundCheck.position, new Vector3(1f, 0.05f,0)); 
         }
         
         if (wallCheck != null)
