@@ -9,11 +9,20 @@ public class PlateformeMouvante : MonoBehaviour
     [SerializeField] private bool loop;
     [SerializeField] public bool objectActive = true; 
     private Vector3 targetPos;
+    public bool noteTouched; // false ça veut dire que c les projectile Re qui vont activer et vice versa
 
     private void Start()
     {
-        transform.position = origine.transform.position;
-        targetPos = end.transform.position;
+        if (noteTouched == false)
+        {
+            transform.position = origine.transform.position;
+            targetPos = end.transform.position;
+        }
+        else
+        {
+            transform.position = end.transform.position;
+            targetPos = origine.transform.position;
+        }
     }
     
     private void FixedUpdate()
@@ -40,6 +49,20 @@ public class PlateformeMouvante : MonoBehaviour
         if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
         {
             other.gameObject.transform.SetParent(transform);
+        }
+        else if (other.gameObject.layer == LayerMask.NameToLayer("Projectile"))
+        {
+            if (other.gameObject.CompareTag("ReProjectile") && noteTouched == false)
+            {
+                targetPos =  end.transform.position;
+                noteTouched = true;
+            }
+            else if (other.gameObject.CompareTag("DoProjectile") && noteTouched == true)
+            {
+                targetPos = origine.transform.position;
+                noteTouched = false;
+            }
+            objectActive = true;
         }
     }
 
