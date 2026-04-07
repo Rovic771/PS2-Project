@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using NUnit.Framework;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Quaternion = UnityEngine.Quaternion;
@@ -128,6 +130,14 @@ public class PlayerController : MonoBehaviour
             zoneActive = true;
             reZone.SetActive(false);
             doZone.SetActive(true);
+            if (canShoot)
+            {
+                Instantiate(doProjectile, transform.position, viseurStartProjectile.transform.rotation);
+                Debug.Log("Do tiré");
+                canShoot = false;
+                StartCoroutine(ShootDelay());
+            }
+
         }
         if (context.canceled) 
         {
@@ -142,6 +152,13 @@ public class PlayerController : MonoBehaviour
             zoneActive = false;
             doZone.SetActive(false);
             reZone.SetActive(true);
+            if(canShoot)
+            {
+                Instantiate(reProjectile, transform.position, viseurStartProjectile.transform.rotation);
+                Debug.Log("Re tiré");
+                canShoot = false;
+                StartCoroutine(ShootDelay());
+            }
         }
         if (context.canceled)
         {
@@ -172,19 +189,6 @@ public class PlayerController : MonoBehaviour
                     {
                         Flip();
                     }
-                }
-                if(canShoot)
-                {
-                    if (zoneActive)
-                    {
-                        Instantiate(doProjectile, transform.position, viseurStartProjectile.transform.rotation);
-                    }
-                    else
-                    {
-                        Instantiate(reProjectile, transform.position, viseurStartProjectile.transform.rotation);
-                    }
-                    canShoot = false;
-                    StartCoroutine(ShootDelay());
                 }
             }
             viseurAncragePoint.transform.rotation = Quaternion.Euler(0, 0, _currentAimAngle);
@@ -255,9 +259,6 @@ public class PlayerController : MonoBehaviour
         }
         WallSlide();
     }
-    
-
-
 
     private void Flip()
     {
@@ -301,23 +302,6 @@ public class PlayerController : MonoBehaviour
     {
         transform.position = posInit;
         rb.linearVelocity = Vector2.zero;
-    }
-
-    [SerializeField] private float test = 2f;
-    
-    private void OnDrawGizmosSelected()
-    {
-        if (groundCheck != null)
-        {
-            Gizmos.color = Color.red;
-            Gizmos.DrawWireCube(groundCheck.position, new Vector3(1f, 0.05f,0)); 
-        }
-        
-        if (wallCheck != null)
-        {
-            Gizmos.color = Color.blue;
-            Gizmos.DrawWireCube(wallCheck.position, new Vector3(0.2f, 2, 0));
-        }
     }
 }
 
