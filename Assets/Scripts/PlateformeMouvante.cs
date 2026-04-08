@@ -1,46 +1,71 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class PlateformeMouvante : MonoBehaviour
 {
     [SerializeField] private GameObject origine;
-    [SerializeField] private GameObject end;
+    [SerializeField] List<GameObject> points = new List<GameObject>();
     [SerializeField] private float speed = 1;
-    [SerializeField] private bool loop;
     [SerializeField] public bool objectActive = true; 
     private Vector3 targetPos;
-    public bool noteTouched; // false ça veut dire que c les projectile Re qui vont activer et vice versa
+    //public bool noteTouched; // false ça veut dire que c les projectile Re qui vont activer et vice versa
 
     private void Start()
     {
-        if (noteTouched == false)
-        {
-            transform.position = origine.transform.position;
-            targetPos = end.transform.position;
-        }
-        else
-        {
-            transform.position = end.transform.position;
-            targetPos = origine.transform.position;
-        }
+        transform.position = origine.transform.position;
     }
     
     private void FixedUpdate()
     {
-        if (loop)
-        {
-            if (Vector3.Distance(transform.position, targetPos) < 0.1f && targetPos == end.transform.position)
-            {
-                targetPos = origine.transform.position;
-            }
-            else if (Vector3.Distance(transform.position, targetPos) < 0.1f && targetPos == origine.transform.position)
-            {
-                targetPos = end.transform.position;
-            }
-        }
         if (objectActive)
         {
             transform.position = Vector3.MoveTowards(transform.position, targetPos, speed * Time.deltaTime);
+        }
+    }
+
+    private int CurrentPoint()
+    {
+        float distanceMin = 10000;
+        int nearestPointIndex = 0;
+        for (int i = 0; i < points.Count; i++)
+        {
+            float dist = Vector2.Distance(points[i].transform.position, transform.position);
+            if (dist < distanceMin)
+            {
+                distanceMin = dist;
+                nearestPointIndex = i;
+            }
+        }
+        return nearestPointIndex;
+    }
+
+    private void ChangeTargetPoint(string typeProjectile)
+    {
+        int currentPoint = CurrentPoint();
+        if (typeProjectile == "Re")
+        {
+            if (currentPoint + 1 < points.Count)
+            {
+                targetPos = points[currentPoint + 1].transform.position;
+            }
+            else
+            {
+                Debug.Log("ct le dernier point");
+                return;
+            }
+        }
+        else if (typeProjectile == "Do")
+        {
+            if (currentPoint - 1 < points.Count)
+            {
+                targetPos = points[currentPoint - 1].transform.position;
+            }
+            else
+            {
+                Debug.Log("ct le premier point");
+                return;
+            }
         }
     }
     
@@ -52,17 +77,28 @@ public class PlateformeMouvante : MonoBehaviour
         }
         else if (other.gameObject.layer == LayerMask.NameToLayer("Projectile"))
         {
-            if (other.gameObject.CompareTag("ReProjectile") && noteTouched == false)
+            if (other.gameObject.CompareTag("ReProjectile"))
             {
-                targetPos =  end.transform.position;
-                noteTouched = true;
+                ChangeTargetPoint("Re");
             }
-            else if (other.gameObject.CompareTag("DoProjectile") && noteTouched == true)
+            else if(other.gameObject.CompareTag("DoProjectile"))
             {
-                targetPos = origine.transform.position;
-                noteTouched = false;
+                ChangeTargetPoint("Do");
             }
+
             objectActive = true;
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.gameObject.CompareTag("ReZone"))
+        {
+            ChangeTargetPoint("Re");
+        }
+        else if(other.gameObject.CompareTag("DoZone"))
+        {
+            ChangeTargetPoint("Do");
         }
     }
 
