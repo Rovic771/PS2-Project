@@ -57,7 +57,7 @@ public class PlateformeMouvante : MonoBehaviour
         }
         else if (typeProjectile == "Do")
         {
-            if (currentPoint - 1 < points.Count)
+            if (currentPoint - 1 < points.Count && currentPoint - 1 >= 0)
             {
                 targetPos = points[currentPoint - 1].transform.position;
             }
