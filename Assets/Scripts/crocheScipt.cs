@@ -27,16 +27,6 @@ public class crocheScipt : MonoBehaviour
         viseurPos = GameObject.FindWithTag("Viseur").transform.position;
         directionTir = (viseurPos - player.transform.position).normalized;
         StartCoroutine(DestroyTime());
-        if (playerController.zoneActive)
-        {
-            Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Projectile"), LayerMask.NameToLayer("DoObject"), true);
-            Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Projectile"), LayerMask.NameToLayer("ReObject"), false);
-        }
-        else
-        {
-            Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Projectile"), LayerMask.NameToLayer("DoObject"), false);
-            Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Projectile"), LayerMask.NameToLayer("ReObject"), true);
-        }
     }
 
     public void FixedUpdate()
@@ -48,7 +38,14 @@ public class crocheScipt : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Destructable"))
         {
-            Destroy(other.gameObject);
+            if (gameObject.CompareTag("DoProjectile") && other.gameObject.layer == LayerMask.NameToLayer("DoObject"))
+            {
+                Destroy(other.gameObject);
+            }
+            else if (gameObject.CompareTag("ReProjectile") && other.gameObject.layer == LayerMask.NameToLayer("ReObject"))
+            {
+                Destroy(other.gameObject);
+            }
         }
         Destroy(gameObject);
     }
