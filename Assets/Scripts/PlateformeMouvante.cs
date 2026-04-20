@@ -14,6 +14,7 @@ public class PlateformeMouvante : MonoBehaviour
     private void Start()
     {
         transform.position = origine.transform.position;
+        
     }
     
     private void FixedUpdate()
@@ -73,7 +74,15 @@ public class PlateformeMouvante : MonoBehaviour
     {
         if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
         {
-            other.gameObject.transform.SetParent(transform);
+            PlayerController.currentPlateform.Add(gameObject);
+            if (PlayerController.currentPlateform.Count == 1)
+            {
+                other.gameObject.transform.SetParent(PlayerController.currentPlateform[0].transform);
+            }
+            else
+            {
+                other.gameObject.transform.SetParent(PlayerController.currentPlateform[PlayerController.currentPlateform.Count - 1].transform);
+            }
         }
         else if (other.gameObject.layer == LayerMask.NameToLayer("Projectile"))
         {
@@ -106,7 +115,16 @@ public class PlateformeMouvante : MonoBehaviour
     {
         if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
         {
-            other.gameObject.transform.SetParent(null);
+            PlayerController.currentPlateform.Remove(gameObject); 
+
+            if (PlayerController.currentPlateform.Count > 0)
+            {
+                other.gameObject.transform.SetParent(PlayerController.currentPlateform[PlayerController.currentPlateform.Count - 1].transform);
+            }
+            else
+            {
+                other.gameObject.transform.SetParent(null);
+            }
         }
     }
 }

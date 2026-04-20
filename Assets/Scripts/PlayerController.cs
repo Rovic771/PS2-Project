@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using NUnit.Framework;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -48,6 +49,7 @@ public class PlayerController : MonoBehaviour
     private bool isWalking;
     public bool isJump;
     private float coyoteTimer;
+    public static List<GameObject> currentPlateform = new List<GameObject>();
 
     IEnumerator ShootDelay()
     {
