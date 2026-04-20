@@ -1,10 +1,12 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using NUnit.Framework;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Debug = UnityEngine.Debug;
 using Quaternion = UnityEngine.Quaternion;
 using Vector2 = UnityEngine.Vector2;
 using Vector3 = UnityEngine.Vector3;
@@ -20,6 +22,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float forceWallJumpY = 5f;
     [SerializeField] private Rigidbody2D rb;
     [SerializeField] private float coyoteTime = 0.1f;
+    [SerializeField] private float coyoteTimeWallJump = 0.5f;
     [SerializeField] private Transform wallCheck;
     [SerializeField] private LayerMask wallLayer;
     [SerializeField] private Transform groundCheck;
@@ -36,6 +39,7 @@ public class PlayerController : MonoBehaviour
     private Vector2 inputRotation;
     public bool isGround; 
     public bool isWall;
+    private bool wasWalled;
     private bool isFacingRight = true;
     private bool isFacingRightAim = true;
     public bool canDoubleJump;
@@ -50,6 +54,7 @@ public class PlayerController : MonoBehaviour
     public bool isJump;
     private float coyoteTimer;
     public static List<GameObject> currentPlateform = new List<GameObject>();
+    private bool canFlip = true;
 
     IEnumerator ShootDelay()
     {
@@ -91,13 +96,12 @@ public class PlayerController : MonoBehaviour
             {
                 rb.AddForce(Vector2.up * jumpStrength, ForceMode2D.Impulse);
                 isGround = false;
-                Debug.Log("je saute");
                 coyoteTimer = 0;
                 isJump = true;
             }
         else
         {
-            if (IsWalled())
+            if (IsWalled() || coyoteTimer > 0 && wasWalled)
             {
                 Vector2 Force = new Vector2(0,0);
                 rb.linearVelocity = Vector2.zero;
@@ -109,8 +113,10 @@ public class PlayerController : MonoBehaviour
                 {
                     Force = new Vector2(transform.localScale.x * forceWallJumpX, forceWallJumpY);
                 }
-                Flip();
+                //Flip();
                 rb.AddForce(Force, ForceMode2D.Impulse); ;
+                coyoteTimer = 0;
+                isJump = true;
                 Debug.Log("WallJump");
             }
             if (canDoubleJump && !isGround && !isWall)
@@ -213,6 +219,7 @@ public class PlayerController : MonoBehaviour
     
     public void FixedUpdate()
     {
+        //Debug.Log(coyoteTimer);
         if (IsGrounded() && !isJump)
         {
             coyoteTimer = coyoteTime;
@@ -225,6 +232,22 @@ public class PlayerController : MonoBehaviour
             if (coyoteTimer <= 0)
             {
                 isGround = false;
+            }
+        }
+
+        if (IsWalled() && !wasWalled)
+        {
+            coyoteTimer = coyoteTimeWallJump;
+            wasWalled = true;
+            canFlip = false;
+        }
+        else
+        {
+            coyoteTimer -= Time.deltaTime;
+            if (coyoteTimer <= 0)
+            {
+                canFlip = true;
+                wasWalled = false;
             }
         }
 
@@ -244,8 +267,6 @@ public class PlayerController : MonoBehaviour
         
         if (isGround)
         {
-            //Debug.Log("Vitesse X" + rb.linearVelocity.x);
-
             if (Mathf.Abs(moveInput.x) > 0.05f) 
             {
                 rb.linearVelocity = new Vector2(moveInput.x * speed, rb.linearVelocity.y);
@@ -257,7 +278,6 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            //Debug.Log("Vitesse Y" + rb.linearVelocity.y);
             if (Mathf.Abs(moveInput.x) > 0.05f && Mathf.Abs(rb.linearVelocity.x) < airControlLimit)
             {
                 rb.AddForce(new Vector2(moveInput.x * airControlIntensity, 0));
@@ -278,17 +298,20 @@ public class PlayerController : MonoBehaviour
 
     private void Flip()
     {
-        if (isGround)
+        if (canFlip)
         {
-            rb.linearVelocity= new Vector2(0, rb.linearVelocity.y);
+            if (isGround)
+            {
+                rb.linearVelocity= new Vector2(0, rb.linearVelocity.y);
+            }
+            else
+            {
+                rb.linearVelocity = new Vector2(rb.linearVelocity.x, rb.linearVelocity.y);
+            }
+            isFacingRight = !isFacingRight;
+            _flipValue += 180;
+            transform.rotation = Quaternion.Euler(0, _flipValue, 0);
         }
-        else
-        {
-            rb.linearVelocity = new Vector2(rb.linearVelocity.x, rb.linearVelocity.y);
-        }
-        isFacingRight = !isFacingRight;
-        _flipValue += 180;
-        transform.rotation = Quaternion.Euler(0, _flipValue, 0);
     }
 
     private bool IsWalled()
@@ -298,7 +321,7 @@ public class PlayerController : MonoBehaviour
 
     private bool IsGrounded()
     {
-        return Physics2D.OverlapBox(groundCheck.position, new Vector2(1f, 0.05f), 0f, groundLayer);
+        return Physics2D.OverlapBox(groundCheck.position, new Vector2(1f, 0.2f), 0f, groundLayer);
     }
 
     private void WallSlide()
