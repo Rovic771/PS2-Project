@@ -44,7 +44,7 @@ public class PlayerController : MonoBehaviour
     private float _lastAimAngle;
     public bool canShoot = true;
     float _flipValue = 0;
-    private Vector3 posInit;
+    public Vector3 posInit;
     public bool zoneActive = true; // true c do et false c re
     private bool isWalking;
     public bool isJump;
@@ -117,6 +117,7 @@ public class PlayerController : MonoBehaviour
             {
                 {
                     Debug.Log("Double Jump");
+                    rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0);
                     rb.AddForce(Vector2.up * doubleJumpStrength, ForceMode2D.Impulse);
                     canDoubleJump = false;
                 }
@@ -125,13 +126,10 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void DoProtectionZone(InputAction.CallbackContext context)
+    public void DoShoot(InputAction.CallbackContext context)
     {
         if (context.performed)
         {
-            zoneActive = true;
-            reZone.SetActive(false);
-            doZone.SetActive(true);
             if (canShoot)
             {
                 Instantiate(doProjectile, transform.position, viseurStartProjectile.transform.rotation);
@@ -139,7 +137,30 @@ public class PlayerController : MonoBehaviour
                 canShoot = false;
                 StartCoroutine(ShootDelay());
             }
+        }
+    }
 
+    public void ReShoot(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            if(canShoot)
+            {
+                Instantiate(reProjectile, transform.position, viseurStartProjectile.transform.rotation);
+                Debug.Log("Re tiré");
+                canShoot = false;
+                StartCoroutine(ShootDelay());
+            }
+        }
+    }
+    
+    public void DoProtectionZone(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            zoneActive = true;
+            reZone.SetActive(false);
+            doZone.SetActive(true);
         }
         if (context.canceled) 
         {
@@ -154,13 +175,6 @@ public class PlayerController : MonoBehaviour
             zoneActive = false;
             doZone.SetActive(false);
             reZone.SetActive(true);
-            if(canShoot)
-            {
-                Instantiate(reProjectile, transform.position, viseurStartProjectile.transform.rotation);
-                Debug.Log("Re tiré");
-                canShoot = false;
-                StartCoroutine(ShootDelay());
-            }
         }
         if (context.canceled)
         {
