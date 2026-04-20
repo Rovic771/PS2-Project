@@ -1,4 +1,8 @@
+using System;
 using System.Collections;
+using System.Collections.Generic;
+using NUnit.Framework;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Quaternion = UnityEngine.Quaternion;
@@ -43,8 +47,9 @@ public class PlayerController : MonoBehaviour
     private Vector3 posInit;
     public bool zoneActive = true; // true c do et false c re
     private bool isWalking;
-    private bool isJump;
+    public bool isJump;
     private float coyoteTimer;
+    public static List<GameObject> currentPlateform = new List<GameObject>();
 
     IEnumerator ShootDelay()
     {
@@ -86,7 +91,8 @@ public class PlayerController : MonoBehaviour
             {
                 rb.AddForce(Vector2.up * jumpStrength, ForceMode2D.Impulse);
                 isGround = false;
-                Debug.Log("isGround" + isGround);
+                Debug.Log("je saute");
+                coyoteTimer = 0;
                 isJump = true;
             }
         else
@@ -126,6 +132,14 @@ public class PlayerController : MonoBehaviour
             zoneActive = true;
             reZone.SetActive(false);
             doZone.SetActive(true);
+            if (canShoot)
+            {
+                Instantiate(doProjectile, transform.position, viseurStartProjectile.transform.rotation);
+                Debug.Log("Do tiré");
+                canShoot = false;
+                StartCoroutine(ShootDelay());
+            }
+
         }
         if (context.canceled) 
         {
@@ -140,6 +154,13 @@ public class PlayerController : MonoBehaviour
             zoneActive = false;
             doZone.SetActive(false);
             reZone.SetActive(true);
+            if(canShoot)
+            {
+                Instantiate(reProjectile, transform.position, viseurStartProjectile.transform.rotation);
+                Debug.Log("Re tiré");
+                canShoot = false;
+                StartCoroutine(ShootDelay());
+            }
         }
         if (context.canceled)
         {
@@ -171,19 +192,6 @@ public class PlayerController : MonoBehaviour
                         Flip();
                     }
                 }
-                if(canShoot)
-                {
-                    if (zoneActive)
-                    {
-                        Instantiate(doProjectile, transform.position, viseurStartProjectile.transform.rotation);
-                    }
-                    else
-                    {
-                        Instantiate(reProjectile, transform.position, viseurStartProjectile.transform.rotation);
-                    }
-                    canShoot = false;
-                    StartCoroutine(ShootDelay());
-                }
             }
             viseurAncragePoint.transform.rotation = Quaternion.Euler(0, 0, _currentAimAngle);
         }
@@ -191,24 +199,24 @@ public class PlayerController : MonoBehaviour
     
     public void FixedUpdate()
     {
-        
-        if (IsGrounded())
+        if (IsGrounded() && !isJump)
         {
-            Debug.Log("isGround" + isGround);
             coyoteTimer = coyoteTime;
             isGround = true;
             canDoubleJump = true;
-            isJump = false;
         }
-        else if(!isJump)
+        else
         {
-            Debug.Log("isGround" + isGround);
             coyoteTimer -= Time.deltaTime;
             if (coyoteTimer <= 0)
             {
-                Debug.Log("isGround" + isGround);
                 isGround = false;
             }
+        }
+
+        if (rb.linearVelocity.y <= 0)
+        {
+            isJump = false;
         }
 
         if (IsWalled())
@@ -253,9 +261,6 @@ public class PlayerController : MonoBehaviour
         }
         WallSlide();
     }
-    
-
-
 
     private void Flip()
     {
@@ -279,7 +284,7 @@ public class PlayerController : MonoBehaviour
 
     private bool IsGrounded()
     {
-        return Physics2D.OverlapBox(groundCheck.position, new Vector2(0.4f, 0.1f), 0f, groundLayer);
+        return Physics2D.OverlapBox(groundCheck.position, new Vector2(1f, 0.05f), 0f, groundLayer);
     }
 
     private void WallSlide()
@@ -299,23 +304,6 @@ public class PlayerController : MonoBehaviour
     {
         transform.position = posInit;
         rb.linearVelocity = Vector2.zero;
-    }
-
-    [SerializeField] private float test = 2f;
-    
-    private void OnDrawGizmosSelected()
-    {
-        if (groundCheck != null)
-        {
-            Gizmos.color = Color.red;
-            Gizmos.DrawWireCube(groundCheck.position, new Vector3(1f, 0.1f,0)); 
-        }
-        
-        if (wallCheck != null)
-        {
-            Gizmos.color = Color.blue;
-            Gizmos.DrawWireCube(wallCheck.position, new Vector3(0.2f, 2, 0));
-        }
     }
 }
 
