@@ -44,7 +44,7 @@ public class PlayerController : MonoBehaviour
     private float _lastAimAngle;
     public bool canShoot = true;
     float _flipValue = 0;
-    private Vector3 posInit;
+    public Vector3 posInit;
     public bool zoneActive = true; // true c do et false c re
     private bool isWalking;
     public bool isJump;
