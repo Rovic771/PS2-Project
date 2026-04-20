@@ -117,6 +117,7 @@ public class PlayerController : MonoBehaviour
             {
                 {
                     Debug.Log("Double Jump");
+                    rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0);
                     rb.AddForce(Vector2.up * doubleJumpStrength, ForceMode2D.Impulse);
                     canDoubleJump = false;
                 }
