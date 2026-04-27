@@ -7,9 +7,8 @@ public class PlateformeMouvante : MonoBehaviour
     [SerializeField] private GameObject origine;
     [SerializeField] List<GameObject> points = new List<GameObject>();
     [SerializeField] private float speed = 1;
-    [SerializeField] public bool objectActive = true; 
+    [SerializeField] public bool objectActive = false; 
     private Vector3 targetPos;
-    //public bool noteTouched; // false ça veut dire que c les projectile Re qui vont activer et vice versa
 
     private void Start()
     {
@@ -21,23 +20,32 @@ public class PlateformeMouvante : MonoBehaviour
         if (objectActive)
         {
             transform.position = Vector3.MoveTowards(transform.position, targetPos, speed * Time.deltaTime);
+            if (Vector3.Distance(transform.position, targetPos) < 0.05f)
+            {
+                objectActive = false;
+            }
         }
     }
 
     private int CurrentPoint()
     {
-        float distanceMin = 10000;
-        int nearestPointIndex = 0;
-        for (int i = 0; i < points.Count; i++)
+        if (!objectActive)
         {
-            float dist = Vector2.Distance(points[i].transform.position, transform.position);
-            if (dist < distanceMin)
+            float distanceMin = 10000;
+            int nearestPointIndex = 0;
+            for (int i = 0; i < points.Count; i++)
             {
-                distanceMin = dist;
-                nearestPointIndex = i;
+                float dist = Vector2.Distance(points[i].transform.position, transform.position);
+                if (dist < distanceMin)
+                {
+                    distanceMin = dist;
+                    nearestPointIndex = i;
+                }
             }
+            return nearestPointIndex;
         }
-        return nearestPointIndex;
+
+        return -1;
     }
 
     private void ChangeTargetPoint(string typeProjectile)
@@ -48,32 +56,41 @@ public class PlateformeMouvante : MonoBehaviour
             if (currentPoint + 1 < points.Count)
             {
                 targetPos = points[currentPoint + 1].transform.position;
+                objectActive = true;
             }
             else
             {
-                Debug.Log("ct le dernier point");
                 return;
             }
         }
         else if (typeProjectile == "Do")
         {
-            if (currentPoint - 1 < points.Count)
+            if (currentPoint - 1 >= 0)
             {
                 targetPos = points[currentPoint - 1].transform.position;
+                objectActive = true;
             }
             else
             {
-                Debug.Log("ct le premier point");
                 return;
             }
         }
+        Debug.Log("TargetPos objet " + targetPos);
     }
     
     void OnCollisionEnter2D(Collision2D other)
     {
         if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
         {
-            other.gameObject.transform.SetParent(transform);
+            PlayerController.currentPlateform.Add(gameObject);
+            if (PlayerController.currentPlateform.Count == 1)
+            {
+                other.gameObject.transform.SetParent(PlayerController.currentPlateform[0].transform);
+            }
+            else
+            {
+                other.gameObject.transform.SetParent(PlayerController.currentPlateform[PlayerController.currentPlateform.Count - 1].transform);
+            }
         }
         else if (other.gameObject.layer == LayerMask.NameToLayer("Projectile"))
         {
@@ -85,8 +102,6 @@ public class PlateformeMouvante : MonoBehaviour
             {
                 ChangeTargetPoint("Do");
             }
-
-            objectActive = true;
         }
     }
 
@@ -106,7 +121,16 @@ public class PlateformeMouvante : MonoBehaviour
     {
         if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
         {
-            other.gameObject.transform.SetParent(null);
+            PlayerController.currentPlateform.Remove(gameObject); 
+
+            if (PlayerController.currentPlateform.Count > 0)
+            {
+                other.gameObject.transform.SetParent(PlayerController.currentPlateform[PlayerController.currentPlateform.Count - 1].transform);
+            }
+            else
+            {
+                other.gameObject.transform.SetParent(null);
+            }
         }
     }
 }
