@@ -9,10 +9,15 @@ TagManager:
   - crocheSpawn
   - Viseur
   - Destructable
-  - DoZone
-  - ReZone
   - DoProjectile
   - ReProjectile
+  - DoZone
+  - ReZone
+<<<<<<< HEAD
+  - DoProjectile
+  - ReProjectile
+=======
+>>>>>>> aksel
   layers:
   - Default
   - TransparentFX
@@ -23,15 +28,23 @@ TagManager:
   - Wall
   - ground
   - Player
-  - 
+  - Projectile
   - DoObject
   - ReObject
   - Ground Plateform
+<<<<<<< HEAD
   - Enemy
   - DoProjectileAlly
   - ReProjectileAlly
   - DoProjectileEnemy
   - ReProjectileEnemy
+=======
+  - 
+  - 
+  - 
+  - 
+  - 
+>>>>>>> aksel
   - 
   - 
   - 
@@ -47,8 +60,14 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: background
+    uniqueID: 2761604325
+    locked: 0
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: foreground
+    uniqueID: 3603230957
     locked: 0
   m_RenderingLayers:
   - Default
