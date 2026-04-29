@@ -53,11 +53,11 @@ public class crocheScipt : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Destructable"))
         {
-            if (gameObject.layer == LayerMask.NameToLayer("DoProjectile") && other.gameObject.layer == LayerMask.NameToLayer("DoObject"))
+            if (gameObject.CompareTag("DoProjectile")  && other.gameObject.layer == LayerMask.NameToLayer("DoObject"))
             {
                 Destroy(other.gameObject);
             }
-            else if (gameObject.layer == LayerMask.NameToLayer("ReProjectile") && other.gameObject.layer == LayerMask.NameToLayer("ReObject"))
+            else if (gameObject.CompareTag("ReProjectile") && other.gameObject.layer == LayerMask.NameToLayer("ReObject"))
             {
                 Destroy(other.gameObject);
             }
