@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 public abstract class Enemy : MonoBehaviour
@@ -8,6 +9,8 @@ public abstract class Enemy : MonoBehaviour
     [SerializeField] private GameObject patternPointA;
     [SerializeField] private GameObject patternPointB;
     [SerializeField] public EnemyType typeEnemy;
+    [SerializeField] private float stunTime = 5;
+    [SerializeField] private GameObject stunIndicator;
     private Vector2 targetPos;
     public bool playerDetected = false;
     public GameObject player; 
@@ -15,6 +18,13 @@ public abstract class Enemy : MonoBehaviour
     public float damage;
     public float speed;
     public Rigidbody2D rbEnemy;
+    public bool isStun = false;
+
+    private IEnumerator StunTime()
+    {
+        yield return new WaitForSeconds(stunTime);
+        Stun();
+    }
     
     public enum EnemyType { Do, Re }
     private void Start()
@@ -42,17 +52,27 @@ public abstract class Enemy : MonoBehaviour
         }
     }
     
-    public void Die()
+    public void Stun()
     {
-        if (life <= 0)
+        switch (isStun)
         {
-            Destroy(gameObject);
+            case false:
+                stunIndicator.SetActive(true);
+                isStun = true;
+                StartCoroutine(StunTime());
+                break;
+            
+            case true:
+                stunIndicator.SetActive(false);
+                isStun = false;
+                life = _enemyData.life;
+                break;
         }
     }
 
     public virtual void FixedUpdate()
     {
-        if (!playerDetected)
+        if (!playerDetected && !isStun)
         {
             if (Vector2.Distance(transform.position, targetPos) < 1f)
             {
@@ -62,6 +82,21 @@ public abstract class Enemy : MonoBehaviour
             {
                 transform.position = Vector3.MoveTowards(transform.position, targetPos, speed * Time.deltaTime);
             }
+        }
+
+        if (life <= 0 && !isStun)
+        {
+            Stun();
+        }
+    }
+
+    public void OnCollisionEnter2D(Collision2D other)
+    {
+        Debug.Log("Truc touché");
+        if (other.gameObject.layer == LayerMask.NameToLayer("DoProjectileAlly") || other.gameObject.layer == LayerMask.NameToLayer("ReProjectileAlly"))
+        {
+            life--;
+            Debug.Log("life " + life);
         }
     }
 
