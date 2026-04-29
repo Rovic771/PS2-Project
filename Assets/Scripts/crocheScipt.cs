@@ -10,27 +10,37 @@ public class crocheScipt : MonoBehaviour
     [SerializeField] private float timeBeforeDestroy = 3f;
     private Rigidbody2D rbProjectile;
     private Vector2 directionTir;
-    private Collider2D playerCollider;
     
-    public void Launch(Vector2 direction, string tagName = "Projectile")
+    public void Launch(Vector2 direction, bool fromPlayer)
     {
-        if (tagName == "AllyProjectile")
+        if (fromPlayer)
         {
-            Physics2D.IgnoreCollision(GetComponent<Collider2D>(), playerCollider, true);
+            if (gameObject.CompareTag("DoProjectile"))
+            {
+                gameObject.layer = LayerMask.NameToLayer("DoProjectileAlly");
+            }
+            else if (gameObject.CompareTag("ReProjectile"))
+            {
+                gameObject.layer = LayerMask.NameToLayer("ReProjectileAlly");
+            }
         }
         else
         {
-            Debug.Log("BBBBBBBBBBBBBBBBBBBBBBBB");
-            Physics2D.IgnoreCollision(GetComponent<Collider2D>(), playerCollider, false);
+            if (gameObject.CompareTag("DoProjectile"))
+            {
+                gameObject.layer = LayerMask.NameToLayer("DoProjectileEnemy");
+            }
+            else if (gameObject.CompareTag("ReProjectile"))
+            {
+                gameObject.layer = LayerMask.NameToLayer("ReProjectileEnemy");
+            }
         }
-        Debug.Log(tagName);
         directionTir = direction.normalized;
         Destroy(gameObject, timeBeforeDestroy);
     }
 
     public void Awake()
     {
-        playerCollider = GameObject.FindGameObjectWithTag("Player").GetComponent<Collider2D>();
         rbProjectile = GetComponent<Rigidbody2D>();
     }
 
