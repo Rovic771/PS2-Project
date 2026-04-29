@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using NUnit.Framework;
 using Unity.VisualScripting;
+using UnityEditor.Rendering;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Debug = UnityEngine.Debug;
@@ -138,8 +139,10 @@ public class PlayerController : MonoBehaviour
         {
             if (canShoot)
             {
-                Instantiate(doProjectile, transform.position, viseurStartProjectile.transform.rotation);
-                Debug.Log("Do tiré");
+                GameObject proj = Instantiate(doProjectile, viseurAncragePoint.transform.position, Quaternion.identity);
+                Vector2 direction = (viseurStartProjectile.transform.position - viseurAncragePoint.transform.position).normalized;
+                //Physics2D.IgnoreCollision(GetComponent<Collider2D>() , proj.GetComponent<Collider2D>());
+                proj.GetComponent<crocheScipt>().Launch(direction, "AllyProjectile");
                 canShoot = false;
                 StartCoroutine(ShootDelay());
             }
@@ -152,8 +155,10 @@ public class PlayerController : MonoBehaviour
         {
             if(canShoot)
             {
-                Instantiate(reProjectile, transform.position, viseurStartProjectile.transform.rotation);
-                Debug.Log("Re tiré");
+                GameObject proj = Instantiate(reProjectile, viseurAncragePoint.transform.position, Quaternion.identity);
+                Vector2 direction = (viseurStartProjectile.transform.position - viseurAncragePoint.transform.position).normalized;
+                //Physics2D.IgnoreCollision(GetComponent<Collider2D>() , proj.GetComponent<Collider2D>());
+                proj.GetComponent<crocheScipt>().Launch(direction, "AllyProjectile");
                 canShoot = false;
                 StartCoroutine(ShootDelay());
             }
