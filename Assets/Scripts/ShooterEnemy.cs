@@ -9,7 +9,6 @@ public class ShooterEnemy : Enemy
     [SerializeField] private GameObject doProjectile;
     [SerializeField] private GameObject reProjectile;
     [SerializeField] private float shootDelay = 0.5f;
-    public bool playerDetected = false;
 
 
     private IEnumerator ShootDelay()
@@ -43,7 +42,7 @@ public class ShooterEnemy : Enemy
     {
         if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
         {
-            StopCoroutine(ShootDelay());
+            StopAllCoroutines();
         }
     }
 
@@ -54,8 +53,9 @@ public class ShooterEnemy : Enemy
         viseurAncragePoint.transform.rotation = Quaternion.Euler(0, 0, angle);
     }
 
-    private void FixedUpdate()
+    public override void FixedUpdate()
     {
+        base.FixedUpdate();
         switch (playerDetected)
         {
             case true:
