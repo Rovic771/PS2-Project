@@ -25,7 +25,7 @@ public class ShooterEnemy : Enemy
         }
         GameObject proj = Instantiate(projectile, viseurStartProjectile.transform.position, Quaternion.identity);
         Vector2 direction = (viseurStartProjectile.transform.position - viseurAncragePoint.transform.position).normalized;
-        proj.GetComponent<crocheScipt>().Launch(direction);
+        proj.GetComponent<crocheScipt>().Launch(direction, false);
         StartCoroutine(ShootDelay());
     }
     
@@ -43,6 +43,7 @@ public class ShooterEnemy : Enemy
         if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
         {
             StopAllCoroutines();
+            playerDetected = false;
         }
     }
 
