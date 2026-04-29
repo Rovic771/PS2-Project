@@ -92,13 +92,13 @@ public class PlateformeMouvante : MonoBehaviour
                 other.gameObject.transform.SetParent(PlayerController.currentPlateform[PlayerController.currentPlateform.Count - 1].transform);
             }
         }
-        else if (other.gameObject.layer == LayerMask.NameToLayer("Projectile"))
+        else if (other.gameObject.CompareTag("Projectile"))
         {
-            if (other.gameObject.CompareTag("ReProjectile"))
+            if (other.gameObject.layer == LayerMask.NameToLayer("ReProjectile"))
             {
                 ChangeTargetPoint("Re");
             }
-            else if(other.gameObject.CompareTag("DoProjectile"))
+            else if(other.gameObject.layer == LayerMask.NameToLayer("DoProjectile"))
             {
                 ChangeTargetPoint("Do");
             }
