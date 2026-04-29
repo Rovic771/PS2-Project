@@ -11,6 +11,8 @@ TagManager:
   - Destructable
   - DoProjectile
   - ReProjectile
+  - DoZone
+  - ReZone
   layers:
   - Default
   - TransparentFX
@@ -45,8 +47,14 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: background
+    uniqueID: 2761604325
+    locked: 0
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: foreground
+    uniqueID: 3603230957
     locked: 0
   m_RenderingLayers:
   - Default
