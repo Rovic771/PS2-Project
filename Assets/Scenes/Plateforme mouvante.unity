@@ -124,6 +124,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 2701951014786522771, guid: a1e0b992666883549b185a27d6d700f2, type: 3}
   m_PrefabInstance: {fileID: 1931986578}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &211867428 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7050751342872113151, guid: f4a8ce418bf86344b8dc8754ed625a1b, type: 3}
+  m_PrefabInstance: {fileID: 268124128015556984}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &267993388
 GameObject:
   m_ObjectHideFlags: 0
@@ -756,6 +761,11 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 7580399671318338757, guid: f4a8ce418bf86344b8dc8754ed625a1b, type: 3}
   m_PrefabInstance: {fileID: 268124128015556984}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1554501604 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4676106046714801560, guid: f4a8ce418bf86344b8dc8754ed625a1b, type: 3}
+  m_PrefabInstance: {fileID: 268124128015556984}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1768220091
 GameObject:
   m_ObjectHideFlags: 0
@@ -1166,8 +1176,37 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5228828180922620571, guid: f4a8ce418bf86344b8dc8754ed625a1b, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -17.87
+      objectReference: {fileID: 0}
+    - target: {fileID: 5228828180922620571, guid: f4a8ce418bf86344b8dc8754ed625a1b, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.75
+      objectReference: {fileID: 0}
+    - target: {fileID: 7291184491984612187, guid: f4a8ce418bf86344b8dc8754ed625a1b, type: 3}
+      propertyPath: points.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7291184491984612187, guid: f4a8ce418bf86344b8dc8754ed625a1b, type: 3}
+      propertyPath: 'points.Array.data[0]'
+      value: 
+      objectReference: {fileID: 1554501604}
+    - target: {fileID: 7291184491984612187, guid: f4a8ce418bf86344b8dc8754ed625a1b, type: 3}
+      propertyPath: 'points.Array.data[1]'
+      value: 
+      objectReference: {fileID: 211867428}
+    - target: {fileID: 7646516670325672124, guid: f4a8ce418bf86344b8dc8754ed625a1b, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -26.97
+      objectReference: {fileID: 0}
+    - target: {fileID: 7646516670325672124, guid: f4a8ce418bf86344b8dc8754ed625a1b, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -3.42
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 8333035320943274137, guid: f4a8ce418bf86344b8dc8754ed625a1b, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f4a8ce418bf86344b8dc8754ed625a1b, type: 3}

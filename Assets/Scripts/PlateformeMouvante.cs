@@ -9,12 +9,10 @@ public class PlateformeMouvante : MonoBehaviour
     [SerializeField] private float speed = 1;
     [SerializeField] public bool objectActive = true; 
     private Vector3 targetPos;
-    //public bool noteTouched; // false ça veut dire que c les projectile Re qui vont activer et vice versa
 
     private void Start()
     {
         transform.position = origine.transform.position;
-        
     }
     
     private void FixedUpdate()
@@ -49,22 +47,22 @@ public class PlateformeMouvante : MonoBehaviour
             if (currentPoint + 1 < points.Count)
             {
                 targetPos = points[currentPoint + 1].transform.position;
+                objectActive = true;
             }
             else
             {
-                Debug.Log("ct le dernier point");
                 return;
             }
         }
         else if (typeProjectile == "Do")
         {
-            if (currentPoint - 1 < points.Count && currentPoint - 1 >= 0)
+            if (currentPoint - 1 >= 0)
             {
                 targetPos = points[currentPoint - 1].transform.position;
+                objectActive = true;
             }
             else
             {
-                Debug.Log("ct le premier point");
                 return;
             }
         }
@@ -94,8 +92,6 @@ public class PlateformeMouvante : MonoBehaviour
             {
                 ChangeTargetPoint("Do");
             }
-
-            objectActive = true;
         }
     }
 
