@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class crocheScipt : MonoBehaviour
@@ -8,25 +9,29 @@ public class crocheScipt : MonoBehaviour
     [SerializeField] private float speedProjectile = 5f;
     [SerializeField] private float timeBeforeDestroy = 3f;
     private Rigidbody2D rbProjectile;
-    private Vector3 viseurPos;
-    private Vector3 directionTir;
-    private GameObject player;
-    private PlayerController playerController;
-
-    IEnumerator DestroyTime()
-    {
-        yield return new WaitForSeconds(timeBeforeDestroy);
-        Destroy(gameObject);
-    }
+    private Vector2 directionTir;
+    private Collider2D playerCollider;
     
-    public void Start()
+    public void Launch(Vector2 direction, string tagName = "Projectile")
     {
-        player = GameObject.FindWithTag("Player");
-        playerController = player.GetComponent<PlayerController>();
+        if (tagName == "AllyProjectile")
+        {
+            Physics2D.IgnoreCollision(GetComponent<Collider2D>(), playerCollider, true);
+        }
+        else
+        {
+            Debug.Log("BBBBBBBBBBBBBBBBBBBBBBBB");
+            Physics2D.IgnoreCollision(GetComponent<Collider2D>(), playerCollider, false);
+        }
+        Debug.Log(tagName);
+        directionTir = direction.normalized;
+        Destroy(gameObject, timeBeforeDestroy);
+    }
+
+    public void Awake()
+    {
+        playerCollider = GameObject.FindGameObjectWithTag("Player").GetComponent<Collider2D>();
         rbProjectile = GetComponent<Rigidbody2D>();
-        viseurPos = GameObject.FindWithTag("Viseur").transform.position;
-        directionTir = (viseurPos - player.transform.position).normalized;
-        StartCoroutine(DestroyTime());
     }
 
     public void FixedUpdate()
@@ -38,15 +43,17 @@ public class crocheScipt : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Destructable"))
         {
-            if (gameObject.CompareTag("DoProjectile") && other.gameObject.layer == LayerMask.NameToLayer("DoObject"))
+            if (gameObject.layer == LayerMask.NameToLayer("DoProjectile") && other.gameObject.layer == LayerMask.NameToLayer("DoObject"))
             {
                 Destroy(other.gameObject);
             }
-            else if (gameObject.CompareTag("ReProjectile") && other.gameObject.layer == LayerMask.NameToLayer("ReObject"))
+            else if (gameObject.layer == LayerMask.NameToLayer("ReProjectile") && other.gameObject.layer == LayerMask.NameToLayer("ReObject"))
             {
                 Destroy(other.gameObject);
             }
         }
+
+        
         Destroy(gameObject);
     }
 }
