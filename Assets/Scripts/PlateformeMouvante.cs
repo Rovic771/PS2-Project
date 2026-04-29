@@ -7,7 +7,7 @@ public class PlateformeMouvante : MonoBehaviour
     [SerializeField] private GameObject origine;
     [SerializeField] List<GameObject> points = new List<GameObject>();
     [SerializeField] private float speed = 1;
-    [SerializeField] public bool objectActive = true; 
+    [SerializeField] public bool objectActive = false; 
     private Vector3 targetPos;
 
     private void Start()
@@ -20,23 +20,32 @@ public class PlateformeMouvante : MonoBehaviour
         if (objectActive)
         {
             transform.position = Vector3.MoveTowards(transform.position, targetPos, speed * Time.deltaTime);
+            if (Vector3.Distance(transform.position, targetPos) < 0.05f)
+            {
+                objectActive = false;
+            }
         }
     }
 
     private int CurrentPoint()
     {
-        float distanceMin = 10000;
-        int nearestPointIndex = 0;
-        for (int i = 0; i < points.Count; i++)
+        if (!objectActive)
         {
-            float dist = Vector2.Distance(points[i].transform.position, transform.position);
-            if (dist < distanceMin)
+            float distanceMin = 10000;
+            int nearestPointIndex = 0;
+            for (int i = 0; i < points.Count; i++)
             {
-                distanceMin = dist;
-                nearestPointIndex = i;
+                float dist = Vector2.Distance(points[i].transform.position, transform.position);
+                if (dist < distanceMin)
+                {
+                    distanceMin = dist;
+                    nearestPointIndex = i;
+                }
             }
+            return nearestPointIndex;
         }
-        return nearestPointIndex;
+
+        return -1;
     }
 
     private void ChangeTargetPoint(string typeProjectile)
@@ -66,6 +75,7 @@ public class PlateformeMouvante : MonoBehaviour
                 return;
             }
         }
+        Debug.Log("TargetPos objet " + targetPos);
     }
     
     void OnCollisionEnter2D(Collision2D other)

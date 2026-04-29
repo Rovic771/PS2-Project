@@ -138,8 +138,9 @@ public class PlayerController : MonoBehaviour
         {
             if (canShoot)
             {
-                Instantiate(doProjectile, transform.position, viseurStartProjectile.transform.rotation);
-                Debug.Log("Do tiré");
+                GameObject proj = Instantiate(doProjectile, viseurStartProjectile.transform.position, Quaternion.identity);
+                Vector2 direction = (viseurStartProjectile.transform.position - viseurAncragePoint.transform.position).normalized;
+                proj.GetComponent<crocheScipt>().Launch(direction);
                 canShoot = false;
                 StartCoroutine(ShootDelay());
             }
@@ -152,8 +153,9 @@ public class PlayerController : MonoBehaviour
         {
             if(canShoot)
             {
-                Instantiate(reProjectile, transform.position, viseurStartProjectile.transform.rotation);
-                Debug.Log("Re tiré");
+                GameObject proj = Instantiate(reProjectile, viseurStartProjectile.transform.position, Quaternion.identity);
+                Vector2 direction = (viseurStartProjectile.transform.position - viseurAncragePoint.transform.position).normalized;
+                proj.GetComponent<crocheScipt>().Launch(direction);
                 canShoot = false;
                 StartCoroutine(ShootDelay());
             }
