@@ -141,8 +141,7 @@ public class PlayerController : MonoBehaviour
             {
                 GameObject proj = Instantiate(doProjectile, viseurAncragePoint.transform.position, Quaternion.identity);
                 Vector2 direction = (viseurStartProjectile.transform.position - viseurAncragePoint.transform.position).normalized;
-                //Physics2D.IgnoreCollision(GetComponent<Collider2D>() , proj.GetComponent<Collider2D>());
-                proj.GetComponent<crocheScipt>().Launch(direction, "AllyProjectile");
+                proj.GetComponent<crocheScipt>().Launch(direction, true);
                 canShoot = false;
                 StartCoroutine(ShootDelay());
             }
@@ -157,8 +156,7 @@ public class PlayerController : MonoBehaviour
             {
                 GameObject proj = Instantiate(reProjectile, viseurAncragePoint.transform.position, Quaternion.identity);
                 Vector2 direction = (viseurStartProjectile.transform.position - viseurAncragePoint.transform.position).normalized;
-                //Physics2D.IgnoreCollision(GetComponent<Collider2D>() , proj.GetComponent<Collider2D>());
-                proj.GetComponent<crocheScipt>().Launch(direction, "AllyProjectile");
+                proj.GetComponent<crocheScipt>().Launch(direction, true);
                 canShoot = false;
                 StartCoroutine(ShootDelay());
             }
