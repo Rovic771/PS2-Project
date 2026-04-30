@@ -19,6 +19,11 @@ public abstract class Enemy : MonoBehaviour
     public float speed;
     public Rigidbody2D rbEnemy;
     public bool isStun = false;
+    
+    [Header("Raycast")]
+    [SerializeField] Color rayColor = Color.green;
+    [SerializeField] private Transform rayCastOrigin;
+    [SerializeField] private LayerMask whatToHit;
 
     private IEnumerator StunTime()
     {
@@ -88,6 +93,28 @@ public abstract class Enemy : MonoBehaviour
         {
             Stun();
         }
+    }
+    
+    protected bool TestIfWall()
+    {
+        if (player == null || rayCastOrigin == null) return true;
+        
+        Vector2 origin = rayCastOrigin.position;
+        Vector2 target = player.transform.position;
+        Vector2 direction = target - origin;
+        float distance = direction.magnitude; 
+        RaycastHit2D hit = Physics2D.Raycast(origin, direction.normalized, distance, whatToHit);
+        Debug.DrawRay(origin, direction.normalized * distance, rayColor, 0.1f);
+        if (hit.collider != null)
+        {
+            if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Player"))
+            {
+                return false;
+            }
+            Debug.Log("Bloqué par : " + hit.collider.name);
+        }
+
+        return true;
     }
 
     public void OnCollisionEnter2D(Collision2D other)

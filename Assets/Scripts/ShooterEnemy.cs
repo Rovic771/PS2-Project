@@ -28,10 +28,19 @@ public class ShooterEnemy : Enemy
         proj.GetComponent<crocheScipt>().Launch(direction, false);
         StartCoroutine(ShootDelay());
     }
-    
+
+    public void OnTriggerStay2D(Collider2D other)
+    {
+        if (other.gameObject.layer == LayerMask.NameToLayer("Player") && !isStun && !TestIfWall())
+        {
+            playerDetected = true;
+        }
+        else playerDetected = false;
+    }
+
     public override void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.gameObject.layer == LayerMask.NameToLayer("Player") && !isStun)
+        if (other.gameObject.layer == LayerMask.NameToLayer("Player") && !isStun && !TestIfWall())
         {
             playerDetected = true;
             StartCoroutine(ShootDelay());
