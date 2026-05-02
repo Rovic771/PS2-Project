@@ -80,7 +80,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: -1
   m_MaskInteraction: 0
   m_Sprite: {fileID: 1167958786, guid: e744357cfce973b4f81f75916626013d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -922,13 +922,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: cheminee_fine
       objectReference: {fileID: 0}
+    - target: {fileID: 4014415438698681921, guid: c58c77644de0ae742aa7893012ff2498, type: 3}
+      propertyPath: m_SortingOrder
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5916690249030850575, guid: c58c77644de0ae742aa7893012ff2498, type: 3}
+      propertyPath: m_SortingOrder
+      value: -1
+      objectReference: {fileID: 0}
     - target: {fileID: 6606081694902623376, guid: c58c77644de0ae742aa7893012ff2498, type: 3}
       propertyPath: m_LocalPosition.x
       value: -78.17847
       objectReference: {fileID: 0}
     - target: {fileID: 6606081694902623376, guid: c58c77644de0ae742aa7893012ff2498, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.54048157
+      value: -0.612
       objectReference: {fileID: 0}
     - target: {fileID: 6606081694902623376, guid: c58c77644de0ae742aa7893012ff2498, type: 3}
       propertyPath: m_LocalPosition.z
@@ -961,6 +969,14 @@ PrefabInstance:
     - target: {fileID: 6606081694902623376, guid: c58c77644de0ae742aa7893012ff2498, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7783598854282223601, guid: c58c77644de0ae742aa7893012ff2498, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.006
+      objectReference: {fileID: 0}
+    - target: {fileID: 7783598854282223601, guid: c58c77644de0ae742aa7893012ff2498, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.518
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1292,11 +1308,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 232619475973879517, guid: bd1b0bce94d548e4d96d8c151bc6eb14, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.24005508
+      value: -0.239
       objectReference: {fileID: 0}
     - target: {fileID: 232619475973879517, guid: bd1b0bce94d548e4d96d8c151bc6eb14, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2.8
+      value: 3.007
       objectReference: {fileID: 0}
     - target: {fileID: 232619475973879517, guid: bd1b0bce94d548e4d96d8c151bc6eb14, type: 3}
       propertyPath: m_LocalPosition.z
@@ -1330,9 +1346,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: -90
       objectReference: {fileID: 0}
+    - target: {fileID: 4405300725989765411, guid: bd1b0bce94d548e4d96d8c151bc6eb14, type: 3}
+      propertyPath: m_SortingOrder
+      value: -2
+      objectReference: {fileID: 0}
     - target: {fileID: 6772498118837264542, guid: bd1b0bce94d548e4d96d8c151bc6eb14, type: 3}
       propertyPath: m_Name
       value: smoke_cheminee
+      objectReference: {fileID: 0}
+    - target: {fileID: 7991329391678336064, guid: bd1b0bce94d548e4d96d8c151bc6eb14, type: 3}
+      propertyPath: InitialModule.gravityModifier.scalar
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1798,6 +1822,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 3087702324172014675}
     m_Modifications:
+    - target: {fileID: 780719759135328987, guid: 9e45cf27385b24a43997bcc8f41dbe98, type: 3}
+      propertyPath: m_SortingOrder
+      value: -1
+      objectReference: {fileID: 0}
     - target: {fileID: 1709918192039820875, guid: 9e45cf27385b24a43997bcc8f41dbe98, type: 3}
       propertyPath: m_Name
       value: cheminee_large
@@ -1808,7 +1836,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2794318886350272055, guid: 9e45cf27385b24a43997bcc8f41dbe98, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 13.024826
+      value: 12.88
       objectReference: {fileID: 0}
     - target: {fileID: 2794318886350272055, guid: 9e45cf27385b24a43997bcc8f41dbe98, type: 3}
       propertyPath: m_LocalPosition.z
@@ -1841,6 +1869,22 @@ PrefabInstance:
     - target: {fileID: 2794318886350272055, guid: 9e45cf27385b24a43997bcc8f41dbe98, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4523699156918015201, guid: 9e45cf27385b24a43997bcc8f41dbe98, type: 3}
+      propertyPath: m_SortingOrder
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4574668714927087033, guid: 9e45cf27385b24a43997bcc8f41dbe98, type: 3}
+      propertyPath: m_SortingOrder
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6433033775607012865, guid: 9e45cf27385b24a43997bcc8f41dbe98, type: 3}
+      propertyPath: m_SortingOrder
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7172671427622233773, guid: 9e45cf27385b24a43997bcc8f41dbe98, type: 3}
+      propertyPath: m_SortingOrder
+      value: -1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
