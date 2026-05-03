@@ -215,7 +215,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: -1
   m_MaskInteraction: 0
   m_Sprite: {fileID: 1400350083, guid: e744357cfce973b4f81f75916626013d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -1739,7 +1739,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: -10
+  m_SortingOrder: -1
   m_MaskInteraction: 0
   m_Sprite: {fileID: 1167958786, guid: e744357cfce973b4f81f75916626013d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -2422,7 +2422,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 232619475973879517, guid: bd1b0bce94d548e4d96d8c151bc6eb14, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.3999939
+      value: -0.32
       objectReference: {fileID: 0}
     - target: {fileID: 232619475973879517, guid: bd1b0bce94d548e4d96d8c151bc6eb14, type: 3}
       propertyPath: m_LocalPosition.z
@@ -2455,6 +2455,10 @@ PrefabInstance:
     - target: {fileID: 232619475973879517, guid: bd1b0bce94d548e4d96d8c151bc6eb14, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: -90
+      objectReference: {fileID: 0}
+    - target: {fileID: 4405300725989765411, guid: bd1b0bce94d548e4d96d8c151bc6eb14, type: 3}
+      propertyPath: m_SortingOrder
+      value: -2
       objectReference: {fileID: 0}
     - target: {fileID: 6772498118837264542, guid: bd1b0bce94d548e4d96d8c151bc6eb14, type: 3}
       propertyPath: m_Name
