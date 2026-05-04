@@ -210,6 +210,11 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+--- !u!4 &98195135 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8101809279519066142, guid: a1e0b992666883549b185a27d6d700f2, type: 3}
+  m_PrefabInstance: {fileID: 1962749736}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &108019552
 GameObject:
   m_ObjectHideFlags: 0
@@ -341,7 +346,6 @@ Transform:
   - {fileID: 119999411}
   - {fileID: 402285302}
   - {fileID: 6669680451740227203}
-  - {fileID: 2142514096}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &313669642
@@ -2262,7 +2266,7 @@ Transform:
   m_GameObject: {fileID: 1766925666}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -3.94, y: -8.64, z: 0}
+  m_LocalPosition: {x: -21.76, y: -8.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2286,7 +2290,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!61 &1904957387
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -2585,6 +2589,7 @@ MonoBehaviour:
   typeEnemy: 0
   stunTime: 5
   stunIndicator: {fileID: 18163656}
+  targetPos: {x: 0, y: 0}
   playerDetected: 0
   player: {fileID: 0}
   life: 0
@@ -2852,7 +2857,7 @@ Transform:
   m_GameObject: {fileID: 2027256169}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -22.42, y: -8.88, z: 0}
+  m_LocalPosition: {x: -4.96, y: -8.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3262,6 +3267,7 @@ MonoBehaviour:
   typeEnemy: 0
   stunTime: 5
   stunIndicator: {fileID: 1716937582}
+  targetPos: {x: 0, y: 0}
   playerDetected: 0
   player: {fileID: 0}
   life: 0

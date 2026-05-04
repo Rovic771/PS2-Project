@@ -282,13 +282,19 @@ MonoBehaviour:
   doProjectile: {fileID: 40574452540280323, guid: ea57713d97de73a4cae3d95af014490c, type: 3}
   reProjectile: {fileID: 40574452540280323, guid: 586fef6d01a81d34aa78d2d1537fd9ea, type: 3}
   wallSlidingSpeed: 2
+  animator: {fileID: 0}
   isGround: 0
   isWall: 0
   canDoubleJump: 0
+  isDoubleJump: 0
   canShoot: 1
   posInit: {x: 0, y: 0, z: 0}
   zoneActive: 1
   isJump: 0
+  doShootSon: {fileID: 8300000, guid: 6d0a7d14a1b5ba541b51aae95a024480, type: 3}
+  doZoneSon: {fileID: 8300000, guid: 7b31b531d6079f8459375f9edd088861, type: 3}
+  reShootSon: {fileID: 8300000, guid: c7685be3fa5e62d45a0c82b29e4fd703, type: 3}
+  reZoneSon: {fileID: 8300000, guid: aacc1072846b064428fe6d042e328669, type: 3}
 --- !u!50 &2866076119305657955
 Rigidbody2D:
   serializedVersion: 5
