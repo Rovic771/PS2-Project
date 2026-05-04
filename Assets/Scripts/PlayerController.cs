@@ -36,6 +36,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private GameObject reProjectile;
     [SerializeField] private float wallSlidingSpeed = 0.2f;
     
+    [Header("Animator")]
+    [SerializeField] private Animator animator;
+    
     private Vector2 moveInput;
     private Vector2 inputRotation;
     public bool isGround; 
@@ -44,6 +47,7 @@ public class PlayerController : MonoBehaviour
     private bool isFacingRight = true;
     private bool isFacingRightAim = true;
     public bool canDoubleJump;
+    public bool isDoubleJump;
     private bool isWallSliding;
     private float _currentAimAngle;
     private float _lastAimAngle;
@@ -71,7 +75,7 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         posInit = transform.position;
-        
+        if(animator is null) animator = GetComponentInChildren<Animator>();
     }
 
     public void OnMove(InputAction.CallbackContext context)
@@ -87,6 +91,32 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public void ApplyForce(string typeJump)
+    {
+        Vector2 force = Vector2.zero;
+        switch (typeJump)
+        {
+            case "basicJump":
+                Debug.Log("basicJump");
+                force = Vector2.up * jumpStrength;
+                isGround = false; 
+                isJump = true;
+                coyoteTimer = 0;
+                break;
+            case "wallJump":
+                if (isFacingRight)
+                {
+                    force = new Vector2(-transform.localScale.x * forceWallJumpX, forceWallJumpY);
+                }
+                else
+                {
+                    force = new Vector2(transform.localScale.x * forceWallJumpX, forceWallJumpY);
+                }
+                break;
+        }
+        rb.AddForce(force, ForceMode2D.Impulse);
+    }
+    
     public void OnJump(InputAction.CallbackContext context)
     {
         if (!context.performed)
@@ -95,10 +125,7 @@ public class PlayerController : MonoBehaviour
         }
         if (isGround)
             {
-                rb.AddForce(Vector2.up * jumpStrength, ForceMode2D.Impulse);
-                isGround = false;
-                coyoteTimer = 0;
-                isJump = true;
+                animator.SetTrigger("isJump");
             }
         else
         {
@@ -106,16 +133,7 @@ public class PlayerController : MonoBehaviour
             {
                 Vector2 Force = new Vector2(0,0);
                 rb.linearVelocity = Vector2.zero;
-                if (isFacingRight)
-                {
-                    Force = new Vector2(-transform.localScale.x * forceWallJumpX, forceWallJumpY);
-                }
-                else
-                {
-                    Force = new Vector2(transform.localScale.x * forceWallJumpX, forceWallJumpY);
-                }
                 //Flip();
-                rb.AddForce(Force, ForceMode2D.Impulse); ;
                 coyoteTimer = 0;
                 isJump = true;
                 Debug.Log("WallJump");
@@ -127,6 +145,7 @@ public class PlayerController : MonoBehaviour
                     rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0);
                     rb.AddForce(Vector2.up * doubleJumpStrength, ForceMode2D.Impulse);
                     canDoubleJump = false;
+                    isDoubleJump = true;
                 }
                 isGround = false;
             }
@@ -254,9 +273,10 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        if (rb.linearVelocity.y <= 0)
+        if (rb.linearVelocity.y <= -0.1f)
         {
             isJump = false;
+            isDoubleJump = false;
         }
 
         if (IsWalled())
@@ -297,6 +317,11 @@ public class PlayerController : MonoBehaviour
             Flip();
         }
         WallSlide();
+        
+        animator.SetFloat("speed", Mathf.Abs(rb.linearVelocity.x));
+        animator.SetBool("isGrounded", isGround);
+        animator.SetBool("isDoubleJump", isDoubleJump);
+        animator.SetBool("isWall", isWall);
     }
 
     private void Flip()
