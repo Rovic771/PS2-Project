@@ -9,14 +9,22 @@ public class ZonePlayer : MonoBehaviour
     {
         if (zoneActiveSys.zoneActive)
         {
-            if (other.gameObject.layer == LayerMask.NameToLayer("ReObject"))
+            if (gameObject.CompareTag("DoZone") && other.gameObject.layer == LayerMask.NameToLayer("DoObject"))
+            {
+                Destroy(other.gameObject);
+            }
+            else if (gameObject.CompareTag("DoZone") && other.gameObject.layer == LayerMask.NameToLayer("DoProjectileEnemy"))
             {
                 Destroy(other.gameObject);
             }
         }
         else 
         {
-            if (other.gameObject.layer == LayerMask.NameToLayer("DoObject"))
+            if (gameObject.CompareTag("ReZone") && other.gameObject.layer == LayerMask.NameToLayer("ReObject"))
+            {
+                Destroy(other.gameObject);
+            }
+            else if (gameObject.CompareTag("ReZone") && other.gameObject.layer == LayerMask.NameToLayer("ReProjectileEnemy"))
             {
                 Destroy(other.gameObject);
             }
