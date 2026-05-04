@@ -11,12 +11,16 @@ public class AnimationRelay : MonoBehaviour
 
     public void TriggerJump(string typeJump)
     {
-        Debug.Log("dsdfgrd");
         playerController.ApplyForce(typeJump);
     }
 
     public void TriggerShoot()
     {
         playerController.ApplyShoot();
+    }
+
+    public void TriggerColliderZone(string typeZone)
+    {
+        playerController.ActiveColliderZone(typeZone);
     }
 }

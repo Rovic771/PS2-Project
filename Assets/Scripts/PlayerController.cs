@@ -7,6 +7,7 @@ using Unity.VisualScripting;
 using UnityEditor.Rendering;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 using Debug = UnityEngine.Debug;
 using Quaternion = UnityEngine.Quaternion;
 using Vector2 = UnityEngine.Vector2;
@@ -37,8 +38,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float wallSlidingSpeed = 0.2f;
     
     [Header("Animator")]
-    [SerializeField] private Animator animatorD;
-    [SerializeField] private Animator animatorG;
+    [SerializeField] private Animator animator;
     
     private Vector2 moveInput;
     private Vector2 inputRotation;
@@ -85,10 +85,20 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         posInit = transform.position;
-        if(animatorD is null) animatorD = GetComponentInChildren<Animator>();
-        if (animatorG is null) animatorG = GetComponentInChildren<Animator>();
+        if(animator is null) animator = GetComponentInChildren<Animator>();
+        if (PlayerPrefs.HasKey("checkpointX"))
+        {
+            transform.position = new Vector2(PlayerPrefs.GetFloat("checkpointX"), PlayerPrefs.GetFloat("checkpointY"));
+        }
     }
 
+    public void NewGame(InputAction.CallbackContext context)
+    {
+        PlayerPrefs.DeleteKey("checkpointX");
+        PlayerPrefs.DeleteKey("checkpointY");
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+    
     public void OnMove(InputAction.CallbackContext context)
     {
         moveInput = context.ReadValue<Vector2>();
@@ -154,19 +164,18 @@ public class PlayerController : MonoBehaviour
         }
         if (isGround)
             {
-                animatorD.SetTrigger("isJump");
-                animatorG.SetTrigger("isJump");
+                animator.SetTrigger("isJump");
             }
         else
         {
             if (IsWalled() || coyoteTimer > 0 && wasWalled)
             {
-                animatorD.SetTrigger("isWallJump"); ;
+                animator.SetTrigger("isWallJump"); ;
             }
             if (canDoubleJump && !isGround && !isWall)
             {
                 {
-                    animatorD.SetTrigger("isDoubleJump");
+                    animator.SetTrigger("isDoubleJump");
                 }
                 isGround = false;
             }
@@ -182,7 +191,7 @@ public class PlayerController : MonoBehaviour
                 GameObject proj = Instantiate(doProjectile, viseurAncragePoint.transform.position, Quaternion.identity);
                 Vector2 direction = (viseurStartProjectile.transform.position - viseurAncragePoint.transform.position).normalized;
                 proj.GetComponent<crocheScipt>().Launch(direction, true);
-                animatorD.SetTrigger("isShoot");
+                animator.SetTrigger("isShoot");
             }
         }
     }
@@ -196,8 +205,21 @@ public class PlayerController : MonoBehaviour
                 GameObject proj = Instantiate(reProjectile, viseurAncragePoint.transform.position, Quaternion.identity);
                 Vector2 direction = (viseurStartProjectile.transform.position - viseurAncragePoint.transform.position).normalized;
                 proj.GetComponent<crocheScipt>().Launch(direction, true);
-                animatorD.SetTrigger("isShoot");
+                animator.SetTrigger("isShoot");
             }
+        }
+    }
+
+    public void ActiveColliderZone(string typeZone)
+    {
+        switch (typeZone)
+        {
+            case "do":
+                doZone.GetComponent<CircleCollider2D>().enabled = true;
+                break;
+            case "re":
+                reZone.GetComponent<CircleCollider2D>().enabled = true;
+                break;
         }
     }
     
@@ -208,10 +230,12 @@ public class PlayerController : MonoBehaviour
             zoneActive = true;
             reZone.SetActive(false);
             doZone.SetActive(true);
+            
         }
         if (context.canceled) 
         {
             doZone.SetActive(false);
+            doZone.GetComponent<CircleCollider2D>().enabled = false;
         }
     }
     
@@ -222,10 +246,12 @@ public class PlayerController : MonoBehaviour
             zoneActive = false;
             doZone.SetActive(false);
             reZone.SetActive(true);
+            
         }
         if (context.canceled)
         {
             reZone.SetActive(false);
+            reZone.GetComponent<CircleCollider2D>().enabled = false;
         }
     }
     
@@ -247,11 +273,11 @@ public class PlayerController : MonoBehaviour
                 {
                     if ((_currentAimAngle > 90 || _currentAimAngle < -90) && isFacingRight)
                     {
-                        isFacingRight = false;
+                        Flip();
                     }
                     else if ((_currentAimAngle < 90 && _currentAimAngle > -90) && !isFacingRight)
                     {
-                        isFacingRight = true;
+                        Flip();
                     }
                 }
             }
@@ -281,12 +307,14 @@ public class PlayerController : MonoBehaviour
         {
             coyoteTimer = coyoteTimeWallJump;
             wasWalled = true;
+            canFlip = false;
         }
         else
         {
             coyoteTimer -= Time.deltaTime;
             if (coyoteTimer <= 0)
             {
+                canFlip = true;
                 wasWalled = false;
             }
         }
@@ -329,24 +357,22 @@ public class PlayerController : MonoBehaviour
         
         if (moveInput.x > 0.2f && !isFacingRight)
         {
-            wallCheck.gameObject.transform.localPosition = new Vector2(1.2f, 2.5f);
-            isFacingRight = true;
+            Flip();
         }
         else if (moveInput.x < -0.2f && isFacingRight)
         {
-            isFacingRight = false;
-            wallCheck.gameObject.transform.localPosition =  new Vector2(-1.2f, 2.5f);
+            Flip();
         }
         
         WallSlide();
         
-        animatorD.SetFloat("speed", Mathf.Abs(rb.linearVelocity.x));
-        animatorD.SetBool("isGrounded", isGround);
-        animatorD.SetBool("isDoubleJump", isDoubleJump);
-        animatorD.SetBool("isWall", isWall);
-        animatorD.SetBool("isFall", isFall);
-        animatorD.SetBool("canDoubleJump", canDoubleJump);
-        animatorD.SetBool("canShoot", canShoot); 
+        animator.SetFloat("speed", Mathf.Abs(rb.linearVelocity.x));
+        animator.SetBool("isGrounded", isGround);
+        animator.SetBool("isDoubleJump", isDoubleJump);
+        animator.SetBool("isWall", isWall);
+        animator.SetBool("isFall", isFall);
+        animator.SetBool("canDoubleJump", canDoubleJump);
+        animator.SetBool("canShoot", canShoot); 
     }
     
     private void Flip()
@@ -393,8 +419,7 @@ public class PlayerController : MonoBehaviour
 
     public void Die()//c temporaire je la mettrais autre part plus tard
     {
-        transform.position = posInit;
-        rb.linearVelocity = Vector2.zero;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }
 
