@@ -7,6 +7,7 @@ using Unity.VisualScripting;
 using UnityEditor.Rendering;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 using Debug = UnityEngine.Debug;
 using Quaternion = UnityEngine.Quaternion;
 using Vector2 = UnityEngine.Vector2;
@@ -85,8 +86,19 @@ public class PlayerController : MonoBehaviour
     {
         posInit = transform.position;
         if(animator is null) animator = GetComponentInChildren<Animator>();
+        if (PlayerPrefs.HasKey("checkpointX"))
+        {
+            transform.position = new Vector2(PlayerPrefs.GetFloat("checkpointX"), PlayerPrefs.GetFloat("checkpointY"));
+        }
     }
 
+    public void NewGame(InputAction.CallbackContext context)
+    {
+        PlayerPrefs.DeleteKey("checkpointX");
+        PlayerPrefs.DeleteKey("checkpointY");
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+    
     public void OnMove(InputAction.CallbackContext context)
     {
         moveInput = context.ReadValue<Vector2>();
@@ -197,6 +209,19 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
+
+    public void ActiveColliderZone(string typeZone)
+    {
+        switch (typeZone)
+        {
+            case "do":
+                doZone.GetComponent<CircleCollider2D>().enabled = true;
+                break;
+            case "re":
+                reZone.GetComponent<CircleCollider2D>().enabled = true;
+                break;
+        }
+    }
     
     public void DoProtectionZone(InputAction.CallbackContext context)
     {
@@ -205,10 +230,12 @@ public class PlayerController : MonoBehaviour
             zoneActive = true;
             reZone.SetActive(false);
             doZone.SetActive(true);
+            
         }
         if (context.canceled) 
         {
             doZone.SetActive(false);
+            doZone.GetComponent<CircleCollider2D>().enabled = false;
         }
     }
     
@@ -219,10 +246,12 @@ public class PlayerController : MonoBehaviour
             zoneActive = false;
             doZone.SetActive(false);
             reZone.SetActive(true);
+            
         }
         if (context.canceled)
         {
             reZone.SetActive(false);
+            reZone.GetComponent<CircleCollider2D>().enabled = false;
         }
     }
     
@@ -390,8 +419,7 @@ public class PlayerController : MonoBehaviour
 
     public void Die()//c temporaire je la mettrais autre part plus tard
     {
-        transform.position = posInit;
-        rb.linearVelocity = Vector2.zero;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }
 

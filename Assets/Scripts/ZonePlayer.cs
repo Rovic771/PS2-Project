@@ -9,6 +9,7 @@ public class ZonePlayer : MonoBehaviour
     {
         if (zoneActiveSys.zoneActive)
         {
+            Debug.Log(other.gameObject.name);
             if (other.gameObject.layer == LayerMask.NameToLayer("ReObject"))
             {
                 Destroy(other.gameObject);
@@ -16,6 +17,7 @@ public class ZonePlayer : MonoBehaviour
         }
         else 
         {
+            Debug.Log(other.gameObject.name);
             if (other.gameObject.layer == LayerMask.NameToLayer("DoObject"))
             {
                 Destroy(other.gameObject);
