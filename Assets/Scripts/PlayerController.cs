@@ -37,17 +37,21 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float wallSlidingSpeed = 0.2f;
     
     [Header("Animator")]
-    [SerializeField] private Animator animator;
+    [SerializeField] private Animator animatorD;
+    [SerializeField] private Animator animatorG;
     
     private Vector2 moveInput;
     private Vector2 inputRotation;
     public bool isGround; 
     public bool isWall;
+    public bool isFall;
+    public bool isShoot = false;
     private bool wasWalled;
-    private bool isFacingRight = true;
+    public bool isFacingRight = true;
     private bool isFacingRightAim = true;
     public bool canDoubleJump;
     public bool isDoubleJump;
+    public bool isWallJump;
     private bool isWallSliding;
     private float _currentAimAngle;
     private float _lastAimAngle;
@@ -63,8 +67,14 @@ public class PlayerController : MonoBehaviour
 
     IEnumerator ShootDelay()
     {
-        yield return new WaitForSeconds(1);
+        Debug.Log("tir");
+        canShoot = false;
+        isShoot = true;
+        yield return new WaitForSeconds(0.1f);
         canShoot = true;
+        isShoot = false;
+        Debug.Log("CanShoot = " + canShoot);
+        Debug.Log("Shoot Delay end");
     }
     
     void Awake()
@@ -75,7 +85,8 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         posInit = transform.position;
-        if(animator is null) animator = GetComponentInChildren<Animator>();
+        if(animatorD is null) animatorD = GetComponentInChildren<Animator>();
+        if (animatorG is null) animatorG = GetComponentInChildren<Animator>();
     }
 
     public void OnMove(InputAction.CallbackContext context)
@@ -104,6 +115,11 @@ public class PlayerController : MonoBehaviour
                 coyoteTimer = 0;
                 break;
             case "wallJump":
+                Debug.Log("wallJump");
+                rb.linearVelocity = Vector2.zero;
+                coyoteTimer = 0;
+                isJump = true;
+                isWallJump = true;
                 if (isFacingRight)
                 {
                     force = new Vector2(-transform.localScale.x * forceWallJumpX, forceWallJumpY);
@@ -113,8 +129,21 @@ public class PlayerController : MonoBehaviour
                     force = new Vector2(transform.localScale.x * forceWallJumpX, forceWallJumpY);
                 }
                 break;
+            case "doubleJump" :
+                Debug.Log("Double Jump");
+                rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0);
+                force = Vector2.up * doubleJumpStrength;
+                canDoubleJump = false;
+                isDoubleJump = true;
+                break;
         }
+        Debug.Log("Force ajoutée " + force);
         rb.AddForce(force, ForceMode2D.Impulse);
+    }
+
+    public void ApplyShoot()
+    {
+        StartCoroutine(ShootDelay());
     }
     
     public void OnJump(InputAction.CallbackContext context)
@@ -125,27 +154,21 @@ public class PlayerController : MonoBehaviour
         }
         if (isGround)
             {
-                animator.SetTrigger("isJump");
+                animatorD.SetTrigger("isJump");
+                animatorG.SetTrigger("isJump");
             }
         else
         {
             if (IsWalled() || coyoteTimer > 0 && wasWalled)
             {
-                Vector2 Force = new Vector2(0,0);
-                rb.linearVelocity = Vector2.zero;
-                //Flip();
-                coyoteTimer = 0;
-                isJump = true;
-                Debug.Log("WallJump");
+                animatorD.SetTrigger("isWallJump");
+                animatorG.SetTrigger("isWallJump");
             }
             if (canDoubleJump && !isGround && !isWall)
             {
                 {
-                    Debug.Log("Double Jump");
-                    rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0);
-                    rb.AddForce(Vector2.up * doubleJumpStrength, ForceMode2D.Impulse);
-                    canDoubleJump = false;
-                    isDoubleJump = true;
+                    animatorD.SetTrigger("isDoubleJump");
+                    animatorG.SetTrigger("isDoubleJump");
                 }
                 isGround = false;
             }
@@ -161,8 +184,8 @@ public class PlayerController : MonoBehaviour
                 GameObject proj = Instantiate(doProjectile, viseurAncragePoint.transform.position, Quaternion.identity);
                 Vector2 direction = (viseurStartProjectile.transform.position - viseurAncragePoint.transform.position).normalized;
                 proj.GetComponent<crocheScipt>().Launch(direction, true);
-                canShoot = false;
-                StartCoroutine(ShootDelay());
+                animatorD.SetTrigger("isShoot");
+                animatorG.SetTrigger("isShoot");
             }
         }
     }
@@ -176,8 +199,8 @@ public class PlayerController : MonoBehaviour
                 GameObject proj = Instantiate(reProjectile, viseurAncragePoint.transform.position, Quaternion.identity);
                 Vector2 direction = (viseurStartProjectile.transform.position - viseurAncragePoint.transform.position).normalized;
                 proj.GetComponent<crocheScipt>().Launch(direction, true);
-                canShoot = false;
-                StartCoroutine(ShootDelay());
+                animatorD.SetTrigger("isShoot");
+                animatorG.SetTrigger("isShoot");
             }
         }
     }
@@ -223,15 +246,16 @@ public class PlayerController : MonoBehaviour
             {
                 _currentAimAngle = Mathf.Atan2(inputRotationJSD.y, inputRotationJSD.x) * Mathf.Rad2Deg;
                 _lastAimAngle = _currentAimAngle;
+                
                 if (!isWalking && isGround)
                 {
                     if ((_currentAimAngle > 90 || _currentAimAngle < -90) && isFacingRight)
                     {
-                        Flip();
+                        isFacingRight = false;
                     }
                     else if ((_currentAimAngle < 90 && _currentAimAngle > -90) && !isFacingRight)
                     {
-                        Flip();
+                        isFacingRight = true;
                     }
                 }
             }
@@ -241,12 +265,12 @@ public class PlayerController : MonoBehaviour
     
     public void FixedUpdate()
     {
-        //Debug.Log(coyoteTimer);
         if (IsGrounded() && !isJump)
         {
             coyoteTimer = coyoteTime;
             isGround = true;
             canDoubleJump = true;
+            isFall = false;
         }
         else
         {
@@ -261,14 +285,12 @@ public class PlayerController : MonoBehaviour
         {
             coyoteTimer = coyoteTimeWallJump;
             wasWalled = true;
-            canFlip = false;
         }
         else
         {
             coyoteTimer -= Time.deltaTime;
             if (coyoteTimer <= 0)
             {
-                canFlip = true;
                 wasWalled = false;
             }
         }
@@ -277,6 +299,7 @@ public class PlayerController : MonoBehaviour
         {
             isJump = false;
             isDoubleJump = false;
+            isFall = true;
         }
 
         if (IsWalled())
@@ -310,37 +333,34 @@ public class PlayerController : MonoBehaviour
         
         if (moveInput.x > 0.2f && !isFacingRight)
         {
-            Flip();
+            wallCheck.gameObject.transform.localPosition = new Vector2(1.2f, 2.5f);
+            isFacingRight = true;
         }
         else if (moveInput.x < -0.2f && isFacingRight)
         {
-            Flip();
+            isFacingRight = false;
+            wallCheck.gameObject.transform.localPosition =  new Vector2(-1.2f, 2.5f);
         }
+        
         WallSlide();
         
-        animator.SetFloat("speed", Mathf.Abs(rb.linearVelocity.x));
-        animator.SetBool("isGrounded", isGround);
-        animator.SetBool("isDoubleJump", isDoubleJump);
-        animator.SetBool("isWall", isWall);
+        animatorD.SetFloat("speed", Mathf.Abs(rb.linearVelocity.x));
+        animatorD.SetBool("isGrounded", isGround);
+        animatorD.SetBool("isDoubleJump", isDoubleJump);
+        animatorD.SetBool("isWall", isWall);
+        animatorD.SetBool("isFall", isFall);
+        animatorD.SetBool("canDoubleJump", canDoubleJump);
+        animatorD.SetBool("canShoot", canShoot); 
+        
+        animatorG.SetFloat("speed", Mathf.Abs(rb.linearVelocity.x));
+        animatorG.SetBool("isGrounded", isGround);
+        animatorG.SetBool("isDoubleJump", isDoubleJump);
+        animatorG.SetBool("isWall", isWall);
+        animatorG.SetBool("isFall", isFall);
+        animatorG.SetBool("canDoubleJump", canDoubleJump);
+        animatorG.SetBool("canShoot", canShoot);
     }
-
-    private void Flip()
-    {
-        if (canFlip)
-        {
-            if (isGround)
-            {
-                rb.linearVelocity= new Vector2(0, rb.linearVelocity.y);
-            }
-            else
-            {
-                rb.linearVelocity = new Vector2(rb.linearVelocity.x, rb.linearVelocity.y);
-            }
-            isFacingRight = !isFacingRight;
-            _flipValue += 180;
-            transform.rotation = Quaternion.Euler(0, _flipValue, 0);
-        }
-    }
+    
 
     private bool IsWalled()
     {
