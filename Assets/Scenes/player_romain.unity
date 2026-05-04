@@ -2297,7 +2297,7 @@ Transform:
   m_GameObject: {fileID: 1766925666}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -3.94, y: -8.64, z: 0}
+  m_LocalPosition: {x: -21.76, y: -8.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2321,7 +2321,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!61 &1904957387
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -2466,13 +2466,17 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player2
       objectReference: {fileID: 0}
+    - target: {fileID: 2252731681507070025, guid: a1e0b992666883549b185a27d6d700f2, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2701951014786522771, guid: a1e0b992666883549b185a27d6d700f2, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -26.34
+      value: -29.88
       objectReference: {fileID: 0}
     - target: {fileID: 2701951014786522771, guid: a1e0b992666883549b185a27d6d700f2, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 5.9453588
+      value: 0.12
       objectReference: {fileID: 0}
     - target: {fileID: 2701951014786522771, guid: a1e0b992666883549b185a27d6d700f2, type: 3}
       propertyPath: m_LocalPosition.z
@@ -2689,6 +2693,7 @@ MonoBehaviour:
   typeEnemy: 0
   stunTime: 5
   stunIndicator: {fileID: 18163656}
+  targetPos: {x: 0, y: 0}
   playerDetected: 0
   player: {fileID: 0}
   life: 0
@@ -2956,7 +2961,7 @@ Transform:
   m_GameObject: {fileID: 2027256169}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -22.42, y: -8.88, z: 0}
+  m_LocalPosition: {x: -4.96, y: -8.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3278,6 +3283,7 @@ MonoBehaviour:
   typeEnemy: 0
   stunTime: 5
   stunIndicator: {fileID: 1716937582}
+  targetPos: {x: 0, y: 0}
   playerDetected: 0
   player: {fileID: 0}
   life: 0

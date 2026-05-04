@@ -6,12 +6,12 @@ public abstract class Enemy : MonoBehaviour
 {
     [SerializeField] private EnemyData _enemyData;
     [SerializeField] private GameObject detectionZone;
-    [SerializeField] private GameObject patternPointA;
-    [SerializeField] private GameObject patternPointB;
+    [SerializeField] public GameObject patternPointA;
+    [SerializeField] public GameObject patternPointB;
     [SerializeField] public EnemyType typeEnemy;
     [SerializeField] private float stunTime = 5;
     [SerializeField] private GameObject stunIndicator;
-    private Vector2 targetPos;
+    public Vector2 targetPos;
     public bool playerDetected = false;
     public GameObject player; 
     public float life;
@@ -36,7 +36,7 @@ public abstract class Enemy : MonoBehaviour
     {
         rbEnemy = GetComponent<Rigidbody2D>();
         player = GameObject.FindGameObjectWithTag("Player");
-        targetPos = patternPointB.transform.position;
+        targetPos = patternPointA.transform.position;
         life = _enemyData.life;
         damage = _enemyData.speed;
         speed = _enemyData.speed;
@@ -81,6 +81,7 @@ public abstract class Enemy : MonoBehaviour
         {
             if (Vector2.Distance(transform.position, targetPos) < 1f)
             {
+                Debug.Log("Arrivé au point");
                 GoToPoint();
             }
             else
@@ -111,7 +112,6 @@ public abstract class Enemy : MonoBehaviour
             {
                 return false;
             }
-            Debug.Log("Bloqué par : " + hit.collider.name);
         }
 
         return true;
