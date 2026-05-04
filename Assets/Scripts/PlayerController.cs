@@ -333,12 +333,15 @@ public class PlayerController : MonoBehaviour
         
         if (moveInput.x > 0.2f && !isFacingRight)
         {
+            wallCheck.gameObject.transform.localPosition = new Vector2(1.2f, 2.5f);
             isFacingRight = true;
         }
         else if (moveInput.x < -0.2f && isFacingRight)
         {
             isFacingRight = false;
+            wallCheck.gameObject.transform.localPosition =  new Vector2(-1.2f, 2.5f);
         }
+        
         WallSlide();
         
         animatorD.SetFloat("speed", Mathf.Abs(rb.linearVelocity.x));
