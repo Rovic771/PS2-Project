@@ -1,151 +1,338 @@
 using System;
-using System.Numerics;
+using System.Collections;
+using System.Collections.Generic;
+using System.Diagnostics;
+using NUnit.Framework;
 using Unity.VisualScripting;
+using UnityEditor.Rendering;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Debug = UnityEngine.Debug;
+using Quaternion = UnityEngine.Quaternion;
 using Vector2 = UnityEngine.Vector2;
 using Vector3 = UnityEngine.Vector3;
 
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField] private float speed = 5.0f;
-    [SerializeField] private float jumpStrength = 1.0f;
+    [SerializeField] private float speed = 5f;
+    [SerializeField] private float airControlIntensity = 5f;
+    [SerializeField] private float airControlLimit = 5f;
+    [SerializeField] private float jumpStrength = 8f;
+    [SerializeField] private float doubleJumpStrength = 5f;
+    [SerializeField] private float forceWallJumpX = 2f;
+    [SerializeField] private float forceWallJumpY = 5f;
+    [SerializeField] private Rigidbody2D rb;
+    [SerializeField] private float coyoteTime = 0.1f;
+    [SerializeField] private float coyoteTimeWallJump = 0.5f;
     [SerializeField] private Transform wallCheck;
     [SerializeField] private LayerMask wallLayer;
-    [SerializeField] private Rigidbody rb;
-
-    private float horizontal;
-    private Vector2 moveInput;
-    private bool isGrounded = true;
-    private bool isCharging = false;
-    private bool isWallSliding;
-    private float wallSlidingSpeed = 2f;
-    private bool isFacingRight = true;
+    [SerializeField] private Transform groundCheck;
+    [SerializeField] private LayerMask groundLayer;
+    [SerializeField] private GameObject viseurAncragePoint;
+    [SerializeField] private GameObject viseurStartProjectile;
+    [SerializeField] private GameObject doZone;
+    [SerializeField] private GameObject reZone;
+    [SerializeField] private GameObject doProjectile;
+    [SerializeField] private GameObject reProjectile;
+    [SerializeField] private float wallSlidingSpeed = 0.2f;
     
-    private bool isWallJumping;
-    private float wallJumpingDirection;
-    private float wallJumpingTime = 0.2f;
-    private float wallJumpingCounter;
-    private float wallJumpingDuration = 0.4f;
-    private Vector3 wallJumpingPower = new Vector3(8f,0,16f);
+    private Vector2 moveInput;
+    private Vector2 inputRotation;
+    public bool isGround; 
+    public bool isWall;
+    private bool wasWalled;
+    private bool isFacingRight = true;
+    private bool isFacingRightAim = true;
+    public bool canDoubleJump;
+    private bool isWallSliding;
+    private float _currentAimAngle;
+    private float _lastAimAngle;
+    public bool canShoot = true;
+    float _flipValue = 0;
+    public Vector3 posInit;
+    public bool zoneActive = true; // true c do et false c re
+    private bool isWalking;
+    public bool isJump;
+    private float coyoteTimer;
+    public static List<GameObject> currentPlateform = new List<GameObject>();
+    private bool canFlip = true;
 
-    void Awake()
+    IEnumerator ShootDelay()
     {
-        rb = GetComponent<Rigidbody>();
+        yield return new WaitForSeconds(1);
+        canShoot = true;
     }
     
+    void Awake()
+    {
+        rb.GetComponent<Rigidbody2D>();
+    }
+
+    private void Start()
+    {
+        posInit = transform.position;
+        
+    }
+
     public void OnMove(InputAction.CallbackContext context)
     {
         moveInput = context.ReadValue<Vector2>();
+        if (context.performed)
+        {
+            isWalking = true;
+        }
+        else
+        {
+            isWalking = false;
+        }
     }
 
     public void OnJump(InputAction.CallbackContext context)
     {
-        if (isGrounded == true)
+        if (!context.performed)
         {
-            if (context.performed) // à la base ct started
+            return;
+        }
+        if (isGround)
             {
-                //isCharging = true;
-                gameObject.GetComponent<Rigidbody>().AddForce(Vector2.up * jumpStrength, ForceMode.VelocityChange);
-                //Debug.Log(isGrounded);
+                rb.AddForce(Vector2.up * jumpStrength, ForceMode2D.Impulse);
+                isGround = false;
+                coyoteTimer = 0;
+                isJump = true;
             }
-            if (context.canceled)
+        else
+        {
+            if (IsWalled() || coyoteTimer > 0 && wasWalled)
             {
-                //isCharging = false;
-                Debug.Log("Jump");
-            }
-            if (context.started && wallJumpingCounter > 0f)
-            {
-                isWallJumping = true;
-                rb.linearVelocity = new Vector3(wallJumpingDirection * wallJumpingPower.x, wallJumpingPower.y, 0);
-                wallJumpingCounter = 0f;
-                
-                if (transform.localScale.x != wallJumpingDirection)
+                Vector2 Force = new Vector2(0,0);
+                rb.linearVelocity = Vector2.zero;
+                if (isFacingRight)
                 {
-                    Vector3 localScale = transform.localScale;
-                    localScale.x *= -1f;
-                    transform.localScale = localScale;
+                    Force = new Vector2(-transform.localScale.x * forceWallJumpX, forceWallJumpY);
                 }
-
-                Invoke(nameof(StopWallJumping), wallJumpingDuration);
+                else
+                {
+                    Force = new Vector2(transform.localScale.x * forceWallJumpX, forceWallJumpY);
+                }
+                //Flip();
+                rb.AddForce(Force, ForceMode2D.Impulse); ;
+                coyoteTimer = 0;
+                isJump = true;
+                Debug.Log("WallJump");
+            }
+            if (canDoubleJump && !isGround && !isWall)
+            {
+                {
+                    Debug.Log("Double Jump");
+                    rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0);
+                    rb.AddForce(Vector2.up * doubleJumpStrength, ForceMode2D.Impulse);
+                    canDoubleJump = false;
+                }
+                isGround = false;
             }
         }
-
     }
 
+    public void DoShoot(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            if (canShoot)
+            {
+                GameObject proj = Instantiate(doProjectile, viseurAncragePoint.transform.position, Quaternion.identity);
+                Vector2 direction = (viseurStartProjectile.transform.position - viseurAncragePoint.transform.position).normalized;
+                proj.GetComponent<crocheScipt>().Launch(direction, true);
+                canShoot = false;
+                StartCoroutine(ShootDelay());
+            }
+        }
+    }
+
+    public void ReShoot(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            if(canShoot)
+            {
+                GameObject proj = Instantiate(reProjectile, viseurAncragePoint.transform.position, Quaternion.identity);
+                Vector2 direction = (viseurStartProjectile.transform.position - viseurAncragePoint.transform.position).normalized;
+                proj.GetComponent<crocheScipt>().Launch(direction, true);
+                canShoot = false;
+                StartCoroutine(ShootDelay());
+            }
+        }
+    }
+    
+    public void DoProtectionZone(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            zoneActive = true;
+            reZone.SetActive(false);
+            doZone.SetActive(true);
+        }
+        if (context.canceled) 
+        {
+            doZone.SetActive(false);
+        }
+    }
+    
+    public void ReProtectionZone(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            zoneActive = false;
+            doZone.SetActive(false);
+            reZone.SetActive(true);
+        }
+        if (context.canceled)
+        {
+            reZone.SetActive(false);
+        }
+    }
+    
+    public void OnAim(InputAction.CallbackContext context)
+    {
+        Vector2 inputRotationJSD = context.ReadValue<Vector2>(); // JSD = joystick droit
+        if (context.performed)
+        {
+            if (inputRotationJSD.x < 0.1 && inputRotationJSD.y < 0.1 && inputRotationJSD.x > -0.1 && inputRotationJSD.y > -0.1) // si le joystick est pas touché
+            {
+                _currentAimAngle = _lastAimAngle; // le dernier input donné
+            }
+            else
+            {
+                _currentAimAngle = Mathf.Atan2(inputRotationJSD.y, inputRotationJSD.x) * Mathf.Rad2Deg;
+                _lastAimAngle = _currentAimAngle;
+                if (!isWalking && isGround)
+                {
+                    if ((_currentAimAngle > 90 || _currentAimAngle < -90) && isFacingRight)
+                    {
+                        Flip();
+                    }
+                    else if ((_currentAimAngle < 90 && _currentAimAngle > -90) && !isFacingRight)
+                    {
+                        Flip();
+                    }
+                }
+            }
+            viseurAncragePoint.transform.rotation = Quaternion.Euler(0, 0, _currentAimAngle);
+        }
+    }
+    
     public void FixedUpdate()
     {
-        //transform.Translate(moveInput * speed * Time.deltaTime, Space.World); -> Je sais pas quelle méthode elle la meilleure pour le déplacement du perso
-        Vector3 direction = new Vector3(moveInput.x, 0, moveInput.y);
-        rb.linearVelocity = new Vector3(moveInput.x * speed, rb.linearVelocity.y, moveInput.y * speed);
-        if (isCharging == true && jumpStrength <= 10.0f)
+        //Debug.Log(coyoteTimer);
+        if (IsGrounded() && !isJump)
         {
-            jumpStrength += 30.0f * Time.deltaTime;
-            Debug.Log(jumpStrength);
+            coyoteTimer = coyoteTime;
+            isGround = true;
+            canDoubleJump = true;
         }
-        if (moveInput.x > 0 && !isFacingRight)
+        else
         {
-            flip();
+            coyoteTimer -= Time.deltaTime;
+            if (coyoteTimer <= 0)
+            {
+                isGround = false;
+            }
         }
-        else if (moveInput.x < 0 && isFacingRight)
+
+        if (IsWalled() && !wasWalled)
         {
-            flip();
+            coyoteTimer = coyoteTimeWallJump;
+            wasWalled = true;
+            canFlip = false;
         }
-        //WallJump(); ça marche pas
+        else
+        {
+            coyoteTimer -= Time.deltaTime;
+            if (coyoteTimer <= 0)
+            {
+                canFlip = true;
+                wasWalled = false;
+            }
+        }
+
+        if (rb.linearVelocity.y <= 0)
+        {
+            isJump = false;
+        }
+
+        if (IsWalled())
+        {
+            isWall = true;
+        }
+        else
+        {
+            isWall = false;
+        }
+        
+        if (isGround)
+        {
+            if (Mathf.Abs(moveInput.x) > 0.05f) 
+            {
+                rb.linearVelocity = new Vector2(moveInput.x * speed, rb.linearVelocity.y);
+            }
+            else 
+            {
+                rb.linearVelocity = new Vector2(0, rb.linearVelocity.y);
+            }
+        }
+        else
+        {
+            if (Mathf.Abs(moveInput.x) > 0.05f && Mathf.Abs(rb.linearVelocity.x) < airControlLimit)
+            {
+                rb.AddForce(new Vector2(moveInput.x * airControlIntensity, 0));
+            }
+        }
+        
+        
+        if (moveInput.x > 0.2f && !isFacingRight)
+        {
+            Flip();
+        }
+        else if (moveInput.x < -0.2f && isFacingRight)
+        {
+            Flip();
+        }
         WallSlide();
     }
 
-    void OnCollisionEnter(Collision other)
+    private void Flip()
     {
-        if (other.gameObject.CompareTag("ground"))
+        if (canFlip)
         {
-            isGrounded = true;
-            Debug.Log(isGrounded);
+            if (isGround)
+            {
+                rb.linearVelocity= new Vector2(0, rb.linearVelocity.y);
+            }
+            else
+            {
+                rb.linearVelocity = new Vector2(rb.linearVelocity.x, rb.linearVelocity.y);
+            }
+            isFacingRight = !isFacingRight;
+            _flipValue += 180;
+            transform.rotation = Quaternion.Euler(0, _flipValue, 0);
         }
-        /*
-        if (other.gameObject.CompareTag("Wall"))
-        {
-            isGrounded = true;
-        }
-        */
     }
 
-    private void OnCollisionExit(Collision other)
+    private bool IsWalled()
     {
-        if (other.gameObject.CompareTag("ground"))
-        {
-            isGrounded = false;
-            //jumpStrength = 1.0f;
-            Debug.Log(isGrounded);
-        }
-        /*
-        if (other.gameObject.CompareTag("Wall"))
-        {
-            isGrounded = false;
-            jumpStrength = 1.0f;
-        }
-        */
+        return Physics2D.OverlapBox(wallCheck.position, new Vector2(0.2f, 2f), 0f,wallLayer); //(où est le truc qui détecte, la taille du rayon de cercle, avec quoi il intéragit) cépadélia
     }
 
-    private void flip()
+    private bool IsGrounded()
     {
-        isFacingRight = !isFacingRight;
-        Vector3 localScale = transform.localScale;
-        localScale.x *= -1;
-        transform.localScale = localScale;
-    }
-    
-    private bool isWalled()
-    {
-        return Physics.CheckSphere(wallCheck.position, 0.2f, wallLayer);
+        return Physics2D.OverlapBox(groundCheck.position, new Vector2(1f, 0.2f), 0f, groundLayer);
     }
 
     private void WallSlide()
     {
-        if (isWalled() && isGrounded == false && moveInput.x != 0)
+        if (IsWalled() && isGround == false)
         {
             isWallSliding = true;
-            rb.linearVelocity = new Vector3(rb.linearVelocity.x, Mathf.Clamp(rb.linearVelocity.y, -wallSlidingSpeed, float.MaxValue), rb.linearVelocity.z);
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, Mathf.Clamp(rb.linearVelocity.y, -wallSlidingSpeed, float.MaxValue));
         }
         else
         {
@@ -153,24 +340,11 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void WallJump()
+    public void Die()//c temporaire je la mettrais autre part plus tard
     {
-        if (isWallSliding == true)
-        {
-            isWallJumping = false;
-            wallJumpingDirection = -transform.localScale.x;
-            wallJumpingCounter = wallJumpingTime;
-            
-            CancelInvoke(nameof(StopWallJumping));
-        }
-        else
-        {
-            wallJumpingCounter -= Time.deltaTime;
-        }
-    }
-
-    private void StopWallJumping()
-    {
-        isWallJumping = false;
+        transform.position = posInit;
+        rb.linearVelocity = Vector2.zero;
     }
 }
+
+

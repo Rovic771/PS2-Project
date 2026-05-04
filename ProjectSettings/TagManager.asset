@@ -6,25 +6,32 @@ TagManager:
   tags:
   - ground
   - Wall
+  - crocheSpawn
+  - Viseur
+  - Destructable
+  - DoProjectile
+  - ReProjectile
+  - DoZone
+  - ReZone
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - DestructableWall
   - Water
   - UI
   - Wall
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - ground
+  - Player
+  - Projectile
+  - DoObject
+  - ReObject
+  - Ground Plateform
+  - Enemy
+  - DoProjectileAlly
+  - ReProjectileAlly
+  - DoProjectileEnemy
+  - ReProjectileEnemy
   - 
   - 
   - 
@@ -40,8 +47,14 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: background
+    uniqueID: 2761604325
+    locked: 0
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: foreground
+    uniqueID: 3603230957
     locked: 0
   m_RenderingLayers:
   - Default
