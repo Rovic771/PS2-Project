@@ -1036,6 +1036,18 @@ PrefabInstance:
       propertyPath: m_SortingOrder
       value: -1
       objectReference: {fileID: 0}
+    - target: {fileID: 7102956794925289113, guid: f284cb1de75e576439af786df68bf727, type: 3}
+      propertyPath: m_Priority
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7102956794925289113, guid: f284cb1de75e576439af786df68bf727, type: 3}
+      propertyPath: m_ShadowMesh.m_InitialTrim
+      value: 0.04
+      objectReference: {fileID: 0}
+    - target: {fileID: 7102956794925289113, guid: f284cb1de75e576439af786df68bf727, type: 3}
+      propertyPath: m_PreviousShadowShape2DSource
+      value: 
+      objectReference: {fileID: 3373771194192062051}
     - target: {fileID: 8277267111233423755, guid: f284cb1de75e576439af786df68bf727, type: 3}
       propertyPath: m_Name
       value: lampe_lanterne_002
@@ -1048,6 +1060,11 @@ PrefabInstance:
 --- !u!4 &1011492478405877498 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 900602848807261562, guid: f284cb1de75e576439af786df68bf727, type: 3}
+  m_PrefabInstance: {fileID: 177362805773568896}
+  m_PrefabAsset: {fileID: 0}
+--- !u!212 &3373771194192062051 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 3216719735991528931, guid: f284cb1de75e576439af786df68bf727, type: 3}
   m_PrefabInstance: {fileID: 177362805773568896}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &590469447673594060
@@ -1102,6 +1119,18 @@ PrefabInstance:
       propertyPath: m_SortingOrder
       value: -1
       objectReference: {fileID: 0}
+    - target: {fileID: 7102956794925289113, guid: f284cb1de75e576439af786df68bf727, type: 3}
+      propertyPath: m_Priority
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7102956794925289113, guid: f284cb1de75e576439af786df68bf727, type: 3}
+      propertyPath: m_ShadowMesh.m_InitialTrim
+      value: 0.04
+      objectReference: {fileID: 0}
+    - target: {fileID: 7102956794925289113, guid: f284cb1de75e576439af786df68bf727, type: 3}
+      propertyPath: m_PreviousShadowShape2DSource
+      value: 
+      objectReference: {fileID: 2636243346112982319}
     - target: {fileID: 8277267111233423755, guid: f284cb1de75e576439af786df68bf727, type: 3}
       propertyPath: m_Name
       value: lampe_lanterne
@@ -1114,6 +1143,11 @@ PrefabInstance:
 --- !u!4 &310274834709009846 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 900602848807261562, guid: f284cb1de75e576439af786df68bf727, type: 3}
+  m_PrefabInstance: {fileID: 590469447673594060}
+  m_PrefabAsset: {fileID: 0}
+--- !u!212 &2636243346112982319 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 3216719735991528931, guid: f284cb1de75e576439af786df68bf727, type: 3}
   m_PrefabInstance: {fileID: 590469447673594060}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &709696146335593621
@@ -1420,9 +1454,37 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5751812168792021404, guid: ca230eec525c7b34ebe8797f18a3f9d3, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6218073978867984634, guid: ca230eec525c7b34ebe8797f18a3f9d3, type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6218073978867984634, guid: ca230eec525c7b34ebe8797f18a3f9d3, type: 3}
+      propertyPath: m_Color.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6218073978867984634, guid: ca230eec525c7b34ebe8797f18a3f9d3, type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6218073978867984634, guid: ca230eec525c7b34ebe8797f18a3f9d3, type: 3}
+      propertyPath: m_Intensity
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7604210840489499602, guid: ca230eec525c7b34ebe8797f18a3f9d3, type: 3}
       propertyPath: m_SortingOrder
       value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8219143842188451133, guid: ca230eec525c7b34ebe8797f18a3f9d3, type: 3}
+      propertyPath: m_Priority
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8219143842188451133, guid: ca230eec525c7b34ebe8797f18a3f9d3, type: 3}
+      propertyPath: m_ShadowMesh.m_InitialTrim
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2052,6 +2114,18 @@ PrefabInstance:
       propertyPath: m_SortingOrder
       value: -1
       objectReference: {fileID: 0}
+    - target: {fileID: 7102956794925289113, guid: f284cb1de75e576439af786df68bf727, type: 3}
+      propertyPath: m_Priority
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7102956794925289113, guid: f284cb1de75e576439af786df68bf727, type: 3}
+      propertyPath: m_ShadowMesh.m_InitialTrim
+      value: 0.04
+      objectReference: {fileID: 0}
+    - target: {fileID: 7102956794925289113, guid: f284cb1de75e576439af786df68bf727, type: 3}
+      propertyPath: m_PreviousShadowShape2DSource
+      value: 
+      objectReference: {fileID: 1478463009961316167}
     - target: {fileID: 8277267111233423755, guid: f284cb1de75e576439af786df68bf727, type: 3}
       propertyPath: m_Name
       value: lampe_lanterne_001
@@ -2061,6 +2135,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f284cb1de75e576439af786df68bf727, type: 3}
+--- !u!212 &1478463009961316167 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 3216719735991528931, guid: f284cb1de75e576439af786df68bf727, type: 3}
+  m_PrefabInstance: {fileID: 4044403751619912356}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &3773750733838710750 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 900602848807261562, guid: f284cb1de75e576439af786df68bf727, type: 3}
@@ -2308,6 +2387,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8219143842188451133, guid: ca230eec525c7b34ebe8797f18a3f9d3, type: 3}
+      propertyPath: m_ShadowMesh.m_InitialTrim
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2497,6 +2580,14 @@ PrefabInstance:
     - target: {fileID: 7604210840489499602, guid: ca230eec525c7b34ebe8797f18a3f9d3, type: 3}
       propertyPath: m_SortingOrder
       value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8219143842188451133, guid: ca230eec525c7b34ebe8797f18a3f9d3, type: 3}
+      propertyPath: m_Priority
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8219143842188451133, guid: ca230eec525c7b34ebe8797f18a3f9d3, type: 3}
+      propertyPath: m_ShadowMesh.m_InitialTrim
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

@@ -1365,17 +1365,33 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 4766750670522946893}
     m_Modifications:
+    - target: {fileID: 944468936143383631, guid: a4a8735d402add3408d6a1ebd0dc8ca4, type: 3}
+      propertyPath: m_SortingOrder
+      value: -2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2073135878340526614, guid: a4a8735d402add3408d6a1ebd0dc8ca4, type: 3}
+      propertyPath: m_SortingOrder
+      value: -2
+      objectReference: {fileID: 0}
     - target: {fileID: 2469937996269757282, guid: a4a8735d402add3408d6a1ebd0dc8ca4, type: 3}
       propertyPath: m_Name
       value: Volante Verticale 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 2469937996269757282, guid: a4a8735d402add3408d6a1ebd0dc8ca4, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4432350938012487335, guid: a4a8735d402add3408d6a1ebd0dc8ca4, type: 3}
       propertyPath: m_SortingOrder
       value: -1
       objectReference: {fileID: 0}
+    - target: {fileID: 6024712902485296966, guid: a4a8735d402add3408d6a1ebd0dc8ca4, type: 3}
+      propertyPath: m_SortingOrder
+      value: -2
+      objectReference: {fileID: 0}
     - target: {fileID: 6341260234542412994, guid: a4a8735d402add3408d6a1ebd0dc8ca4, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -6.00167
+      value: -7.85
       objectReference: {fileID: 0}
     - target: {fileID: 6341260234542412994, guid: a4a8735d402add3408d6a1ebd0dc8ca4, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1575,6 +1591,10 @@ PrefabInstance:
       propertyPath: m_Offset.x
       value: 0.08571858
       objectReference: {fileID: 0}
+    - target: {fileID: 3243802876544722744, guid: 15c27f817c07c3f47b79caaf373b1a99, type: 3}
+      propertyPath: m_SortingOrder
+      value: -1
+      objectReference: {fileID: 0}
     - target: {fileID: 3446204474258828580, guid: 15c27f817c07c3f47b79caaf373b1a99, type: 3}
       propertyPath: m_Name
       value: Cassable Do Sol 4 2
@@ -1633,19 +1653,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5024227791484008137, guid: 15c27f817c07c3f47b79caaf373b1a99, type: 3}
       propertyPath: m_LocalBounds.m_Center.x
-      value: -0.37625003
+      value: -0.4213
       objectReference: {fileID: 0}
     - target: {fileID: 5024227791484008137, guid: 15c27f817c07c3f47b79caaf373b1a99, type: 3}
       propertyPath: m_LocalBounds.m_Center.y
-      value: 0.48354998
+      value: 0.48115
       objectReference: {fileID: 0}
     - target: {fileID: 5024227791484008137, guid: 15c27f817c07c3f47b79caaf373b1a99, type: 3}
       propertyPath: m_LocalBounds.m_Extent.x
-      value: 1.98155
+      value: 1.9365001
       objectReference: {fileID: 0}
     - target: {fileID: 5024227791484008137, guid: 15c27f817c07c3f47b79caaf373b1a99, type: 3}
       propertyPath: m_LocalBounds.m_Extent.y
-      value: 0.97455
+      value: 0.97214997
       objectReference: {fileID: 0}
     - target: {fileID: 5024227791484008137, guid: 15c27f817c07c3f47b79caaf373b1a99, type: 3}
       propertyPath: m_ShapePath.Array.data[0].x
@@ -1657,7 +1677,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5024227791484008137, guid: 15c27f817c07c3f47b79caaf373b1a99, type: 3}
       propertyPath: m_ShapePath.Array.data[1].x
-      value: 1.1051434
+      value: 1.0150268
       objectReference: {fileID: 0}
     - target: {fileID: 5024227791484008137, guid: 15c27f817c07c3f47b79caaf373b1a99, type: 3}
       propertyPath: m_ShapePath.Array.data[1].y
@@ -1665,11 +1685,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5024227791484008137, guid: 15c27f817c07c3f47b79caaf373b1a99, type: 3}
       propertyPath: m_ShapePath.Array.data[2].x
-      value: 1.103571
+      value: 1.0087085
       objectReference: {fileID: 0}
     - target: {fileID: 5024227791484008137, guid: 15c27f817c07c3f47b79caaf373b1a99, type: 3}
       propertyPath: m_ShapePath.Array.data[2].y
-      value: 0.9573069
+      value: 0.9525682
       objectReference: {fileID: 0}
     - target: {fileID: 5024227791484008137, guid: 15c27f817c07c3f47b79caaf373b1a99, type: 3}
       propertyPath: m_ShapePath.Array.data[3].x
