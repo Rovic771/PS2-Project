@@ -37,8 +37,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float wallSlidingSpeed = 0.2f;
     
     [Header("Animator")]
-    [SerializeField] private Animator animatorD;
-    [SerializeField] private Animator animatorG;
+    [SerializeField] private Animator animator;
     
     private Vector2 moveInput;
     private Vector2 inputRotation;
@@ -85,8 +84,7 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         posInit = transform.position;
-        if(animatorD is null) animatorD = GetComponentInChildren<Animator>();
-        if (animatorG is null) animatorG = GetComponentInChildren<Animator>();
+        if(animator is null) animator = GetComponentInChildren<Animator>();
     }
 
     public void OnMove(InputAction.CallbackContext context)
@@ -154,21 +152,18 @@ public class PlayerController : MonoBehaviour
         }
         if (isGround)
             {
-                animatorD.SetTrigger("isJump");
-                animatorG.SetTrigger("isJump");
+                animator.SetTrigger("isJump");
             }
         else
         {
             if (IsWalled() || coyoteTimer > 0 && wasWalled)
             {
-                animatorD.SetTrigger("isWallJump");
-                animatorG.SetTrigger("isWallJump");
+                animator.SetTrigger("isWallJump"); ;
             }
             if (canDoubleJump && !isGround && !isWall)
             {
                 {
-                    animatorD.SetTrigger("isDoubleJump");
-                    animatorG.SetTrigger("isDoubleJump");
+                    animator.SetTrigger("isDoubleJump");
                 }
                 isGround = false;
             }
@@ -184,8 +179,7 @@ public class PlayerController : MonoBehaviour
                 GameObject proj = Instantiate(doProjectile, viseurAncragePoint.transform.position, Quaternion.identity);
                 Vector2 direction = (viseurStartProjectile.transform.position - viseurAncragePoint.transform.position).normalized;
                 proj.GetComponent<crocheScipt>().Launch(direction, true);
-                animatorD.SetTrigger("isShoot");
-                animatorG.SetTrigger("isShoot");
+                animator.SetTrigger("isShoot");
             }
         }
     }
@@ -199,8 +193,7 @@ public class PlayerController : MonoBehaviour
                 GameObject proj = Instantiate(reProjectile, viseurAncragePoint.transform.position, Quaternion.identity);
                 Vector2 direction = (viseurStartProjectile.transform.position - viseurAncragePoint.transform.position).normalized;
                 proj.GetComponent<crocheScipt>().Launch(direction, true);
-                animatorD.SetTrigger("isShoot");
-                animatorG.SetTrigger("isShoot");
+                animator.SetTrigger("isShoot");
             }
         }
     }
@@ -251,11 +244,11 @@ public class PlayerController : MonoBehaviour
                 {
                     if ((_currentAimAngle > 90 || _currentAimAngle < -90) && isFacingRight)
                     {
-                        isFacingRight = false;
+                        Flip();
                     }
                     else if ((_currentAimAngle < 90 && _currentAimAngle > -90) && !isFacingRight)
                     {
-                        isFacingRight = true;
+                        Flip();
                     }
                 }
             }
@@ -285,12 +278,14 @@ public class PlayerController : MonoBehaviour
         {
             coyoteTimer = coyoteTimeWallJump;
             wasWalled = true;
+            canFlip = false;
         }
         else
         {
             coyoteTimer -= Time.deltaTime;
             if (coyoteTimer <= 0)
             {
+                canFlip = true;
                 wasWalled = false;
             }
         }
@@ -333,32 +328,40 @@ public class PlayerController : MonoBehaviour
         
         if (moveInput.x > 0.2f && !isFacingRight)
         {
-            wallCheck.gameObject.transform.localPosition = new Vector2(1.2f, 2.5f);
-            isFacingRight = true;
+            Flip();
         }
         else if (moveInput.x < -0.2f && isFacingRight)
         {
-            isFacingRight = false;
-            wallCheck.gameObject.transform.localPosition =  new Vector2(-1.2f, 2.5f);
+            Flip();
         }
         
         WallSlide();
         
-        animatorD.SetFloat("speed", Mathf.Abs(rb.linearVelocity.x));
-        animatorD.SetBool("isGrounded", isGround);
-        animatorD.SetBool("isDoubleJump", isDoubleJump);
-        animatorD.SetBool("isWall", isWall);
-        animatorD.SetBool("isFall", isFall);
-        animatorD.SetBool("canDoubleJump", canDoubleJump);
-        animatorD.SetBool("canShoot", canShoot); 
-        
-        animatorG.SetFloat("speed", Mathf.Abs(rb.linearVelocity.x));
-        animatorG.SetBool("isGrounded", isGround);
-        animatorG.SetBool("isDoubleJump", isDoubleJump);
-        animatorG.SetBool("isWall", isWall);
-        animatorG.SetBool("isFall", isFall);
-        animatorG.SetBool("canDoubleJump", canDoubleJump);
-        animatorG.SetBool("canShoot", canShoot);
+        animator.SetFloat("speed", Mathf.Abs(rb.linearVelocity.x));
+        animator.SetBool("isGrounded", isGround);
+        animator.SetBool("isDoubleJump", isDoubleJump);
+        animator.SetBool("isWall", isWall);
+        animator.SetBool("isFall", isFall);
+        animator.SetBool("canDoubleJump", canDoubleJump);
+        animator.SetBool("canShoot", canShoot); 
+    }
+    
+    private void Flip()
+    {
+        if (canFlip)
+        {
+            if (isGround)
+            {
+                rb.linearVelocity= new Vector2(0, rb.linearVelocity.y);
+            }
+            else
+            {
+                rb.linearVelocity = new Vector2(rb.linearVelocity.x, rb.linearVelocity.y);
+            }
+            isFacingRight = !isFacingRight;
+            _flipValue += 180;
+            transform.rotation = Quaternion.Euler(0, _flipValue, 0);
+        }
     }
     
 
