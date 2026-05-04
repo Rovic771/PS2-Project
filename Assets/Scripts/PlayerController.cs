@@ -161,12 +161,12 @@ public class PlayerController : MonoBehaviour
         {
             if (IsWalled() || coyoteTimer > 0 && wasWalled)
             {
-                animator.SetTrigger("isWallJump"); ;
+                animatorD.SetTrigger("isWallJump"); ;
             }
             if (canDoubleJump && !isGround && !isWall)
             {
                 {
-                    animator.SetTrigger("isDoubleJump");
+                    animatorD.SetTrigger("isDoubleJump");
                 }
                 isGround = false;
             }
@@ -182,7 +182,7 @@ public class PlayerController : MonoBehaviour
                 GameObject proj = Instantiate(doProjectile, viseurAncragePoint.transform.position, Quaternion.identity);
                 Vector2 direction = (viseurStartProjectile.transform.position - viseurAncragePoint.transform.position).normalized;
                 proj.GetComponent<crocheScipt>().Launch(direction, true);
-                animator.SetTrigger("isShoot");
+                animatorD.SetTrigger("isShoot");
             }
         }
     }
@@ -196,7 +196,7 @@ public class PlayerController : MonoBehaviour
                 GameObject proj = Instantiate(reProjectile, viseurAncragePoint.transform.position, Quaternion.identity);
                 Vector2 direction = (viseurStartProjectile.transform.position - viseurAncragePoint.transform.position).normalized;
                 proj.GetComponent<crocheScipt>().Launch(direction, true);
-                animator.SetTrigger("isShoot");
+                animatorD.SetTrigger("isShoot");
             }
         }
     }
@@ -340,13 +340,13 @@ public class PlayerController : MonoBehaviour
         
         WallSlide();
         
-        animator.SetFloat("speed", Mathf.Abs(rb.linearVelocity.x));
-        animator.SetBool("isGrounded", isGround);
-        animator.SetBool("isDoubleJump", isDoubleJump);
-        animator.SetBool("isWall", isWall);
-        animator.SetBool("isFall", isFall);
-        animator.SetBool("canDoubleJump", canDoubleJump);
-        animator.SetBool("canShoot", canShoot); 
+        animatorD.SetFloat("speed", Mathf.Abs(rb.linearVelocity.x));
+        animatorD.SetBool("isGrounded", isGround);
+        animatorD.SetBool("isDoubleJump", isDoubleJump);
+        animatorD.SetBool("isWall", isWall);
+        animatorD.SetBool("isFall", isFall);
+        animatorD.SetBool("canDoubleJump", canDoubleJump);
+        animatorD.SetBool("canShoot", canShoot); 
     }
     
     private void Flip()
