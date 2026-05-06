@@ -67,14 +67,11 @@ public class PlayerController : MonoBehaviour
 
     IEnumerator ShootDelay()
     {
-        Debug.Log("tir");
         canShoot = false;
         isShoot = true;
         yield return new WaitForSeconds(0.1f);
         canShoot = true;
         isShoot = false;
-        Debug.Log("CanShoot = " + canShoot);
-        Debug.Log("Shoot Delay end");
     }
     
     void Awake()
@@ -118,14 +115,12 @@ public class PlayerController : MonoBehaviour
         switch (typeJump)
         {
             case "basicJump":
-                Debug.Log("basicJump");
                 force = Vector2.up * jumpStrength;
                 isGround = false; 
                 isJump = true;
                 coyoteTimer = 0;
                 break;
             case "wallJump":
-                Debug.Log("wallJump");
                 rb.linearVelocity = Vector2.zero;
                 coyoteTimer = 0;
                 isJump = true;
@@ -140,14 +135,12 @@ public class PlayerController : MonoBehaviour
                 }
                 break;
             case "doubleJump" :
-                Debug.Log("Double Jump");
                 rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0);
                 force = Vector2.up * doubleJumpStrength;
                 canDoubleJump = false;
                 isDoubleJump = true;
                 break;
         }
-        Debug.Log("Force ajoutée " + force);
         rb.AddForce(force, ForceMode2D.Impulse);
     }
 
@@ -389,7 +382,7 @@ public class PlayerController : MonoBehaviour
             }
             isFacingRight = !isFacingRight;
             _flipValue += 180;
-            transform.rotation = Quaternion.Euler(0, _flipValue, 0);
+            animator.gameObject.transform.rotation = Quaternion.Euler(0, _flipValue, 0);
         }
     }
     

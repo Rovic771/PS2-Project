@@ -6,15 +6,23 @@ public class SprinterEnemy : Enemy
     
     public void OnTriggerStay2D(Collider2D other)
     {
-        if (other.gameObject.layer == LayerMask.NameToLayer("Player") && !isStun)
+        if (other.gameObject.layer == LayerMask.NameToLayer("Player") && !isStun && !TestIfWall())
         {
             playerDetected = true;
         }
+        else playerDetected = false;
     }
+
+    public override void Init()
+    {
+        throw new System.NotImplementedException();
+    }
+
     public override void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.gameObject.layer == LayerMask.NameToLayer("Player") && !isStun)
+        if (other.gameObject.layer == LayerMask.NameToLayer("Player") && !isStun && !TestIfWall())
         {
+            Debug.Log("TriggerEnter");
             playerDetected = true;
         }
     }

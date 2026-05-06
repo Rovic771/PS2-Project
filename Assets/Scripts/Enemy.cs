@@ -19,6 +19,9 @@ public abstract class Enemy : MonoBehaviour
     public float speed;
     public Rigidbody2D rbEnemy;
     public bool isStun = false;
+    public float _flipValue = 0;
+    private float test;
+    public bool isFacingRight = true;
     
     [Header("Raycast")]
     [SerializeField] Color rayColor = Color.green;
@@ -40,7 +43,6 @@ public abstract class Enemy : MonoBehaviour
         life = _enemyData.life;
         damage = _enemyData.speed;
         speed = _enemyData.speed;
-        Debug.Log(targetPos);
     }
 
     private void GoToPoint()
@@ -81,7 +83,6 @@ public abstract class Enemy : MonoBehaviour
         {
             if (Vector2.Distance(transform.position, targetPos) < 1f)
             {
-                Debug.Log("Arrivé au point");
                 GoToPoint();
             }
             else
@@ -90,19 +91,16 @@ public abstract class Enemy : MonoBehaviour
             }
         }
 
-        if (life <= 0 && !isStun)
-        {
-            Stun();
-        }
     }
+    
     
     protected bool TestIfWall()
     {
         if (player == null || rayCastOrigin == null) return true;
         
         Vector2 origin = rayCastOrigin.position;
-        Vector2 target = player.transform.position;
-        Vector2 direction = target - origin;
+        Vector2 target = player.transform.position + new Vector3(0.3f,0,0);
+        Vector2 direction = (target - origin) + new Vector2(0,1);
         float distance = direction.magnitude; 
         RaycastHit2D hit = Physics2D.Raycast(origin, direction.normalized, distance, whatToHit);
         Debug.DrawRay(origin, direction.normalized * distance, rayColor, 0.1f);
@@ -119,7 +117,6 @@ public abstract class Enemy : MonoBehaviour
 
     public void OnCollisionEnter2D(Collision2D other)
     {
-        Debug.Log("Truc touché");
         if (other.gameObject.layer == LayerMask.NameToLayer("DoProjectileAlly") || other.gameObject.layer == LayerMask.NameToLayer("ReProjectileAlly"))
         {
             life--;
@@ -127,6 +124,7 @@ public abstract class Enemy : MonoBehaviour
         }
     }
 
+    public abstract void Init();
     public abstract void OnTriggerEnter2D(Collider2D other);
     public abstract void OnTriggerExit2D(Collider2D other);
 }

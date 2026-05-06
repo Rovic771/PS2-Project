@@ -9,6 +9,8 @@ public class ShooterEnemy : Enemy
     [SerializeField] private GameObject doProjectile;
     [SerializeField] private GameObject reProjectile;
     [SerializeField] private float shootDelay = 0.5f;
+    private Animator animatorShooter;
+    private bool isWalking;
 
 
     private IEnumerator ShootDelay()
@@ -38,6 +40,12 @@ public class ShooterEnemy : Enemy
         else playerDetected = false;
     }
 
+    public override void Init()
+    {
+        animatorShooter = GetComponent<Animator>();
+        Debug.Log(animatorShooter);
+    }
+
     public override void OnTriggerEnter2D(Collider2D other)
     {
         if (other.gameObject.layer == LayerMask.NameToLayer("Player") && !isStun && !TestIfWall())
@@ -59,7 +67,7 @@ public class ShooterEnemy : Enemy
     private void LookToPlayer()
     {
         Vector2 direction = player.transform.position - viseurAncragePoint.transform.position;
-        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+        float angle = Mathf.Atan2(direction.y + 1, direction.x) * Mathf.Rad2Deg;
         viseurAncragePoint.transform.rotation = Quaternion.Euler(0, 0, angle);
     }
 
@@ -69,8 +77,14 @@ public class ShooterEnemy : Enemy
         switch (playerDetected)
         {
             case true:
+                isWalking = false;
                 LookToPlayer();
                 break;
+            case false:
+                isWalking = true;
+                break;
         }
+        
+        animatorShooter.SetBool("isWalking", isWalking);
     }
 }
