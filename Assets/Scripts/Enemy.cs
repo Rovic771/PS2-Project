@@ -43,6 +43,7 @@ public abstract class Enemy : MonoBehaviour
         life = _enemyData.life;
         damage = _enemyData.speed;
         speed = _enemyData.speed;
+        Init();
     }
 
     private void GoToPoint()
@@ -59,7 +60,7 @@ public abstract class Enemy : MonoBehaviour
         }
     }
     
-    public void Stun()
+    public virtual void Stun()
     {
         switch (isStun)
         {

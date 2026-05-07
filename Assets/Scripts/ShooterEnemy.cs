@@ -11,12 +11,19 @@ public class ShooterEnemy : Enemy
     [SerializeField] private float shootDelay = 0.5f;
     private Animator animatorShooter;
     private bool isWalking;
+    private bool canShoot = true;
 
 
     private IEnumerator ShootDelay()
     {
-        GameObject projectile;
+        canShoot = false;
         yield return new WaitForSeconds(shootDelay);
+        canShoot = true;
+    }
+
+    public void Shoot()
+    {
+        GameObject projectile;
         if (typeEnemy == EnemyType.Re)
         {
             projectile = reProjectile;
@@ -43,7 +50,6 @@ public class ShooterEnemy : Enemy
     public override void Init()
     {
         animatorShooter = GetComponent<Animator>();
-        Debug.Log(animatorShooter);
     }
 
     public override void OnTriggerEnter2D(Collider2D other)
@@ -51,7 +57,7 @@ public class ShooterEnemy : Enemy
         if (other.gameObject.layer == LayerMask.NameToLayer("Player") && !isStun && !TestIfWall())
         {
             playerDetected = true;
-            StartCoroutine(ShootDelay());
+            animatorShooter.SetTrigger("isShot");
         }
     }
 
@@ -60,6 +66,7 @@ public class ShooterEnemy : Enemy
         if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
         {
             StopAllCoroutines();
+            canShoot = true;
             playerDetected = false;
         }
     }
@@ -86,5 +93,9 @@ public class ShooterEnemy : Enemy
         }
         
         animatorShooter.SetBool("isWalking", isWalking);
+        animatorShooter.SetBool("canShoot", canShoot);
+        animatorShooter.SetFloat("life", life);
+        Debug.Log("life "+ life);
+        Debug.Log("canShot " + canShoot);
     }
 }

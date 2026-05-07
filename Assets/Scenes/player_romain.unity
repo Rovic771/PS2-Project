@@ -1018,6 +1018,14 @@ PrefabInstance:
       propertyPath: m_LocalRotation.z
       value: 0.9989755
       objectReference: {fileID: 0}
+    - target: {fileID: 2040273466557568832, guid: de7029761a80f3e4796decbae7a0791a, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.99999756
+      objectReference: {fileID: 0}
+    - target: {fileID: 2040273466557568832, guid: de7029761a80f3e4796decbae7a0791a, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0.0022381893
+      objectReference: {fileID: 0}
     - target: {fileID: 3173818865744264742, guid: de7029761a80f3e4796decbae7a0791a, type: 3}
       propertyPath: m_LocalRotation.w
       value: 0.99891275
@@ -1085,6 +1093,10 @@ PrefabInstance:
     - target: {fileID: 8268772796001582237, guid: de7029761a80f3e4796decbae7a0791a, type: 3}
       propertyPath: m_LocalRotation.w
       value: -0.017713891
+      objectReference: {fileID: 0}
+    - target: {fileID: 8268772796001582237, guid: de7029761a80f3e4796decbae7a0791a, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8268772796001582237, guid: de7029761a80f3e4796decbae7a0791a, type: 3}
       propertyPath: m_LocalRotation.z
@@ -1308,7 +1320,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5717736212116380576, guid: 1fac45bdef65d194bb36b9dcab212994, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6793663743529454943, guid: 1fac45bdef65d194bb36b9dcab212994, type: 3}
       propertyPath: m_LocalPosition.x
@@ -3370,7 +3382,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 1
+  m_Mass: 10
   m_LinearDamping: 1
   m_AngularDamping: 0.05
   m_GravityScale: 1
