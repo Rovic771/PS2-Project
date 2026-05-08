@@ -62,7 +62,7 @@ public class crocheScipt : MonoBehaviour
                 Destroy(other.gameObject);
             }
         }
-        
+        Debug.Log(other.gameObject.name);
         Destroy(gameObject);
     }
 }

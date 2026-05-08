@@ -385,7 +385,6 @@ public class PlayerController : MonoBehaviour
             animator.gameObject.transform.rotation = Quaternion.Euler(0, _flipValue, 0);
         }
     }
-    
 
     private bool IsWalled()
     {

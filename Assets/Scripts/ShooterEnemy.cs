@@ -3,26 +3,19 @@ using System.Collections;
 using UnityEngine;
 
 public class ShooterEnemy : Enemy
-{    
+{ 
     [SerializeField] private GameObject viseurAncragePoint;
     [SerializeField] private GameObject viseurStartProjectile;
     [SerializeField] private GameObject doProjectile;
     [SerializeField] private GameObject reProjectile;
-    [SerializeField] private float shootDelay = 0.5f;
     private Animator animatorShooter;
     private bool isWalking;
     private bool canShoot = true;
-
-
-    private IEnumerator ShootDelay()
-    {
-        canShoot = false;
-        yield return new WaitForSeconds(shootDelay);
-        canShoot = true;
-    }
+    
 
     public void Shoot()
     {
+        canShoot = true;
         GameObject projectile;
         if (typeEnemy == EnemyType.Re)
         {
@@ -35,7 +28,7 @@ public class ShooterEnemy : Enemy
         GameObject proj = Instantiate(projectile, viseurStartProjectile.transform.position, Quaternion.identity);
         Vector2 direction = (viseurStartProjectile.transform.position - viseurAncragePoint.transform.position).normalized;
         proj.GetComponent<crocheScipt>().Launch(direction, false);
-        StartCoroutine(ShootDelay());
+        canShoot = false;
     }
 
     public void OnTriggerStay2D(Collider2D other)
@@ -57,7 +50,6 @@ public class ShooterEnemy : Enemy
         if (other.gameObject.layer == LayerMask.NameToLayer("Player") && !isStun && !TestIfWall())
         {
             playerDetected = true;
-            animatorShooter.SetTrigger("isShot");
         }
     }
 
@@ -65,7 +57,6 @@ public class ShooterEnemy : Enemy
     {
         if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
         {
-            StopAllCoroutines();
             canShoot = true;
             playerDetected = false;
         }
@@ -74,7 +65,7 @@ public class ShooterEnemy : Enemy
     private void LookToPlayer()
     {
         Vector2 direction = player.transform.position - viseurAncragePoint.transform.position;
-        float angle = Mathf.Atan2(direction.y + 1, direction.x) * Mathf.Rad2Deg;
+        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
         viseurAncragePoint.transform.rotation = Quaternion.Euler(0, 0, angle);
     }
 
@@ -86,6 +77,7 @@ public class ShooterEnemy : Enemy
             case true:
                 isWalking = false;
                 LookToPlayer();
+                animatorShooter.SetTrigger("isShot");
                 break;
             case false:
                 isWalking = true;
@@ -95,7 +87,5 @@ public class ShooterEnemy : Enemy
         animatorShooter.SetBool("isWalking", isWalking);
         animatorShooter.SetBool("canShoot", canShoot);
         animatorShooter.SetFloat("life", life);
-        Debug.Log("life "+ life);
-        Debug.Log("canShot " + canShoot);
     }
 }

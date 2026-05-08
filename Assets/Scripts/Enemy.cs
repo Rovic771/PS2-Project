@@ -30,8 +30,9 @@ public abstract class Enemy : MonoBehaviour
 
     private IEnumerator StunTime()
     {
+        Debug.Log("stunTime");
         yield return new WaitForSeconds(stunTime);
-        Stun();
+        EndStun();
     }
     
     public enum EnemyType { Do, Re }
@@ -62,22 +63,50 @@ public abstract class Enemy : MonoBehaviour
     
     public virtual void Stun()
     {
-        switch (isStun)
-        {
-            case false:
-                stunIndicator.SetActive(true);
-                isStun = true;
-                StartCoroutine(StunTime());
-                break;
-            
-            case true:
-                stunIndicator.SetActive(false);
-                isStun = false;
-                life = _enemyData.life;
-                break;
-        }
+        Debug.Log("Stun");
+        if (isStun) return; 
+        isStun = true;
+        stunIndicator.SetActive(true);
+        StopAllCoroutines(); 
+        StartCoroutine(StunTime());
     }
 
+    private void EndStun()
+    {
+        isStun = false;
+        stunIndicator.SetActive(false);
+        life = _enemyData.life;
+        Debug.Log("EndStun");
+    }
+
+    private void DetectWhenFlip()
+    {
+        if (!playerDetected)
+        {
+            if (targetPos.x > transform.position.x && isFacingRight)
+            {
+                Flip();
+            }
+            else if (targetPos.x < transform.position.x && !isFacingRight)
+            {
+                Flip();
+            }
+        }
+        else
+        {
+            if (player.transform.position.x > transform.position.x && isFacingRight)
+            {
+                Flip();
+            }
+            else if (player.transform.position.x < transform.position.x && !isFacingRight)
+            {
+                Flip();
+            }
+        }
+
+    }
+    
+    
     public virtual void FixedUpdate()
     {
         if (!playerDetected && !isStun)
@@ -91,9 +120,15 @@ public abstract class Enemy : MonoBehaviour
                 transform.position = Vector3.MoveTowards(transform.position, targetPos, speed * Time.deltaTime);
             }
         }
-
+        DetectWhenFlip();
     }
     
+    private void Flip()
+    {
+        isFacingRight = !isFacingRight;
+        _flipValue += 180;
+        transform.rotation = Quaternion.Euler(0, _flipValue, 0);
+    }
     
     protected bool TestIfWall()
     {
@@ -121,7 +156,6 @@ public abstract class Enemy : MonoBehaviour
         if (other.gameObject.layer == LayerMask.NameToLayer("DoProjectileAlly") || other.gameObject.layer == LayerMask.NameToLayer("ReProjectileAlly"))
         {
             life--;
-            Debug.Log("life " + life);
         }
     }
 

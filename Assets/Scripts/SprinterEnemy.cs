@@ -3,6 +3,8 @@ using UnityEngine;
 public class SprinterEnemy : Enemy
 {
     [SerializeField] private float attackSpeed;
+    private Animator animatorSprinter;
+    private bool isWalking;
     
     public void OnTriggerStay2D(Collider2D other)
     {
@@ -15,14 +17,13 @@ public class SprinterEnemy : Enemy
 
     public override void Init()
     {
-        throw new System.NotImplementedException();
+        animatorSprinter = GetComponent<Animator>();
     }
 
     public override void OnTriggerEnter2D(Collider2D other)
     {
         if (other.gameObject.layer == LayerMask.NameToLayer("Player") && !isStun && !TestIfWall())
         {
-            Debug.Log("TriggerEnter");
             playerDetected = true;
         }
     }
@@ -37,26 +38,25 @@ public class SprinterEnemy : Enemy
 
     private void PursuitPlayer()
     {
-        //Debug.Log("PursuitPlayer");
         transform.position = Vector3.MoveTowards(transform.position, player.transform.position, attackSpeed * Time.deltaTime);
     }
 
     public override void FixedUpdate()
     {
         base.FixedUpdate();
-        Debug.Log("player detected " +  playerDetected);
         switch (playerDetected)
         {
             case true:
-                patternPointA.SetActive(false);
-                patternPointB.SetActive(false);
+                isWalking = false;
                 PursuitPlayer();
                 break;
             
             case false:
-                patternPointA.SetActive(true);
-                patternPointB.SetActive(true);
+                isWalking = true;
                 break;
         }
+        
+        animatorSprinter.SetBool("isWalking", isWalking);
+        animatorSprinter.SetBool("playerDetected", playerDetected);
     }
 }
