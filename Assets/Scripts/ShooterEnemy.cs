@@ -8,7 +8,7 @@ public class ShooterEnemy : Enemy
     [SerializeField] private GameObject viseurStartProjectile;
     [SerializeField] private GameObject doProjectile;
     [SerializeField] private GameObject reProjectile;
-    private Animator animatorShooter;
+    //private Animator animatorShooter;
     private bool isWalking;
     private bool canShoot = true;
     
@@ -27,7 +27,7 @@ public class ShooterEnemy : Enemy
         }
         GameObject proj = Instantiate(projectile, viseurStartProjectile.transform.position, Quaternion.identity);
         Vector2 direction = (viseurStartProjectile.transform.position - viseurAncragePoint.transform.position).normalized;
-        proj.GetComponent<crocheScipt>().Launch(direction, false);
+        proj.GetComponent<crocheScipt>().Launch(direction, false, damage);
         canShoot = false;
     }
 
@@ -42,7 +42,7 @@ public class ShooterEnemy : Enemy
 
     public override void Init()
     {
-        animatorShooter = GetComponent<Animator>();
+        animator = GetComponent<Animator>();
     }
 
     public override void OnTriggerEnter2D(Collider2D other)
@@ -77,15 +77,15 @@ public class ShooterEnemy : Enemy
             case true:
                 isWalking = false;
                 LookToPlayer();
-                animatorShooter.SetTrigger("isShot");
+                animator.SetTrigger("isShot");
                 break;
             case false:
                 isWalking = true;
                 break;
         }
         
-        animatorShooter.SetBool("isWalking", isWalking);
-        animatorShooter.SetBool("canShoot", canShoot);
-        animatorShooter.SetFloat("life", life);
+        animator.SetBool("isWalking", isWalking);
+        animator.SetBool("canShoot", canShoot);
+        animator.SetFloat("life", life);
     }
 }

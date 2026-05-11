@@ -40,6 +40,13 @@ public class PlayerController : MonoBehaviour
     [Header("Animator")]
     [SerializeField] private Animator animator;
     
+    [Header("Statistiques")] 
+    [SerializeField] private PlayerData _playerData;
+    public int life;
+    public int damage;
+    
+    
+    [Header("Autre")]
     private Vector2 moveInput;
     private Vector2 inputRotation;
     public bool isGround; 
@@ -87,6 +94,9 @@ public class PlayerController : MonoBehaviour
         {
             transform.position = new Vector2(PlayerPrefs.GetFloat("checkpointX"), PlayerPrefs.GetFloat("checkpointY"));
         }
+
+        life = _playerData.life;
+        damage = _playerData.damage;
     }
 
     public void NewGame(InputAction.CallbackContext context)
@@ -183,7 +193,7 @@ public class PlayerController : MonoBehaviour
             {
                 GameObject proj = Instantiate(doProjectile, viseurAncragePoint.transform.position, Quaternion.identity);
                 Vector2 direction = (viseurStartProjectile.transform.position - viseurAncragePoint.transform.position).normalized;
-                proj.GetComponent<crocheScipt>().Launch(direction, true);
+                proj.GetComponent<crocheScipt>().Launch(direction, true, damage);
                 animator.SetTrigger("isShoot");
             }
         }
@@ -197,7 +207,7 @@ public class PlayerController : MonoBehaviour
             {
                 GameObject proj = Instantiate(reProjectile, viseurAncragePoint.transform.position, Quaternion.identity);
                 Vector2 direction = (viseurStartProjectile.transform.position - viseurAncragePoint.transform.position).normalized;
-                proj.GetComponent<crocheScipt>().Launch(direction, true);
+                proj.GetComponent<crocheScipt>().Launch(direction, true, damage);
                 animator.SetTrigger("isShoot");
             }
         }
@@ -409,6 +419,15 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public void TakeDamage(int damage)
+    {
+        life -= damage;
+        if (life <= 0)
+        {
+            Die();
+        }
+    }
+    
     public void Die()//c temporaire je la mettrais autre part plus tard
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);

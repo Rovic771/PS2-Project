@@ -1,9 +1,10 @@
+using System;
 using UnityEngine;
 
 public class SprinterEnemy : Enemy
 {
     [SerializeField] private float attackSpeed;
-    private Animator animatorSprinter;
+    //private Animator animatorSprinter;
     private bool isWalking;
     
     public void OnTriggerStay2D(Collider2D other)
@@ -17,7 +18,7 @@ public class SprinterEnemy : Enemy
 
     public override void Init()
     {
-        animatorSprinter = GetComponent<Animator>();
+        animator = GetComponent<Animator>();
     }
 
     public override void OnTriggerEnter2D(Collider2D other)
@@ -33,6 +34,15 @@ public class SprinterEnemy : Enemy
         if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
         {
             playerDetected = false;
+        }
+    }
+
+    public override void OnCollisionEnter2D(Collision2D other)
+    {
+        base.OnCollisionEnter2D(other);
+        if (other.gameObject.layer == LayerMask.NameToLayer("Player") && !isStun)
+        {
+            player.GetComponent<PlayerController>().TakeDamage(damage);
         }
     }
 
@@ -56,7 +66,7 @@ public class SprinterEnemy : Enemy
                 break;
         }
         
-        animatorSprinter.SetBool("isWalking", isWalking);
-        animatorSprinter.SetBool("playerDetected", playerDetected);
+        animator.SetBool("isWalking", isWalking);
+        animator.SetBool("playerDetected", playerDetected);
     }
 }

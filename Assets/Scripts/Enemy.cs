@@ -15,13 +15,13 @@ public abstract class Enemy : MonoBehaviour
     public bool playerDetected = false;
     public GameObject player; 
     public float life;
-    public float damage;
+    public int damage;
     public float speed;
     public Rigidbody2D rbEnemy;
     public bool isStun = false;
     public float _flipValue = 0;
-    private float test;
     public bool isFacingRight = true;
+    public Animator animator;
     
     [Header("Raycast")]
     [SerializeField] Color rayColor = Color.green;
@@ -39,10 +39,11 @@ public abstract class Enemy : MonoBehaviour
     private void Start()
     {
         rbEnemy = GetComponent<Rigidbody2D>();
+        animator = GetComponent<Animator>();
         player = GameObject.FindGameObjectWithTag("Player");
         targetPos = patternPointA.transform.position;
         life = _enemyData.life;
-        damage = _enemyData.speed;
+        damage = _enemyData.damage;
         speed = _enemyData.speed;
         Init();
     }
@@ -63,8 +64,8 @@ public abstract class Enemy : MonoBehaviour
     
     public virtual void Stun()
     {
-        Debug.Log("Stun");
         if (isStun) return; 
+        animator.SetBool("isStun", true);
         isStun = true;
         stunIndicator.SetActive(true);
         StopAllCoroutines(); 
@@ -76,7 +77,7 @@ public abstract class Enemy : MonoBehaviour
         isStun = false;
         stunIndicator.SetActive(false);
         life = _enemyData.life;
-        Debug.Log("EndStun");
+        animator.SetBool("isStun", false);
     }
 
     private void DetectWhenFlip()
@@ -151,11 +152,15 @@ public abstract class Enemy : MonoBehaviour
         return true;
     }
 
-    public void OnCollisionEnter2D(Collision2D other)
+    public virtual void OnCollisionEnter2D(Collision2D other)
     {
         if (other.gameObject.layer == LayerMask.NameToLayer("DoProjectileAlly") || other.gameObject.layer == LayerMask.NameToLayer("ReProjectileAlly"))
         {
             life--;
+            if (life <= 0)
+            {
+                Stun();
+            }
         }
     }
 
