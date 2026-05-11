@@ -28,12 +28,13 @@ public abstract class Enemy : MonoBehaviour
     [SerializeField] private Transform rayCastOrigin;
     [SerializeField] private LayerMask whatToHit;
 
+    
     private IEnumerator StunTime()
     {
-        Debug.Log("stunTime");
         yield return new WaitForSeconds(stunTime);
         EndStun();
     }
+    
     
     public enum EnemyType { Do, Re }
     private void Start()
@@ -72,7 +73,7 @@ public abstract class Enemy : MonoBehaviour
         StartCoroutine(StunTime());
     }
 
-    private void EndStun()
+    public void EndStun()
     {
         isStun = false;
         stunIndicator.SetActive(false);
