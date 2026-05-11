@@ -8,8 +8,8 @@ AnimatorStateTransition:
   m_PrefabAsset: {fileID: 0}
   m_Name: 
   m_Conditions:
-  - m_ConditionMode: 4
-    m_ConditionEvent: life
+  - m_ConditionMode: 1
+    m_ConditionEvent: isStun
     m_EventTreshold: 1
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -3724868965003013636}
@@ -192,8 +192,8 @@ AnimatorController:
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 9100000}
-  - m_Name: life
-    m_Type: 1
+  - m_Name: isStun
+    m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
@@ -248,8 +248,8 @@ AnimatorStateTransition:
   m_PrefabAsset: {fileID: 0}
   m_Name: 
   m_Conditions:
-  - m_ConditionMode: 3
-    m_ConditionEvent: life
+  - m_ConditionMode: 2
+    m_ConditionEvent: isStun
     m_EventTreshold: 1
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -3613164964780531334}
@@ -298,8 +298,8 @@ AnimatorStateTransition:
   m_PrefabAsset: {fileID: 0}
   m_Name: 
   m_Conditions:
-  - m_ConditionMode: 4
-    m_ConditionEvent: life
+  - m_ConditionMode: 1
+    m_ConditionEvent: isStun
     m_EventTreshold: 1
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -3724868965003013636}
@@ -379,8 +379,8 @@ AnimatorStateTransition:
   m_PrefabAsset: {fileID: 0}
   m_Name: 
   m_Conditions:
-  - m_ConditionMode: 4
-    m_ConditionEvent: life
+  - m_ConditionMode: 1
+    m_ConditionEvent: isStun
     m_EventTreshold: 1
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -3724868965003013636}
