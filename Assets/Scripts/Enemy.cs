@@ -82,6 +82,7 @@ public abstract class Enemy : MonoBehaviour
         gameObject.layer = LayerMask.NameToLayer("Enemy");
         isStun = false;
         stunIndicator.SetActive(false);
+        ResetEnemyState();
         life = _enemyData.life;
         animator.SetBool("isStun", false);
     }
@@ -112,7 +113,11 @@ public abstract class Enemy : MonoBehaviour
         }
 
     }
-    
+
+    public virtual void ResetEnemyState()
+    {
+        
+    }
     
     public virtual void FixedUpdate()
     {

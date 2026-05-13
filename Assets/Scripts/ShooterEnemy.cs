@@ -8,9 +8,8 @@ public class ShooterEnemy : Enemy
     [SerializeField] private GameObject viseurStartProjectile;
     [SerializeField] private GameObject doProjectile;
     [SerializeField] private GameObject reProjectile;
-    //private Animator animatorShooter;
-    private bool isWalking;
-    private bool canShoot = true;
+    public bool isWalking;
+    public bool canShoot = true;
     
 
     public void Shoot()
@@ -31,6 +30,7 @@ public class ShooterEnemy : Enemy
         canShoot = false;
     }
 
+    /*
     public void OnTriggerStay2D(Collider2D other)
     {
         if (other.gameObject.layer == LayerMask.NameToLayer("Player") && !isStun && !TestIfWall())
@@ -38,7 +38,7 @@ public class ShooterEnemy : Enemy
             playerDetected = true;
         }
         else playerDetected = false;
-    }
+    }*/
 
     public override void Init()
     {
@@ -57,18 +57,25 @@ public class ShooterEnemy : Enemy
     {
         if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
         {
-            canShoot = true;
+            ResetEnemyState();
             playerDetected = false;
         }
     }
 
-    private void LookToPlayer()
+    public override void ResetEnemyState()
     {
-        Vector2 direction = player.transform.position - viseurAncragePoint.transform.position;
-        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-        viseurAncragePoint.transform.rotation = Quaternion.Euler(0, 0, angle);
+        canShoot = true;
     }
 
+    private void LookToPlayer()
+    {
+        Vector2 direction = player.transform.position - viseurStartProjectile.transform.position;
+        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+        if (!isFacingRight) angle += 20;
+        viseurAncragePoint.transform.rotation = Quaternion.Euler(0, 0, angle);
+    }
+    
+    
     public override void FixedUpdate()
     {
         base.FixedUpdate();
