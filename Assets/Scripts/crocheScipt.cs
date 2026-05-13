@@ -71,9 +71,10 @@ public class crocheScipt : MonoBehaviour
         }
         else if (other.gameObject.CompareTag("Player"))
         {
-            other.gameObject.GetComponent<PlayerController>().TakeDamage(damageProjectile);
+            PlayerController playerController = other.gameObject.GetComponent<PlayerController>();
+            playerController.TakeDamage(damageProjectile);
+            playerController.KnockBack();
         }
-        Debug.Log(other.gameObject.name);
         Destroy(gameObject);
     }
 }

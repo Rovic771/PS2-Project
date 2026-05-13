@@ -36,6 +36,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private GameObject doProjectile;
     [SerializeField] private GameObject reProjectile;
     [SerializeField] private float wallSlidingSpeed = 0.2f;
+    [SerializeField] private float knockbackForce = 10f;
     
     [Header("Animator")]
     [SerializeField] private Animator animator;
@@ -71,6 +72,7 @@ public class PlayerController : MonoBehaviour
     private float coyoteTimer;
     public static List<GameObject> currentPlateform = new List<GameObject>();
     private bool canFlip = true;
+    public bool isKnockback = false;
 
     IEnumerator ShootDelay()
     {
@@ -79,6 +81,12 @@ public class PlayerController : MonoBehaviour
         yield return new WaitForSeconds(0.1f);
         canShoot = true;
         isShoot = false;
+    }
+
+    IEnumerator KnockbackDelay()
+    {
+        yield return new WaitForSeconds(0.2f);
+        isKnockback = false;
     }
     
     void Awake()
@@ -119,6 +127,23 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public void KnockBack()
+    {
+        isKnockback = true;
+        Vector2 force = Vector2.zero;
+        if (isFacingRight)
+        {
+            force = new Vector2(-knockbackForce, knockbackForce);
+        }
+        else
+        {
+            force = new Vector2(knockbackForce, knockbackForce);
+        }
+        
+        rb.AddForce(force, ForceMode2D.Impulse);
+        StartCoroutine(KnockbackDelay());
+    }
+    
     public void ApplyForce(string typeJump)
     {
         Vector2 force = Vector2.zero;
@@ -338,7 +363,7 @@ public class PlayerController : MonoBehaviour
             isWall = false;
         }
         
-        if (isGround)
+        if (isGround && !isKnockback)
         {
             if (Mathf.Abs(moveInput.x) > 0.05f) 
             {
