@@ -15,10 +15,13 @@ public abstract class Enemy : MonoBehaviour
     public bool playerDetected = false;
     public GameObject player; 
     public float life;
-    public float damage;
+    public int damage;
     public float speed;
     public Rigidbody2D rbEnemy;
     public bool isStun = false;
+    public float _flipValue = 0;
+    public bool isFacingRight = true;
+    public Animator animator;
     
     [Header("Raycast")]
     [SerializeField] Color rayColor = Color.green;
@@ -27,20 +30,22 @@ public abstract class Enemy : MonoBehaviour
 
     private IEnumerator StunTime()
     {
+        Debug.Log("stunTime");
         yield return new WaitForSeconds(stunTime);
-        Stun();
+        EndStun();
     }
     
     public enum EnemyType { Do, Re }
     private void Start()
     {
         rbEnemy = GetComponent<Rigidbody2D>();
+        animator = GetComponent<Animator>();
         player = GameObject.FindGameObjectWithTag("Player");
         targetPos = patternPointA.transform.position;
         life = _enemyData.life;
-        damage = _enemyData.speed;
+        damage = _enemyData.damage;
         speed = _enemyData.speed;
-        Debug.Log(targetPos);
+        Init();
     }
 
     private void GoToPoint()
@@ -57,31 +62,58 @@ public abstract class Enemy : MonoBehaviour
         }
     }
     
-    public void Stun()
+    public virtual void Stun()
     {
-        switch (isStun)
-        {
-            case false:
-                stunIndicator.SetActive(true);
-                isStun = true;
-                StartCoroutine(StunTime());
-                break;
-            
-            case true:
-                stunIndicator.SetActive(false);
-                isStun = false;
-                life = _enemyData.life;
-                break;
-        }
+        if (isStun) return; 
+        animator.SetBool("isStun", true);
+        isStun = true;
+        stunIndicator.SetActive(true);
+        StopAllCoroutines(); 
+        StartCoroutine(StunTime());
     }
 
+    private void EndStun()
+    {
+        isStun = false;
+        stunIndicator.SetActive(false);
+        life = _enemyData.life;
+        animator.SetBool("isStun", false);
+    }
+
+    private void DetectWhenFlip()
+    {
+        if (!playerDetected)
+        {
+            if (targetPos.x > transform.position.x && isFacingRight)
+            {
+                Flip();
+            }
+            else if (targetPos.x < transform.position.x && !isFacingRight)
+            {
+                Flip();
+            }
+        }
+        else
+        {
+            if (player.transform.position.x > transform.position.x && isFacingRight)
+            {
+                Flip();
+            }
+            else if (player.transform.position.x < transform.position.x && !isFacingRight)
+            {
+                Flip();
+            }
+        }
+
+    }
+    
+    
     public virtual void FixedUpdate()
     {
         if (!playerDetected && !isStun)
         {
             if (Vector2.Distance(transform.position, targetPos) < 1f)
             {
-                Debug.Log("Arrivé au point");
                 GoToPoint();
             }
             else
@@ -89,11 +121,14 @@ public abstract class Enemy : MonoBehaviour
                 transform.position = Vector3.MoveTowards(transform.position, targetPos, speed * Time.deltaTime);
             }
         }
-
-        if (life <= 0 && !isStun)
-        {
-            Stun();
-        }
+        DetectWhenFlip();
+    }
+    
+    private void Flip()
+    {
+        isFacingRight = !isFacingRight;
+        _flipValue += 180;
+        transform.rotation = Quaternion.Euler(0, _flipValue, 0);
     }
     
     protected bool TestIfWall()
@@ -101,8 +136,8 @@ public abstract class Enemy : MonoBehaviour
         if (player == null || rayCastOrigin == null) return true;
         
         Vector2 origin = rayCastOrigin.position;
-        Vector2 target = player.transform.position;
-        Vector2 direction = target - origin;
+        Vector2 target = player.transform.position + new Vector3(0.3f,0,0);
+        Vector2 direction = (target - origin) + new Vector2(0,1);
         float distance = direction.magnitude; 
         RaycastHit2D hit = Physics2D.Raycast(origin, direction.normalized, distance, whatToHit);
         Debug.DrawRay(origin, direction.normalized * distance, rayColor, 0.1f);
@@ -117,16 +152,19 @@ public abstract class Enemy : MonoBehaviour
         return true;
     }
 
-    public void OnCollisionEnter2D(Collision2D other)
+    public virtual void OnCollisionEnter2D(Collision2D other)
     {
-        Debug.Log("Truc touché");
         if (other.gameObject.layer == LayerMask.NameToLayer("DoProjectileAlly") || other.gameObject.layer == LayerMask.NameToLayer("ReProjectileAlly"))
         {
             life--;
-            Debug.Log("life " + life);
+            if (life <= 0)
+            {
+                Stun();
+            }
         }
     }
 
+    public abstract void Init();
     public abstract void OnTriggerEnter2D(Collider2D other);
     public abstract void OnTriggerExit2D(Collider2D other);
 }
