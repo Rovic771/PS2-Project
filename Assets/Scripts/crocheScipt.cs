@@ -81,7 +81,7 @@ public class crocheScipt : MonoBehaviour
                 projectileTouchFromRight = false;
             }
             PlayerController playerController = other.gameObject.GetComponent<PlayerController>();
-            playerController.TakeDamage(damageProjectile);
+            //playerController.TakeDamage(damageProjectile);
             playerController.KnockBack(projectileTouchFromRight);
         }
         Destroy(gameObject);
