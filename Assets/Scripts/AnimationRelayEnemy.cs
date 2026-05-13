@@ -1,0 +1,16 @@
+using UnityEngine;
+
+public class AnimationRelayEnemy : MonoBehaviour
+{
+    private Enemy enemy;
+    
+    void Start()
+    {
+        if (enemy is null) enemy = GetComponent<Enemy>();
+    }
+
+    public void EndStun()
+    {
+        enemy.EndStun();
+    }
+}

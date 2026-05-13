@@ -28,12 +28,13 @@ public abstract class Enemy : MonoBehaviour
     [SerializeField] private Transform rayCastOrigin;
     [SerializeField] private LayerMask whatToHit;
 
+    
     private IEnumerator StunTime()
     {
-        Debug.Log("stunTime");
         yield return new WaitForSeconds(stunTime);
-        EndStun();
+        animator.SetTrigger("Revive");
     }
+    
     
     public enum EnemyType { Do, Re }
     private void Start()
@@ -41,6 +42,9 @@ public abstract class Enemy : MonoBehaviour
         rbEnemy = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         player = GameObject.FindGameObjectWithTag("Player");
+        if (typeEnemy == EnemyType.Do) gameObject.tag = "DoEnemy";
+        else if (typeEnemy == EnemyType.Re) gameObject.tag = "ReEnemy";
+        
         targetPos = patternPointA.transform.position;
         life = _enemyData.life;
         damage = _enemyData.damage;
@@ -64,7 +68,8 @@ public abstract class Enemy : MonoBehaviour
     
     public virtual void Stun()
     {
-        if (isStun) return; 
+        if (isStun) return;
+        gameObject.layer = LayerMask.NameToLayer("EnemyStun");
         animator.SetBool("isStun", true);
         isStun = true;
         stunIndicator.SetActive(true);
@@ -72,8 +77,9 @@ public abstract class Enemy : MonoBehaviour
         StartCoroutine(StunTime());
     }
 
-    private void EndStun()
+    public void EndStun()
     {
+        gameObject.layer = LayerMask.NameToLayer("Enemy");
         isStun = false;
         stunIndicator.SetActive(false);
         life = _enemyData.life;
@@ -154,13 +160,19 @@ public abstract class Enemy : MonoBehaviour
 
     public virtual void OnCollisionEnter2D(Collision2D other)
     {
-        if (other.gameObject.layer == LayerMask.NameToLayer("DoProjectileAlly") || other.gameObject.layer == LayerMask.NameToLayer("ReProjectileAlly"))
+        if (other.gameObject.layer == LayerMask.NameToLayer("DoProjectileAlly") && gameObject.CompareTag("DoEnemy") 
+            || other.gameObject.layer == LayerMask.NameToLayer("ReProjectileAlly") && gameObject.CompareTag("ReEnemy"))
         {
-            life--;
-            if (life <= 0)
-            {
-                Stun();
-            }
+            LoseHp();
+        }
+    }
+
+    public void LoseHp()
+    {
+        life--;
+        if (life <= 0)
+        {
+            Stun();
         }
     }
 

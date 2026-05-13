@@ -1,8 +1,9 @@
 using UnityEngine;
 
-public class AnimationRelay : MonoBehaviour
+public class AnimationRelayPlayer : MonoBehaviour
 {
     public PlayerController playerController;
+    public Enemy enemy;
     
     void Start()
     {
