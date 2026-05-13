@@ -1,19 +1,29 @@
+using System;
 using UnityEngine;
 
 public class SprinterEnemy : Enemy
 {
     [SerializeField] private float attackSpeed;
+    //private Animator animatorSprinter;
+    private bool isWalking;
     
     public void OnTriggerStay2D(Collider2D other)
     {
-        if (other.gameObject.layer == LayerMask.NameToLayer("Player") && !isStun)
+        if (other.gameObject.layer == LayerMask.NameToLayer("Player") && !isStun && !TestIfWall())
         {
             playerDetected = true;
         }
+        else playerDetected = false;
     }
+
+    public override void Init()
+    {
+        animator = GetComponent<Animator>();
+    }
+
     public override void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.gameObject.layer == LayerMask.NameToLayer("Player") && !isStun)
+        if (other.gameObject.layer == LayerMask.NameToLayer("Player") && !isStun && !TestIfWall())
         {
             playerDetected = true;
         }
@@ -27,28 +37,36 @@ public class SprinterEnemy : Enemy
         }
     }
 
+    public override void OnCollisionEnter2D(Collision2D other)
+    {
+        base.OnCollisionEnter2D(other);
+        if (other.gameObject.layer == LayerMask.NameToLayer("Player") && !isStun)
+        {
+            player.GetComponent<PlayerController>().TakeDamage(damage);
+        }
+    }
+
     private void PursuitPlayer()
     {
-        //Debug.Log("PursuitPlayer");
         transform.position = Vector3.MoveTowards(transform.position, player.transform.position, attackSpeed * Time.deltaTime);
     }
 
     public override void FixedUpdate()
     {
         base.FixedUpdate();
-        Debug.Log("player detected " +  playerDetected);
         switch (playerDetected)
         {
             case true:
-                patternPointA.SetActive(false);
-                patternPointB.SetActive(false);
+                isWalking = false;
                 PursuitPlayer();
                 break;
             
             case false:
-                patternPointA.SetActive(true);
-                patternPointB.SetActive(true);
+                isWalking = true;
                 break;
         }
+        
+        animator.SetBool("isWalking", isWalking);
+        animator.SetBool("playerDetected", playerDetected);
     }
 }

@@ -1,8 +1,9 @@
 using UnityEngine;
 
-public class AnimationRelay : MonoBehaviour
+public class AnimationRelayPlayer : MonoBehaviour
 {
     public PlayerController playerController;
+    public Enemy enemy;
     
     void Start()
     {
@@ -11,12 +12,16 @@ public class AnimationRelay : MonoBehaviour
 
     public void TriggerJump(string typeJump)
     {
-        Debug.Log("dsdfgrd");
         playerController.ApplyForce(typeJump);
     }
 
     public void TriggerShoot()
     {
         playerController.ApplyShoot();
+    }
+
+    public void TriggerColliderZone(string typeZone)
+    {
+        playerController.ActiveColliderZone(typeZone);
     }
 }
