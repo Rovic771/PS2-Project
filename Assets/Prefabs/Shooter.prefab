@@ -46,7 +46,7 @@ GameObject:
   m_Layer: 0
   m_Name: PointB
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: 3936346786652291628, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -631,6 +631,8 @@ MonoBehaviour:
   viseurStartProjectile: {fileID: 7588638476556792208}
   doProjectile: {fileID: 7945442381689740488, guid: be16aa65d3ef27544a594ac61050e77a, type: 3}
   reProjectile: {fileID: 5687507030353344439, guid: 88e3fe6df10c38d4a88eb08e91f49afd, type: 3}
+  isWalking: 0
+  canShoot: 1
 --- !u!1 &1875710111395000360
 GameObject:
   m_ObjectHideFlags: 0
@@ -984,7 +986,7 @@ GameObject:
   m_Layer: 0
   m_Name: PointA
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: 3936346786652291628, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
