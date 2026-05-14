@@ -7,6 +7,7 @@ using Unity.VisualScripting;
 using UnityEditor.Rendering;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 using Debug = UnityEngine.Debug;
 using Quaternion = UnityEngine.Quaternion;
 using Vector2 = UnityEngine.Vector2;
@@ -36,14 +37,28 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private GameObject reProjectile;
     [SerializeField] private float wallSlidingSpeed = 0.2f;
     
+    [Header("Animator")]
+    [SerializeField] private Animator animator;
+    
+    [Header("Statistiques")] 
+    [SerializeField] private PlayerData _playerData;
+    public int life;
+    public int damage;
+    
+    
+    [Header("Autre")]
     private Vector2 moveInput;
     private Vector2 inputRotation;
     public bool isGround; 
     public bool isWall;
+    public bool isFall;
+    public bool isShoot = false;
     private bool wasWalled;
-    private bool isFacingRight = true;
+    public bool isFacingRight = true;
     private bool isFacingRightAim = true;
     public bool canDoubleJump;
+    public bool isDoubleJump;
+    public bool isWallJump;
     private bool isWallSliding;
     private float _currentAimAngle;
     private float _lastAimAngle;
@@ -59,8 +74,11 @@ public class PlayerController : MonoBehaviour
 
     IEnumerator ShootDelay()
     {
-        yield return new WaitForSeconds(1);
+        canShoot = false;
+        isShoot = true;
+        yield return new WaitForSeconds(0.1f);
         canShoot = true;
+        isShoot = false;
     }
     
     void Awake()
@@ -71,9 +89,23 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         posInit = transform.position;
-        
+        if(animator is null) animator = GetComponentInChildren<Animator>();
+        if (PlayerPrefs.HasKey("checkpointX"))
+        {
+            transform.position = new Vector2(PlayerPrefs.GetFloat("checkpointX"), PlayerPrefs.GetFloat("checkpointY"));
+        }
+
+        life = _playerData.life;
+        damage = _playerData.damage;
     }
 
+    public void NewGame(InputAction.CallbackContext context)
+    {
+        PlayerPrefs.DeleteKey("checkpointX");
+        PlayerPrefs.DeleteKey("checkpointY");
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+    
     public void OnMove(InputAction.CallbackContext context)
     {
         moveInput = context.ReadValue<Vector2>();
@@ -87,6 +119,46 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public void ApplyForce(string typeJump)
+    {
+        Vector2 force = Vector2.zero;
+        switch (typeJump)
+        {
+            case "basicJump":
+                force = Vector2.up * jumpStrength;
+                isGround = false; 
+                isJump = true;
+                coyoteTimer = 0;
+                break;
+            case "wallJump":
+                rb.linearVelocity = Vector2.zero;
+                coyoteTimer = 0;
+                isJump = true;
+                isWallJump = true;
+                if (isFacingRight)
+                {
+                    force = new Vector2(-transform.localScale.x * forceWallJumpX, forceWallJumpY);
+                }
+                else
+                {
+                    force = new Vector2(transform.localScale.x * forceWallJumpX, forceWallJumpY);
+                }
+                break;
+            case "doubleJump" :
+                rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0);
+                force = Vector2.up * doubleJumpStrength;
+                canDoubleJump = false;
+                isDoubleJump = true;
+                break;
+        }
+        rb.AddForce(force, ForceMode2D.Impulse);
+    }
+
+    public void ApplyShoot()
+    {
+        StartCoroutine(ShootDelay());
+    }
+    
     public void OnJump(InputAction.CallbackContext context)
     {
         if (!context.performed)
@@ -95,38 +167,18 @@ public class PlayerController : MonoBehaviour
         }
         if (isGround)
             {
-                rb.AddForce(Vector2.up * jumpStrength, ForceMode2D.Impulse);
-                isGround = false;
-                coyoteTimer = 0;
-                isJump = true;
+                animator.SetTrigger("isJump");
             }
         else
         {
             if (IsWalled() || coyoteTimer > 0 && wasWalled)
             {
-                Vector2 Force = new Vector2(0,0);
-                rb.linearVelocity = Vector2.zero;
-                if (isFacingRight)
-                {
-                    Force = new Vector2(-transform.localScale.x * forceWallJumpX, forceWallJumpY);
-                }
-                else
-                {
-                    Force = new Vector2(transform.localScale.x * forceWallJumpX, forceWallJumpY);
-                }
-                //Flip();
-                rb.AddForce(Force, ForceMode2D.Impulse); ;
-                coyoteTimer = 0;
-                isJump = true;
-                Debug.Log("WallJump");
+                animator.SetTrigger("isWallJump"); ;
             }
             if (canDoubleJump && !isGround && !isWall)
             {
                 {
-                    Debug.Log("Double Jump");
-                    rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0);
-                    rb.AddForce(Vector2.up * doubleJumpStrength, ForceMode2D.Impulse);
-                    canDoubleJump = false;
+                    animator.SetTrigger("isDoubleJump");
                 }
                 isGround = false;
             }
@@ -141,9 +193,8 @@ public class PlayerController : MonoBehaviour
             {
                 GameObject proj = Instantiate(doProjectile, viseurAncragePoint.transform.position, Quaternion.identity);
                 Vector2 direction = (viseurStartProjectile.transform.position - viseurAncragePoint.transform.position).normalized;
-                proj.GetComponent<crocheScipt>().Launch(direction, true);
-                canShoot = false;
-                StartCoroutine(ShootDelay());
+                proj.GetComponent<crocheScipt>().Launch(direction, true, damage);
+                animator.SetTrigger("isShoot");
             }
         }
     }
@@ -156,10 +207,22 @@ public class PlayerController : MonoBehaviour
             {
                 GameObject proj = Instantiate(reProjectile, viseurAncragePoint.transform.position, Quaternion.identity);
                 Vector2 direction = (viseurStartProjectile.transform.position - viseurAncragePoint.transform.position).normalized;
-                proj.GetComponent<crocheScipt>().Launch(direction, true);
-                canShoot = false;
-                StartCoroutine(ShootDelay());
+                proj.GetComponent<crocheScipt>().Launch(direction, true, damage);
+                animator.SetTrigger("isShoot");
             }
+        }
+    }
+
+    public void ActiveColliderZone(string typeZone)
+    {
+        switch (typeZone)
+        {
+            case "do":
+                doZone.GetComponent<CircleCollider2D>().enabled = true;
+                break;
+            case "re":
+                reZone.GetComponent<CircleCollider2D>().enabled = true;
+                break;
         }
     }
     
@@ -170,10 +233,12 @@ public class PlayerController : MonoBehaviour
             zoneActive = true;
             reZone.SetActive(false);
             doZone.SetActive(true);
+            
         }
         if (context.canceled) 
         {
             doZone.SetActive(false);
+            doZone.GetComponent<CircleCollider2D>().enabled = false;
         }
     }
     
@@ -184,10 +249,12 @@ public class PlayerController : MonoBehaviour
             zoneActive = false;
             doZone.SetActive(false);
             reZone.SetActive(true);
+            
         }
         if (context.canceled)
         {
             reZone.SetActive(false);
+            reZone.GetComponent<CircleCollider2D>().enabled = false;
         }
     }
     
@@ -204,6 +271,7 @@ public class PlayerController : MonoBehaviour
             {
                 _currentAimAngle = Mathf.Atan2(inputRotationJSD.y, inputRotationJSD.x) * Mathf.Rad2Deg;
                 _lastAimAngle = _currentAimAngle;
+                
                 if (!isWalking && isGround)
                 {
                     if ((_currentAimAngle > 90 || _currentAimAngle < -90) && isFacingRight)
@@ -222,12 +290,12 @@ public class PlayerController : MonoBehaviour
     
     public void FixedUpdate()
     {
-        //Debug.Log(coyoteTimer);
         if (IsGrounded() && !isJump)
         {
             coyoteTimer = coyoteTime;
             isGround = true;
             canDoubleJump = true;
+            isFall = false;
         }
         else
         {
@@ -254,9 +322,11 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        if (rb.linearVelocity.y <= 0)
+        if (rb.linearVelocity.y <= -0.1f)
         {
             isJump = false;
+            isDoubleJump = false;
+            isFall = true;
         }
 
         if (IsWalled())
@@ -296,9 +366,18 @@ public class PlayerController : MonoBehaviour
         {
             Flip();
         }
+        
         WallSlide();
+        
+        animator.SetFloat("speed", Mathf.Abs(rb.linearVelocity.x));
+        animator.SetBool("isGrounded", isGround);
+        animator.SetBool("isDoubleJump", isDoubleJump);
+        animator.SetBool("isWall", isWall);
+        animator.SetBool("isFall", isFall);
+        animator.SetBool("canDoubleJump", canDoubleJump);
+        animator.SetBool("canShoot", canShoot); 
     }
-
+    
     private void Flip()
     {
         if (canFlip)
@@ -313,7 +392,7 @@ public class PlayerController : MonoBehaviour
             }
             isFacingRight = !isFacingRight;
             _flipValue += 180;
-            transform.rotation = Quaternion.Euler(0, _flipValue, 0);
+            animator.gameObject.transform.rotation = Quaternion.Euler(0, _flipValue, 0);
         }
     }
 
@@ -340,10 +419,18 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public void TakeDamage(int damage)
+    {
+        life -= damage;
+        if (life <= 0)
+        {
+            Die();
+        }
+    }
+    
     public void Die()//c temporaire je la mettrais autre part plus tard
     {
-        transform.position = posInit;
-        rb.linearVelocity = Vector2.zero;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }
 

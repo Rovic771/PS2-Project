@@ -18,8 +18,8 @@ public class Checkpoint : MonoBehaviour
     {
         if(other.gameObject.layer == LayerMask.NameToLayer("Player"))
         {
-            playerPos = transform.localPosition;
-            _playerController.posInit = playerPos;
+            PlayerPrefs.SetFloat("checkpointX", transform.position.x);
+            PlayerPrefs.SetFloat("checkpointY", transform.position.y);
         }
     }
 }
