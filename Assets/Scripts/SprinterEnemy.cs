@@ -43,6 +43,7 @@ public class SprinterEnemy : Enemy
         if (other.gameObject.layer == LayerMask.NameToLayer("Player") && !isStun)
         {
             player.GetComponent<PlayerController>().TakeDamage(damage);
+            Debug.Log(gameObject + " collisionne avec " + other.gameObject.name);
         }
     }
 
