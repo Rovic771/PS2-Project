@@ -380,7 +380,7 @@ public class PlayerController : MonoBehaviour
         {
             if (Mathf.Abs(moveInput.x) > 0.05f && Mathf.Abs(rb.linearVelocity.x) < airControlLimit)
             {
-                rb.AddForce(new Vector2(moveInput.x * airControlIntensity, 0));
+                rb.AddForce(new Vector2(moveInput.x * airControlIntensity, 0), ForceMode2D.Force);
             }
         }
         
