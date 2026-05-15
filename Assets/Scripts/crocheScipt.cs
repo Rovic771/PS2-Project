@@ -10,8 +10,11 @@ public class crocheScipt : MonoBehaviour
     [SerializeField] private float timeBeforeDestroy = 3f;
     private Rigidbody2D rbProjectile;
     private Vector2 directionTir;
+
+    private int damageProjectile;
+    //private PlayerController _playerController;
     
-    public void Launch(Vector2 direction, bool fromPlayer)
+    public void Launch(Vector2 direction, bool fromPlayer, int damage)
     {
         if (fromPlayer)
         {
@@ -34,7 +37,10 @@ public class crocheScipt : MonoBehaviour
             {
                 gameObject.layer = LayerMask.NameToLayer("ReProjectileEnemy");
             }
+            
         }
+
+        damageProjectile = damage;
         directionTir = direction.normalized;
         Destroy(gameObject, timeBeforeDestroy);
     }
@@ -43,6 +49,7 @@ public class crocheScipt : MonoBehaviour
     {
         rbProjectile = GetComponent<Rigidbody2D>();
     }
+    
 
     public void FixedUpdate()
     {
@@ -62,9 +69,21 @@ public class crocheScipt : MonoBehaviour
                 Destroy(other.gameObject);
             }
         }
-
-        Debug.Log(gameObject.layer);
-        Debug.Log(other.gameObject.name);
+        else if (other.gameObject.CompareTag("Player"))
+        {
+            bool projectileTouchFromRight;
+            if (transform.position.x > other.gameObject.transform.position.x)
+            {
+                projectileTouchFromRight = true;
+            }
+            else
+            {
+                projectileTouchFromRight = false;
+            }
+            PlayerController playerController = other.gameObject.GetComponent<PlayerController>();
+            //playerController.TakeDamage(damageProjectile);
+            playerController.KnockBack(projectileTouchFromRight);
+        }
         Destroy(gameObject);
     }
 }

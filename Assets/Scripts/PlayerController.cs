@@ -7,6 +7,7 @@ using Unity.VisualScripting;
 using UnityEditor.Rendering;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 using Debug = UnityEngine.Debug;
 using Quaternion = UnityEngine.Quaternion;
 using Vector2 = UnityEngine.Vector2;
@@ -35,10 +36,19 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private GameObject doProjectile;
     [SerializeField] private GameObject reProjectile;
     [SerializeField] private float wallSlidingSpeed = 0.2f;
+    [SerializeField] private float knockbackForceX = 10f;
+    [SerializeField] private float knockbackForceY = 10f;
     
     [Header("Animator")]
     [SerializeField] private Animator animator;
     
+    [Header("Statistiques")] 
+    [SerializeField] private PlayerData _playerData;
+    public int life;
+    public int damage;
+    
+    
+    [Header("Autre")]
     private Vector2 moveInput;
     private Vector2 inputRotation;
     public bool isGround; 
@@ -63,17 +73,21 @@ public class PlayerController : MonoBehaviour
     private float coyoteTimer;
     public static List<GameObject> currentPlateform = new List<GameObject>();
     private bool canFlip = true;
+    public bool isKnockback = false;
 
     IEnumerator ShootDelay()
     {
-        Debug.Log("tir");
         canShoot = false;
         isShoot = true;
         yield return new WaitForSeconds(0.1f);
         canShoot = true;
         isShoot = false;
-        Debug.Log("CanShoot = " + canShoot);
-        Debug.Log("Shoot Delay end");
+    }
+
+    IEnumerator KnockbackDelay()
+    {
+        yield return new WaitForSeconds(0.2f);
+        isKnockback = false;
     }
     
     void Awake()
@@ -85,8 +99,22 @@ public class PlayerController : MonoBehaviour
     {
         posInit = transform.position;
         if(animator is null) animator = GetComponentInChildren<Animator>();
+        if (PlayerPrefs.HasKey("checkpointX"))
+        {
+            transform.position = new Vector2(PlayerPrefs.GetFloat("checkpointX"), PlayerPrefs.GetFloat("checkpointY"));
+        }
+
+        life = _playerData.life;
+        damage = _playerData.damage;
     }
 
+    public void NewGame(InputAction.CallbackContext context)
+    {
+        PlayerPrefs.DeleteKey("checkpointX");
+        PlayerPrefs.DeleteKey("checkpointY");
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+    
     public void OnMove(InputAction.CallbackContext context)
     {
         moveInput = context.ReadValue<Vector2>();
@@ -100,20 +128,36 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public void KnockBack(bool toucheFromRight)
+    {
+        StopCoroutine(KnockbackDelay());
+        Vector2 force = Vector2.zero;
+        if (toucheFromRight)
+        {
+            force = new Vector2(-knockbackForceX, knockbackForceY);
+        }
+        else
+        {
+            force = new Vector2(knockbackForceX, knockbackForceY);
+        }
+        isKnockback = true;
+        rb.linearVelocity = Vector2.zero;
+        rb.AddForce(force, ForceMode2D.Impulse);
+        StartCoroutine(KnockbackDelay());
+    }
+    
     public void ApplyForce(string typeJump)
     {
         Vector2 force = Vector2.zero;
         switch (typeJump)
         {
             case "basicJump":
-                Debug.Log("basicJump");
                 force = Vector2.up * jumpStrength;
                 isGround = false; 
                 isJump = true;
                 coyoteTimer = 0;
                 break;
             case "wallJump":
-                Debug.Log("wallJump");
                 rb.linearVelocity = Vector2.zero;
                 coyoteTimer = 0;
                 isJump = true;
@@ -128,14 +172,12 @@ public class PlayerController : MonoBehaviour
                 }
                 break;
             case "doubleJump" :
-                Debug.Log("Double Jump");
                 rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0);
                 force = Vector2.up * doubleJumpStrength;
                 canDoubleJump = false;
                 isDoubleJump = true;
                 break;
         }
-        Debug.Log("Force ajoutée " + force);
         rb.AddForce(force, ForceMode2D.Impulse);
     }
 
@@ -178,7 +220,7 @@ public class PlayerController : MonoBehaviour
             {
                 GameObject proj = Instantiate(doProjectile, viseurAncragePoint.transform.position, Quaternion.identity);
                 Vector2 direction = (viseurStartProjectile.transform.position - viseurAncragePoint.transform.position).normalized;
-                proj.GetComponent<crocheScipt>().Launch(direction, true);
+                proj.GetComponent<crocheScipt>().Launch(direction, true, damage);
                 animator.SetTrigger("isShoot");
             }
         }
@@ -192,9 +234,22 @@ public class PlayerController : MonoBehaviour
             {
                 GameObject proj = Instantiate(reProjectile, viseurAncragePoint.transform.position, Quaternion.identity);
                 Vector2 direction = (viseurStartProjectile.transform.position - viseurAncragePoint.transform.position).normalized;
-                proj.GetComponent<crocheScipt>().Launch(direction, true);
+                proj.GetComponent<crocheScipt>().Launch(direction, true, damage);
                 animator.SetTrigger("isShoot");
             }
+        }
+    }
+
+    public void ActiveColliderZone(string typeZone)
+    {
+        switch (typeZone)
+        {
+            case "do":
+                doZone.GetComponent<CircleCollider2D>().enabled = true;
+                break;
+            case "re":
+                reZone.GetComponent<CircleCollider2D>().enabled = true;
+                break;
         }
     }
     
@@ -205,10 +260,12 @@ public class PlayerController : MonoBehaviour
             zoneActive = true;
             reZone.SetActive(false);
             doZone.SetActive(true);
+            
         }
         if (context.canceled) 
         {
             doZone.SetActive(false);
+            doZone.GetComponent<CircleCollider2D>().enabled = false;
         }
     }
     
@@ -219,10 +276,12 @@ public class PlayerController : MonoBehaviour
             zoneActive = false;
             doZone.SetActive(false);
             reZone.SetActive(true);
+            
         }
         if (context.canceled)
         {
             reZone.SetActive(false);
+            reZone.GetComponent<CircleCollider2D>().enabled = false;
         }
     }
     
@@ -306,7 +365,7 @@ public class PlayerController : MonoBehaviour
             isWall = false;
         }
         
-        if (isGround)
+        if (isGround && !isKnockback)
         {
             if (Mathf.Abs(moveInput.x) > 0.05f) 
             {
@@ -321,7 +380,7 @@ public class PlayerController : MonoBehaviour
         {
             if (Mathf.Abs(moveInput.x) > 0.05f && Mathf.Abs(rb.linearVelocity.x) < airControlLimit)
             {
-                rb.AddForce(new Vector2(moveInput.x * airControlIntensity, 0));
+                rb.AddForce(new Vector2(moveInput.x * airControlIntensity, 0), ForceMode2D.Force);
             }
         }
         
@@ -360,10 +419,9 @@ public class PlayerController : MonoBehaviour
             }
             isFacingRight = !isFacingRight;
             _flipValue += 180;
-            transform.rotation = Quaternion.Euler(0, _flipValue, 0);
+            animator.gameObject.transform.rotation = Quaternion.Euler(0, _flipValue, 0);
         }
     }
-    
 
     private bool IsWalled()
     {
@@ -388,10 +446,18 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public void TakeDamage(int damage)
+    {
+        life -= damage;
+        if (life <= 0)
+        {
+            Die();
+        }
+    }
+    
     public void Die()//c temporaire je la mettrais autre part plus tard
     {
-        transform.position = posInit;
-        rb.linearVelocity = Vector2.zero;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }
 
