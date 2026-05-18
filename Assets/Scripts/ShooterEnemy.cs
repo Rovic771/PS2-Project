@@ -29,16 +29,7 @@ public class ShooterEnemy : Enemy
         proj.GetComponent<crocheScipt>().Launch(direction, false, damage);
         canShoot = false;
     }
-
-    /*
-    public void OnTriggerStay2D(Collider2D other)
-    {
-        if (other.gameObject.layer == LayerMask.NameToLayer("Player") && !isStun && !TestIfWall())
-        {
-            playerDetected = true;
-        }
-        else playerDetected = false;
-    }*/
+    
 
     public override void Init()
     {
