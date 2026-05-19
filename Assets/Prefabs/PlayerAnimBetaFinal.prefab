@@ -730,6 +730,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AnimationRelay
   playerController: {fileID: 0}
+  enemy: {fileID: 0}
 --- !u!1 &2117359565108237453
 GameObject:
   m_ObjectHideFlags: 0
@@ -922,11 +923,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 8
-  airControlIntensity: 12
-  airControlLimit: 12
+  airControlIntensity: 20
+  airControlLimit: 20
   jumpStrength: 19
   doubleJumpStrength: 19
-  forceWallJumpX: 10
+  forceWallJumpX: 25
   forceWallJumpY: 20
   rb: {fileID: 5911240755402580217}
   coyoteTime: 0.3
@@ -946,6 +947,8 @@ MonoBehaviour:
   doProjectile: {fileID: 7945442381689740488, guid: be16aa65d3ef27544a594ac61050e77a, type: 3}
   reProjectile: {fileID: 5687507030353344439, guid: 88e3fe6df10c38d4a88eb08e91f49afd, type: 3}
   wallSlidingSpeed: 2
+  knockbackForceX: 10
+  knockbackForceY: 10
   animator: {fileID: 4108578945805453932}
   _playerData: {fileID: 11400000, guid: a2a56b4c692cf5c4a85dda3786949ee6, type: 2}
   life: 0
@@ -962,6 +965,7 @@ MonoBehaviour:
   posInit: {x: 0, y: 0, z: 0}
   zoneActive: 1
   isJump: 0
+  isKnockback: 0
 --- !u!50 &5911240755402580217
 Rigidbody2D:
   serializedVersion: 5
@@ -2103,6 +2107,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AnimationRelay
   playerController: {fileID: 0}
+  enemy: {fileID: 0}
 --- !u!1 &5119483830446102501
 GameObject:
   m_ObjectHideFlags: 0
@@ -2901,6 +2906,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AnimationRelay
   playerController: {fileID: 0}
+  enemy: {fileID: 0}
 --- !u!1 &8609631183576987672
 GameObject:
   m_ObjectHideFlags: 0

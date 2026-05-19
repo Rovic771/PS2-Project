@@ -200,7 +200,7 @@ public class PlayerController : MonoBehaviour
         {
             if (IsWalled() || coyoteTimer > 0 && wasWalled)
             {
-                animator.SetTrigger("isWallJump"); ;
+                animator.SetTrigger("isWallJump");
             }
             if (canDoubleJump && !isGround && !isWall)
             {
