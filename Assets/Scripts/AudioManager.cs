@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -5,7 +6,8 @@ public class AudioManager : MonoBehaviour
 {
     private AudioSource audioSource;
     [SerializeField] AudioClip GuitardTireRe, GuitardTireDo, GuitardZoneRe, GuitardZoneDo;
-   
+
+    public static AudioManager Instance;
 
     [Range(0f, 1f)]
     public float volume;
@@ -35,6 +37,8 @@ public class AudioManager : MonoBehaviour
         source.volume = volume;
         source.pitch = pitch;
         audioSource = GetComponent<AudioSource>();
+        
+
     }
 
     // Update is called once per frame
@@ -52,12 +56,29 @@ public class AudioManager : MonoBehaviour
 
         if (Gamepad.current.leftShoulder.wasPressedThisFrame)
         {
+            audioSource.loop = true;
             audioSource.PlayOneShot(GuitardZoneDo);
+            audioSource.Play();
+        }
+        if (Gamepad.current.leftShoulder.wasReleasedThisFrame)
+        {
+            audioSource.Stop();
+            audioSource.loop = false;
         }
 
         if (Gamepad.current.rightShoulder.wasPressedThisFrame)
         {
+            audioSource.loop = true;
             audioSource.PlayOneShot(GuitardZoneRe);
+            audioSource.Play();
+
         }
+        if (Gamepad.current.rightShoulder.wasReleasedThisFrame)
+        {
+            audioSource.Stop();
+            audioSource.loop = false;
+        }
+
+        
     }
 }
