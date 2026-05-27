@@ -710,6 +710,7 @@ MonoBehaviour:
   typeEnemy: 0
   stunTime: 5
   stunIndicator: {fileID: 5447370078898957009}
+  basicMove: 1
   targetPos: {x: 0, y: 0}
   playerDetected: 0
   player: {fileID: 0}
@@ -718,8 +719,10 @@ MonoBehaviour:
   speed: 0
   rbEnemy: {fileID: 0}
   isStun: 0
+  isIddle: 0
   _flipValue: 0
   isFacingRight: 1
+  isWalking: 0
   animator: {fileID: 0}
   rayColor: {r: 0, g: 1, b: 0, a: 1}
   rayCastOrigin: {fileID: 3146920736745342159}
@@ -727,6 +730,12 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 448
   attackSpeed: 10
+  groundCheck: {fileID: 0}
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 128
+  knockbackOnPlayerForceX: 20
+  knockbackOnPlayerForceY: 20
 --- !u!1001 &4780782070757435330
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -36,8 +36,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private GameObject doProjectile;
     [SerializeField] private GameObject reProjectile;
     [SerializeField] private float wallSlidingSpeed = 0.2f;
-    [SerializeField] private float knockbackForceX = 10f;
-    [SerializeField] private float knockbackForceY = 10f;
     
     [Header("Animator")]
     [SerializeField] private Animator animator;
@@ -128,17 +126,17 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void KnockBack(bool toucheFromRight)
+    public void KnockBack(bool toucheFromRight, float kbX, float kbY)
     {
         StopCoroutine(KnockbackDelay());
         Vector2 force = Vector2.zero;
         if (toucheFromRight)
         {
-            force = new Vector2(-knockbackForceX, knockbackForceY);
+            force = new Vector2(-kbX, kbY);
         }
         else
         {
-            force = new Vector2(knockbackForceX, knockbackForceY);
+            force = new Vector2(kbX, kbY);
         }
         isKnockback = true;
         rb.linearVelocity = Vector2.zero;
