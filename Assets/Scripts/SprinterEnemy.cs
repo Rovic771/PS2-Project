@@ -4,7 +4,14 @@ using UnityEngine;
 public class SprinterEnemy : Enemy
 {
     [SerializeField] private float attackSpeed;
+
+    /*
+    [SerializeField] private Transform rightLimit;
+    [SerializeField] private Transform leftLimit;
+    */
     //private Animator animatorSprinter;
+    [SerializeField] private Transform groundCheck;
+    [SerializeField] private LayerMask groundLayer;
     private bool isWalking;
     
     public void OnTriggerStay2D(Collider2D other)
@@ -52,19 +59,38 @@ public class SprinterEnemy : Enemy
         transform.position = Vector3.MoveTowards(transform.position, player.transform.position, attackSpeed * Time.deltaTime);
     }
 
+    private bool IsGrounded()
+    {
+        return Physics2D.OverlapBox(groundCheck.position, new Vector2(0.1f, 0.2f), 0f, groundLayer);
+    }
+    
+    
+    private bool EnemyInZone()
+    {
+        if (IsGrounded()) return true; 
+        return false;
+    }
+
     public override void FixedUpdate()
     {
         base.FixedUpdate();
-        switch (playerDetected)
+        if (EnemyInZone())
         {
-            case true:
-                isWalking = false;
-                PursuitPlayer();
-                break;
-            
-            case false:
-                isWalking = true;
-                break;
+            switch (playerDetected)
+            {
+                case true:
+                    isWalking = false;
+                    PursuitPlayer();
+                    break;
+        
+                case false:
+                    isWalking = true;
+                    break;
+            }
+        }
+        else
+        {
+            animator.SetBool("isIddle", true);
         }
         
         animator.SetBool("isWalking", isWalking);
