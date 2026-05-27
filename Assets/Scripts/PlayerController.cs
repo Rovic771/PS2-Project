@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using NUnit.Framework;
 using Unity.VisualScripting;
-using UnityEditor.Rendering;
+//using UnityEditor.Rendering;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -200,7 +200,7 @@ public class PlayerController : MonoBehaviour
         {
             if (IsWalled() || coyoteTimer > 0 && wasWalled)
             {
-                animator.SetTrigger("isWallJump"); ;
+                animator.SetTrigger("isWallJump");
             }
             if (canDoubleJump && !isGround && !isWall)
             {
