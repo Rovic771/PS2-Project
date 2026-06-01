@@ -150,24 +150,8 @@ public class PlayerController : MonoBehaviour
         switch (typeJump)
         {
             case "basicJump":
-                force = Vector2.up * jumpStrength;
-                isGround = false; 
-                isJump = true;
-                coyoteTimer = 0;
                 break;
             case "wallJump":
-                rb.linearVelocity = Vector2.zero;
-                coyoteTimer = 0;
-                isJump = true;
-                isWallJump = true;
-                if (isFacingRight)
-                {
-                    force = new Vector2(-transform.localScale.x * forceWallJumpX, forceWallJumpY);
-                }
-                else
-                {
-                    force = new Vector2(transform.localScale.x * forceWallJumpX, forceWallJumpY);
-                }
                 break;
             case "doubleJump" :
                 Debug.Log("Double Jump");
@@ -183,6 +167,7 @@ public class PlayerController : MonoBehaviour
     
     public void OnJump(InputAction.CallbackContext context)
     {
+        Vector2 force = Vector2.zero;
         if (!context.performed)
         {
             return;
@@ -190,28 +175,42 @@ public class PlayerController : MonoBehaviour
         if (isGround)
             {
                 animator.SetTrigger("isJump");
+                force = Vector2.up * jumpStrength;
+                isGround = false; 
+                isJump = true;
+                coyoteTimer = 0;
             }
         else
         {
             if (IsWalled() || coyoteTimer > 0 && wasWalled)
             {
                 animator.SetTrigger("isWallJump");
+                rb.linearVelocity = Vector2.zero;
+                coyoteTimer = 0;
+                isJump = true;
+                isWallJump = true;
+                if (isFacingRight)
+                {
+                    force = new Vector2(-transform.localScale.x * forceWallJumpX, forceWallJumpY);
+                }
+                else
+                {
+                    force = new Vector2(transform.localScale.x * forceWallJumpX, forceWallJumpY);
+                }
             }
             if (canDoubleJump && !isGround && !isWall)
             {
                 {
                     animator.SetTrigger("isDoubleJump");
                     rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0);
-                    Vector2 force = Vector2.zero;
                     force = Vector2.up * doubleJumpStrength;
                     canDoubleJump = false;
                     isDoubleJump = true;
-                    Debug.Log("Appuie sur la touche double Jump");
-                    rb.AddForce(force, ForceMode2D.Impulse);
                 }
                 isGround = false;
             }
         }
+        rb.AddForce(force, ForceMode2D.Impulse);
     }
 
     public void DoShoot(InputAction.CallbackContext context)
