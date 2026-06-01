@@ -4,81 +4,46 @@ using UnityEngine.InputSystem;
 
 public class AudioManager : MonoBehaviour
 {
-    private AudioSource audioSource;
-    [SerializeField] AudioClip GuitardTireRe, GuitardTireDo, GuitardZoneRe, GuitardZoneDo;
+    [Header("Sounds")]
+    [SerializeField] private AudioClip[] sfx;
+    [SerializeField] private AudioClip mainMusic;
 
+
+    [Header("Audio Sources")] 
+    [SerializeField] private AudioSource musicSource;
+    [SerializeField] private AudioSource sfxSource;
+    
     public static AudioManager Instance;
-
-    [Range(0f, 1f)]
-    public float volume;
-
-    [Range(0.1f, 2.5f)]
-    public float pitch;
-
-    private AudioSource source;
 
    void Awake()
     {
-        gameObject.AddComponent<AudioSource>();
-        source = GetComponent <AudioSource>();
+        if (Instance != null && Instance != this)
+        {
+            Destroy(this);
+        }
 
-        volume = 0.5f;
-        pitch = 1f;
+        Instance = this;
     }
-
-
-
-
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+   
     void Start()
     {
-        source.clip = GuitardTireRe;
-        source.volume = volume;
-        source.pitch = pitch;
-        audioSource = GetComponent<AudioSource>();
-        
-
+        if (mainMusic == null)
+            return;
+        musicSource.clip = mainMusic;
+        musicSource.Play();
+    }
+    
+    public void SoundExample(int _soundToplay, bool _loop = false)
+    {
+        sfxSource.clip = sfx[_soundToplay];
+        sfxSource.loop = _loop;
+        sfxSource.Play();
     }
 
-    // Update is called once per frame
-    void Update()
+    public void StopSound()
     {
-        if (Gamepad.current.leftTrigger.wasPressedThisFrame)
-        {
-            audioSource.PlayOneShot(GuitardTireDo);
-        }
-
-        if (Gamepad.current.rightTrigger.wasPressedThisFrame)
-        {
-            audioSource.PlayOneShot(GuitardTireRe);
-        }
-
-        if (Gamepad.current.leftShoulder.wasPressedThisFrame)
-        {
-            audioSource.loop = true;
-            audioSource.PlayOneShot(GuitardZoneDo);
-            audioSource.Play();
-        }
-        if (Gamepad.current.leftShoulder.wasReleasedThisFrame)
-        {
-            audioSource.Stop();
-            audioSource.loop = false;
-        }
-
-        if (Gamepad.current.rightShoulder.wasPressedThisFrame)
-        {
-            audioSource.loop = true;
-            audioSource.PlayOneShot(GuitardZoneRe);
-            audioSource.Play();
-
-        }
-        if (Gamepad.current.rightShoulder.wasReleasedThisFrame)
-        {
-            audioSource.Stop();
-            audioSource.loop = false;
-        }
-
-        
+        sfxSource.Stop();
     }
 }
+
+
