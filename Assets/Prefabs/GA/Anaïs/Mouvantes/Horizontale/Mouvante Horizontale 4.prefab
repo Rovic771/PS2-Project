@@ -563,6 +563,46 @@ PrefabInstance:
       propertyPath: m_Name
       value: Smoke Plateforme
       objectReference: {fileID: 0}
+    - target: {fileID: 7050525469746018840, guid: f7db323464156ba40a693f5dce740255, type: 3}
+      propertyPath: moveWithTransform
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7050525469746018840, guid: f7db323464156ba40a693f5dce740255, type: 3}
+      propertyPath: ShapeModule.enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7050525469746018840, guid: f7db323464156ba40a693f5dce740255, type: 3}
+      propertyPath: VelocityModule.enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7050525469746018840, guid: f7db323464156ba40a693f5dce740255, type: 3}
+      propertyPath: VelocityModule.x.scalar
+      value: -0.001
+      objectReference: {fileID: 0}
+    - target: {fileID: 7050525469746018840, guid: f7db323464156ba40a693f5dce740255, type: 3}
+      propertyPath: InitialModule.gravitySource
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7050525469746018840, guid: f7db323464156ba40a693f5dce740255, type: 3}
+      propertyPath: VelocityModule.inWorldSpace
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7050525469746018840, guid: f7db323464156ba40a693f5dce740255, type: 3}
+      propertyPath: InheritVelocityModule.m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7050525469746018840, guid: f7db323464156ba40a693f5dce740255, type: 3}
+      propertyPath: InheritVelocityModule.enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7050525469746018840, guid: f7db323464156ba40a693f5dce740255, type: 3}
+      propertyPath: InheritVelocityModule.m_Curve.scalar
+      value: 0.9
+      objectReference: {fileID: 0}
+    - target: {fileID: 7050525469746018840, guid: f7db323464156ba40a693f5dce740255, type: 3}
+      propertyPath: InitialModule.gravityModifier.scalar
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -637,6 +677,30 @@ PrefabInstance:
       propertyPath: m_Name
       value: Smoke Plateforme_002
       objectReference: {fileID: 0}
+    - target: {fileID: 7050525469746018840, guid: f7db323464156ba40a693f5dce740255, type: 3}
+      propertyPath: moveWithTransform
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7050525469746018840, guid: f7db323464156ba40a693f5dce740255, type: 3}
+      propertyPath: VelocityModule.enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7050525469746018840, guid: f7db323464156ba40a693f5dce740255, type: 3}
+      propertyPath: ClampVelocityModule.enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7050525469746018840, guid: f7db323464156ba40a693f5dce740255, type: 3}
+      propertyPath: InheritVelocityModule.m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7050525469746018840, guid: f7db323464156ba40a693f5dce740255, type: 3}
+      propertyPath: InheritVelocityModule.enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7050525469746018840, guid: f7db323464156ba40a693f5dce740255, type: 3}
+      propertyPath: InheritVelocityModule.m_Curve.scalar
+      value: 0.9
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -710,6 +774,22 @@ PrefabInstance:
     - target: {fileID: 5963371853331691206, guid: f7db323464156ba40a693f5dce740255, type: 3}
       propertyPath: m_Name
       value: Smoke Plateforme_001
+      objectReference: {fileID: 0}
+    - target: {fileID: 7050525469746018840, guid: f7db323464156ba40a693f5dce740255, type: 3}
+      propertyPath: moveWithTransform
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7050525469746018840, guid: f7db323464156ba40a693f5dce740255, type: 3}
+      propertyPath: InheritVelocityModule.m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7050525469746018840, guid: f7db323464156ba40a693f5dce740255, type: 3}
+      propertyPath: InheritVelocityModule.enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7050525469746018840, guid: f7db323464156ba40a693f5dce740255, type: 3}
+      propertyPath: InheritVelocityModule.m_Curve.scalar
+      value: 0.9
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
