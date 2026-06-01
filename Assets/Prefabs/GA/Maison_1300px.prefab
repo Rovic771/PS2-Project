@@ -374,9 +374,9 @@ GameObject:
   m_Component:
   - component: {fileID: 7432892125913019446}
   - component: {fileID: 2568035058403701996}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: sol
-  m_TagString: Untagged
+  m_TagString: ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -430,7 +430,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0.006667465, y: -0.9655268}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -440,7 +440,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 0.98666507, y: 0.9080064}
   m_EdgeRadius: 0
 --- !u!1 &3827364641678500044
 GameObject:
@@ -452,9 +452,9 @@ GameObject:
   m_Component:
   - component: {fileID: 6878625487099314755}
   - component: {fileID: 4934429245717082178}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: mur
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -508,7 +508,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: -0.002725646, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -518,7 +518,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 1.0054512, y: 1}
   m_EdgeRadius: 0
 --- !u!1 &3916777874699907981
 GameObject:
