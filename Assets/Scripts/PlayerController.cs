@@ -170,10 +170,7 @@ public class PlayerController : MonoBehaviour
                 }
                 break;
             case "doubleJump" :
-                rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0);
-                force = Vector2.up * doubleJumpStrength;
-                canDoubleJump = false;
-                isDoubleJump = true;
+                Debug.Log("Double Jump");
                 break;
         }
         rb.AddForce(force, ForceMode2D.Impulse);
@@ -204,6 +201,13 @@ public class PlayerController : MonoBehaviour
             {
                 {
                     animator.SetTrigger("isDoubleJump");
+                    rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0);
+                    Vector2 force = Vector2.zero;
+                    force = Vector2.up * doubleJumpStrength;
+                    canDoubleJump = false;
+                    isDoubleJump = true;
+                    Debug.Log("Appuie sur la touche double Jump");
+                    rb.AddForce(force, ForceMode2D.Impulse);
                 }
                 isGround = false;
             }
