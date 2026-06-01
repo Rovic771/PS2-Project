@@ -88,7 +88,7 @@ public class SprinterEnemy : Enemy
     public override void FixedUpdate()
     {
         base.FixedUpdate();
-        if (IsGrounded())
+        if (IsGrounded() && !isStun)
         {
             isIddle = false;
             switch (playerDetected)
