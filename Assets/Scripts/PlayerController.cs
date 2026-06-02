@@ -1,10 +1,5 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
-using NUnit.Framework;
-using Unity.VisualScripting;
-using UnityEditor.Rendering;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -65,7 +60,16 @@ public class PlayerController : MonoBehaviour
     public bool canShoot = true;
     float _flipValue = 0;
     public Vector3 posInit;
-    public bool zoneActive = true; // true c do et false c re
+    
+    public enum TypeZone
+    {
+        Not,
+        Do,
+        Re,
+    }
+
+    public TypeZone currentZoneActive;
+    
     private bool isWalking;
     public bool isJump;
     private float coyoteTimer;
@@ -95,6 +99,7 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
+        currentZoneActive  = TypeZone.Not;
         posInit = transform.position;
         if(animator is null) animator = GetComponentInChildren<Animator>();
         if (PlayerPrefs.HasKey("checkpointX"))
@@ -142,22 +147,6 @@ public class PlayerController : MonoBehaviour
         rb.linearVelocity = Vector2.zero;
         rb.AddForce(force, ForceMode2D.Impulse);
         StartCoroutine(KnockbackDelay());
-    }
-    
-    public void ApplyForce(string typeJump)
-    {
-        Vector2 force = Vector2.zero;
-        switch (typeJump)
-        {
-            case "basicJump":
-                break;
-            case "wallJump":
-                break;
-            case "doubleJump" :
-                Debug.Log("Double Jump");
-                break;
-        }
-        rb.AddForce(force, ForceMode2D.Impulse);
     }
 
     public void ApplyShoot()
@@ -217,7 +206,7 @@ public class PlayerController : MonoBehaviour
     {
         if (context.performed)
         {
-            if (canShoot)
+            if (canShoot && currentZoneActive == TypeZone.Not)
             {
                 GameObject proj = Instantiate(doProjectile, viseurAncragePoint.transform.position, Quaternion.identity);
                 Vector2 direction = (viseurStartProjectile.transform.position - viseurAncragePoint.transform.position).normalized;
@@ -231,7 +220,7 @@ public class PlayerController : MonoBehaviour
     {
         if (context.performed)
         {
-            if(canShoot)
+            if(canShoot && currentZoneActive == TypeZone.Not)
             {
                 GameObject proj = Instantiate(reProjectile, viseurAncragePoint.transform.position, Quaternion.identity);
                 Vector2 direction = (viseurStartProjectile.transform.position - viseurAncragePoint.transform.position).normalized;
@@ -258,7 +247,7 @@ public class PlayerController : MonoBehaviour
     {
         if (context.performed)
         {
-            zoneActive = true;
+            currentZoneActive = TypeZone.Do;
             reZone.SetActive(false);
             doZone.SetActive(true);
             
@@ -266,6 +255,7 @@ public class PlayerController : MonoBehaviour
         if (context.canceled) 
         {
             doZone.SetActive(false);
+            currentZoneActive = TypeZone.Not;
             doZone.GetComponent<CircleCollider2D>().enabled = false;
         }
     }
@@ -274,7 +264,7 @@ public class PlayerController : MonoBehaviour
     {
         if (context.performed)
         {
-            zoneActive = false;
+            currentZoneActive = TypeZone.Re;
             doZone.SetActive(false);
             reZone.SetActive(true);
             
@@ -282,6 +272,7 @@ public class PlayerController : MonoBehaviour
         if (context.canceled)
         {
             reZone.SetActive(false);
+            currentZoneActive = TypeZone.Not;
             reZone.GetComponent<CircleCollider2D>().enabled = false;
         }
     }
