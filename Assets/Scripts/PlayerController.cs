@@ -230,14 +230,14 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void ActiveColliderZone(string typeZone)
+    public void ActiveColliderZone(TypeZone _typeZone)
     {
-        switch (typeZone)
+        switch (_typeZone)
         {
-            case "do":
+            case TypeZone.Do:
                 doZone.GetComponent<CircleCollider2D>().enabled = true;
                 break;
-            case "re":
+            case TypeZone.Re:
                 reZone.GetComponent<CircleCollider2D>().enabled = true;
                 break;
         }
@@ -248,6 +248,7 @@ public class PlayerController : MonoBehaviour
         if (context.performed)
         {
             currentZoneActive = TypeZone.Do;
+            ActiveColliderZone(TypeZone.Do);
             reZone.SetActive(false);
             doZone.SetActive(true);
             
@@ -265,6 +266,7 @@ public class PlayerController : MonoBehaviour
         if (context.performed)
         {
             currentZoneActive = TypeZone.Re;
+            ActiveColliderZone(TypeZone.Re);
             doZone.SetActive(false);
             reZone.SetActive(true);
             
