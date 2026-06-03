@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class SprinterEnemy : Enemy
@@ -8,6 +9,16 @@ public class SprinterEnemy : Enemy
     [SerializeField] private float knockbackOnPlayerForceX = 10f;
     [SerializeField] private float knockbackOnPlayerForceY = 10f;
     private Vector2 posInit;
+    private bool playerWasDetected;
+
+    private IEnumerator TimeBeforeRestartMovement()
+    {
+        Debug.Log("Test");
+        yield return new WaitForSeconds(2f);
+        Debug.Log("Test2");
+        playerWasDetected = false;
+        ReturnToInitPosition();
+    }
     
     public void OnTriggerStay2D(Collider2D other)
     {
@@ -29,6 +40,7 @@ public class SprinterEnemy : Enemy
         if (other.gameObject.layer == LayerMask.NameToLayer("Player") && !isStun && !TestIfWall())
         {
             playerDetected = true;
+            playerWasDetected = true;
         }
     }
 
@@ -88,23 +100,27 @@ public class SprinterEnemy : Enemy
     public override void FixedUpdate()
     {
         base.FixedUpdate();
-        if (IsGrounded())
+        if (IsGrounded() && !isStun)
         {
             isIddle = false;
             switch (playerDetected)
             {
                 case true:
+                    StopAllCoroutines();
                     isWalking = false;
                     PursuitPlayer();
                     break;
         
                 case false: ;
-                    if (basicMove)
+                    if (playerWasDetected)
+                    {
+                        StartCoroutine(TimeBeforeRestartMovement());
+                    }
+                    else if(basicMove && !playerWasDetected)
                     {
                         isWalking = true;
-                        break;
                     }
-                    ReturnToInitPosition();
+                    //ReturnToInitPosition();
                     break;
             }
         }
