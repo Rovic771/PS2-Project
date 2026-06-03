@@ -10,11 +10,6 @@ public class AnimationRelayPlayer : MonoBehaviour
         if(playerController is null) playerController = GetComponentInParent<PlayerController>();
     }
 
-    public void TriggerJump(string typeJump)
-    {
-        playerController.ApplyForce(typeJump);
-    }
-
     public void TriggerShoot()
     {
         playerController.ApplyShoot();

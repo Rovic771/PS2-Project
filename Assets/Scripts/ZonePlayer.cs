@@ -8,7 +8,7 @@ public class ZonePlayer : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (zoneActiveSys.zoneActive)
+        if (zoneActiveSys.currentZoneActive == PlayerController.TypeZone.Do)
         {
             if (gameObject.CompareTag("DoZone") && other.gameObject.layer == LayerMask.NameToLayer("DoObject"))
             {
@@ -23,7 +23,7 @@ public class ZonePlayer : MonoBehaviour
                 other.gameObject.GetComponent<Enemy>().LoseHp();
             }
         }
-        else 
+        else if(zoneActiveSys.currentZoneActive == PlayerController.TypeZone.Re)
         {
             if (gameObject.CompareTag("ReZone") && other.gameObject.layer == LayerMask.NameToLayer("ReObject"))
             {
