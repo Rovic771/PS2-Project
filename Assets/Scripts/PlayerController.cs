@@ -1,10 +1,5 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
-using NUnit.Framework;
-using Unity.VisualScripting;
-//using UnityEditor.Rendering;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -65,7 +60,16 @@ public class PlayerController : MonoBehaviour
     public bool canShoot = true;
     float _flipValue = 0;
     public Vector3 posInit;
-    public bool zoneActive = true; // true c do et false c re
+    
+    public enum TypeZone
+    {
+        Not,
+        Do,
+        Re,
+    }
+
+    public TypeZone currentZoneActive;
+    
     private bool isWalking;
     public bool isJump;
     private float coyoteTimer;
@@ -95,6 +99,7 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
+        currentZoneActive  = TypeZone.Not;
         posInit = transform.position;
         if(animator is null) animator = GetComponentInChildren<Animator>();
         if (PlayerPrefs.HasKey("checkpointX"))
@@ -143,19 +148,32 @@ public class PlayerController : MonoBehaviour
         rb.AddForce(force, ForceMode2D.Impulse);
         StartCoroutine(KnockbackDelay());
     }
+
+    public void ApplyShoot()
+    {
+        StartCoroutine(ShootDelay());
+    }
     
-    public void ApplyForce(string typeJump)
+    public void OnJump(InputAction.CallbackContext context)
     {
         Vector2 force = Vector2.zero;
-        switch (typeJump)
+        if (!context.performed)
         {
-            case "basicJump":
+            return;
+        }
+        if (isGround)
+            {
+                animator.SetTrigger("isJump");
                 force = Vector2.up * jumpStrength;
                 isGround = false; 
                 isJump = true;
                 coyoteTimer = 0;
-                break;
-            case "wallJump":
+            }
+        else
+        {
+            if (IsWalled() || coyoteTimer > 0 && wasWalled)
+            {
+                animator.SetTrigger("isWallJump");
                 rb.linearVelocity = Vector2.zero;
                 coyoteTimer = 0;
                 isJump = true;
@@ -168,53 +186,27 @@ public class PlayerController : MonoBehaviour
                 {
                     force = new Vector2(transform.localScale.x * forceWallJumpX, forceWallJumpY);
                 }
-                break;
-            case "doubleJump" :
-                rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0);
-                force = Vector2.up * doubleJumpStrength;
-                canDoubleJump = false;
-                isDoubleJump = true;
-                break;
-        }
-        rb.AddForce(force, ForceMode2D.Impulse);
-    }
-
-    public void ApplyShoot()
-    {
-        StartCoroutine(ShootDelay());
-    }
-    
-    public void OnJump(InputAction.CallbackContext context)
-    {
-        if (!context.performed)
-        {
-            return;
-        }
-        if (isGround)
-            {
-                animator.SetTrigger("isJump");
-            }
-        else
-        {
-            if (IsWalled() || coyoteTimer > 0 && wasWalled)
-            {
-                animator.SetTrigger("isWallJump");
             }
             if (canDoubleJump && !isGround && !isWall)
             {
                 {
                     animator.SetTrigger("isDoubleJump");
+                    rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0);
+                    force = Vector2.up * doubleJumpStrength;
+                    canDoubleJump = false;
+                    isDoubleJump = true;
                 }
                 isGround = false;
             }
         }
+        rb.AddForce(force, ForceMode2D.Impulse);
     }
 
     public void DoShoot(InputAction.CallbackContext context)
     {
         if (context.performed)
         {
-            if (canShoot)
+            if (canShoot && currentZoneActive == TypeZone.Not)
             {
                 GameObject proj = Instantiate(doProjectile, viseurAncragePoint.transform.position, Quaternion.identity);
                 Vector2 direction = (viseurStartProjectile.transform.position - viseurAncragePoint.transform.position).normalized;
@@ -228,7 +220,7 @@ public class PlayerController : MonoBehaviour
     {
         if (context.performed)
         {
-            if(canShoot)
+            if(canShoot && currentZoneActive == TypeZone.Not)
             {
                 GameObject proj = Instantiate(reProjectile, viseurAncragePoint.transform.position, Quaternion.identity);
                 Vector2 direction = (viseurStartProjectile.transform.position - viseurAncragePoint.transform.position).normalized;
@@ -255,7 +247,7 @@ public class PlayerController : MonoBehaviour
     {
         if (context.performed)
         {
-            zoneActive = true;
+            currentZoneActive = TypeZone.Do;
             reZone.SetActive(false);
             doZone.SetActive(true);
             
@@ -263,6 +255,7 @@ public class PlayerController : MonoBehaviour
         if (context.canceled) 
         {
             doZone.SetActive(false);
+            currentZoneActive = TypeZone.Not;
             doZone.GetComponent<CircleCollider2D>().enabled = false;
         }
     }
@@ -271,7 +264,7 @@ public class PlayerController : MonoBehaviour
     {
         if (context.performed)
         {
-            zoneActive = false;
+            currentZoneActive = TypeZone.Re;
             doZone.SetActive(false);
             reZone.SetActive(true);
             
@@ -279,6 +272,7 @@ public class PlayerController : MonoBehaviour
         if (context.canceled)
         {
             reZone.SetActive(false);
+            currentZoneActive = TypeZone.Not;
             reZone.GetComponent<CircleCollider2D>().enabled = false;
         }
     }
