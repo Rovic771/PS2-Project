@@ -1,11 +1,10 @@
-using JetBrains.Annotations;
+using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class AudioManager : MonoBehaviour
 {
     [Header("Sounds")]
-    [SerializeField] private AudioClip[] sfx;
+    [SerializeField] private List<AudioClip> sfx = new List<AudioClip>();
     [SerializeField] private AudioClip mainMusic;
 
 
