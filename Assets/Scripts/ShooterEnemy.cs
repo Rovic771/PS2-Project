@@ -79,7 +79,12 @@ public class ShooterEnemy : Enemy
                 animator.SetTrigger("isShot");
                 break;
             case false:
-                isWalking = true;
+                if(basicMove)
+                {
+                    isWalking = true;
+                    break;
+                }
+                isWalking = false;
                 break;
         }
         
