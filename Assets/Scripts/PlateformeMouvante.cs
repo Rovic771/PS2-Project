@@ -9,10 +9,12 @@ public class PlateformeMouvante : MonoBehaviour
     [SerializeField] private float speed = 1;
     [SerializeField] public bool objectActive = false; 
     private Vector3 targetPos;
+    public int currentPointIndex;
 
     private void Start()
     {
         transform.position = origine.transform.position;
+        currentPointIndex = points.IndexOf(origine);
     }
     
     private void FixedUpdate()
@@ -20,13 +22,14 @@ public class PlateformeMouvante : MonoBehaviour
         if (objectActive)
         {
             transform.position = Vector3.MoveTowards(transform.position, targetPos, speed * Time.deltaTime);
-            if (Vector3.Distance(transform.position, targetPos) < 0.05f)
+            if (Vector3.Distance(transform.position, targetPos) < 0.05f && points[currentPointIndex] != origine)
             {
                 objectActive = false;
             }
         }
     }
 
+    /*
     private int CurrentPoint()
     {
         if (!objectActive)
@@ -46,16 +49,17 @@ public class PlateformeMouvante : MonoBehaviour
         }
 
         return -1;
-    }
+    }*/
 
     private void ChangeTargetPoint(string typeProjectile)
     {
-        int currentPoint = CurrentPoint();
+        //int currentPoint = CurrentPoint();
         if (typeProjectile == "Re")
         {
-            if (currentPoint + 1 < points.Count)
+            if (currentPointIndex + 1 < points.Count)
             {
-                targetPos = points[currentPoint + 1].transform.position;
+                currentPointIndex++;
+                targetPos = points[currentPointIndex].transform.position;
                 objectActive = true;
             }
             else
@@ -65,9 +69,10 @@ public class PlateformeMouvante : MonoBehaviour
         }
         else if (typeProjectile == "Do")
         {
-            if (currentPoint - 1 >= 0)
+            if (currentPointIndex - 1 >= 0)
             {
-                targetPos = points[currentPoint - 1].transform.position;
+                currentPointIndex--;
+                targetPos = points[currentPointIndex].transform.position;
                 objectActive = true;
             }
             else

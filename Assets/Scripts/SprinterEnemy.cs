@@ -1,18 +1,13 @@
-using System;
 using UnityEngine;
 
 public class SprinterEnemy : Enemy
 {
     [SerializeField] private float attackSpeed;
-
-    /*
-    [SerializeField] private Transform rightLimit;
-    [SerializeField] private Transform leftLimit;
-    */
-    //private Animator animatorSprinter;
     [SerializeField] private Transform groundCheck;
     [SerializeField] private LayerMask groundLayer;
-    private bool isWalking;
+    [SerializeField] private float knockbackOnPlayerForceX = 10f;
+    [SerializeField] private float knockbackOnPlayerForceY = 10f;
+    private Vector2 posInit;
     
     public void OnTriggerStay2D(Collider2D other)
     {
@@ -26,6 +21,7 @@ public class SprinterEnemy : Enemy
     public override void Init()
     {
         animator = GetComponent<Animator>();
+        posInit = transform.position;
     }
 
     public override void OnTriggerEnter2D(Collider2D other)
@@ -49,8 +45,18 @@ public class SprinterEnemy : Enemy
         base.OnCollisionEnter2D(other);
         if (other.gameObject.layer == LayerMask.NameToLayer("Player") && !isStun)
         {
-            player.GetComponent<PlayerController>().TakeDamage(damage);
-            Debug.Log(gameObject + " collisionne avec " + other.gameObject.name);
+            bool touchFromRight;
+            PlayerController playerController = player.GetComponent<PlayerController>();
+            if (transform.position.x < other.gameObject.transform.position.x)
+            {
+                touchFromRight = false;
+            }
+            else
+            {
+                touchFromRight = true;
+            }
+            playerController.TakeDamage(damage);
+            playerController.KnockBack(touchFromRight, knockbackOnPlayerForceX, knockbackOnPlayerForceY);
         }
     }
 
@@ -63,19 +69,28 @@ public class SprinterEnemy : Enemy
     {
         return Physics2D.OverlapBox(groundCheck.position, new Vector2(0.1f, 0.2f), 0f, groundLayer);
     }
-    
-    
-    private bool EnemyInZone()
+
+    private void ReturnToInitPosition()
     {
-        if (IsGrounded()) return true; 
-        return false;
+        if (Vector2.Distance(transform.position, posInit) < 1f)
+        {
+            isWalking = false;
+            isIddle = true;
+
+        }
+        else
+        {
+            isWalking = true;
+            transform.position = Vector3.MoveTowards(transform.position, posInit, speed * Time.deltaTime);
+        }
     }
 
     public override void FixedUpdate()
     {
         base.FixedUpdate();
-        if (EnemyInZone())
+        if (IsGrounded())
         {
+            isIddle = false;
             switch (playerDetected)
             {
                 case true:
@@ -83,16 +98,23 @@ public class SprinterEnemy : Enemy
                     PursuitPlayer();
                     break;
         
-                case false:
-                    isWalking = true;
+                case false: ;
+                    if (basicMove)
+                    {
+                        isWalking = true;
+                        break;
+                    }
+                    ReturnToInitPosition();
                     break;
             }
         }
-        else
+        else if(!IsGrounded())
         {
-            animator.SetBool("isIddle", true);
+            isWalking = false;
+            isIddle = true;
         }
         
+        animator.SetBool("isIddle", isIddle);
         animator.SetBool("isWalking", isWalking);
         animator.SetBool("playerDetected", playerDetected);
     }

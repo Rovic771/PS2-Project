@@ -11,6 +11,7 @@ public abstract class Enemy : MonoBehaviour
     [SerializeField] public EnemyType typeEnemy;
     [SerializeField] private float stunTime = 5;
     [SerializeField] private GameObject stunIndicator;
+    [SerializeField] public bool basicMove = true;
     public Vector2 targetPos;
     public bool playerDetected = false;
     public GameObject player; 
@@ -19,8 +20,10 @@ public abstract class Enemy : MonoBehaviour
     public float speed;
     public Rigidbody2D rbEnemy;
     public bool isStun = false;
+    public bool isIddle = false;
     public float _flipValue = 0;
     public bool isFacingRight = true;
+    public bool isWalking;
     public Animator animator;
     
     [Header("Raycast")]
@@ -127,9 +130,14 @@ public abstract class Enemy : MonoBehaviour
             {
                 GoToPoint();
             }
-            else
+            else if(basicMove)
             {
                 transform.position = Vector3.MoveTowards(transform.position, targetPos, speed * Time.deltaTime);
+            }
+            else if(!basicMove)
+            {
+                isWalking = false;
+                isIddle = true;
             }
         }
         DetectWhenFlip();
