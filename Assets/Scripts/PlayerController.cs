@@ -258,10 +258,9 @@ public class PlayerController : MonoBehaviour
         }
         if (context.canceled) 
         {
-            AudioManager.Instance.StopSound();
+            if(currentZoneActive == TypeZone.Do) currentZoneActive = TypeZone.Not;
+            if(currentZoneActive == TypeZone.Not) AudioManager.Instance.StopSound();
             doZone.SetActive(false);
-            currentZoneActive = TypeZone.Not;
-            Debug.Log("Zone relaché " + currentZoneActive);
             doZone.GetComponent<CircleCollider2D>().enabled = false;
         }
     }
@@ -279,10 +278,9 @@ public class PlayerController : MonoBehaviour
         }
         if (context.canceled)
         {
-            AudioManager.Instance.StopSound();
+            if(currentZoneActive == TypeZone.Re) currentZoneActive = TypeZone.Not;
+            if(currentZoneActive == TypeZone.Not) AudioManager.Instance.StopSound();
             reZone.SetActive(false);
-            currentZoneActive = TypeZone.Not;
-            Debug.Log("Zone relaché " + currentZoneActive);
             reZone.GetComponent<CircleCollider2D>().enabled = false;
         }
     }
