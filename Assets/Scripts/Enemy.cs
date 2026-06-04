@@ -143,9 +143,12 @@ public abstract class Enemy : MonoBehaviour
     
     private void Flip()
     {
-        isFacingRight = !isFacingRight;
-        _flipValue += 180;
-        transform.rotation = Quaternion.Euler(0, _flipValue, 0);
+        if (!isStun)
+        {
+            isFacingRight = !isFacingRight;
+            _flipValue += 180;
+            transform.rotation = Quaternion.Euler(0, _flipValue, 0);
+        }
     }
     
     protected bool TestIfWall()
