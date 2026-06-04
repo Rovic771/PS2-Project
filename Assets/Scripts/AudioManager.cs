@@ -1,18 +1,28 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Audio;
 
 public class AudioManager : MonoBehaviour
 {
     [Header("Sounds")]
-    [SerializeField] private List<AudioClip> sfx = new List<AudioClip>();
+    [SerializeField] private List<AudioClip> sfxPlayer = new List<AudioClip>();
     [SerializeField] private AudioClip mainMusic;
 
+    [Header("Audio Mixers")] 
+    [SerializeField] private List<AudioMixer> audioMixers = new List<AudioMixer>();
 
     [Header("Audio Sources")] 
     [SerializeField] private AudioSource musicSource;
     [SerializeField] private AudioSource sfxSource;
     
     public static AudioManager Instance;
+
+    public enum TypeAudio
+    {
+        player,
+        enemy,
+        environment,
+    }
 
    void Awake()
     {
@@ -32,9 +42,14 @@ public class AudioManager : MonoBehaviour
         musicSource.Play();
     }
     
-    public void SoundExample(int _soundToplay, bool _loop = false)
+    public void SoundExample(int _soundToplay, int _audioMixer, TypeAudio _typeAudio,bool _loop = false)
     {
-        sfxSource.clip = sfx[_soundToplay];
+        /*
+        switch (_typeAudio)
+        {
+            case 
+        }*/
+        sfxSource.clip = sfxPlayer[_soundToplay];
         sfxSource.loop = _loop;
         sfxSource.Play();
     }
@@ -44,5 +59,7 @@ public class AudioManager : MonoBehaviour
         sfxSource.Stop();
     }
 }
+
+// Mettre plusieurs sfxSource genre player Environment
 
 
