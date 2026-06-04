@@ -211,7 +211,7 @@ public class PlayerController : MonoBehaviour
                 GameObject proj = Instantiate(doProjectile, viseurAncragePoint.transform.position, Quaternion.identity);
                 Vector2 direction = (viseurStartProjectile.transform.position - viseurAncragePoint.transform.position).normalized;
                 proj.GetComponent<crocheScipt>().Launch(direction, true, damage);
-                AudioManager.Instance.SoundExample(0);
+                //AudioManager.Instance.SoundExample(0, AudioManager.TypeAudio.player);
                 animator.SetTrigger("isShoot");
             }
         }
@@ -226,7 +226,7 @@ public class PlayerController : MonoBehaviour
                 GameObject proj = Instantiate(reProjectile, viseurAncragePoint.transform.position, Quaternion.identity);
                 Vector2 direction = (viseurStartProjectile.transform.position - viseurAncragePoint.transform.position).normalized;
                 proj.GetComponent<crocheScipt>().Launch(direction, true, damage);
-                AudioManager.Instance.SoundExample(1);
+                //AudioManager.Instance.SoundExample(1);
                 animator.SetTrigger("isShoot");
             }
         }
@@ -253,7 +253,7 @@ public class PlayerController : MonoBehaviour
             ActiveColliderZone(TypeZone.Do);
             reZone.SetActive(false);
             doZone.SetActive(true);
-            AudioManager.Instance.SoundExample(2, true);
+            //AudioManager.Instance.SoundExample(2, true);
             
         }
         if (context.canceled) 
@@ -273,7 +273,7 @@ public class PlayerController : MonoBehaviour
             ActiveColliderZone(TypeZone.Re);
             doZone.SetActive(false);
             reZone.SetActive(true);
-            AudioManager.Instance.SoundExample(3, true);
+            //AudioManager.Instance.SoundExample(3, true);
             
         }
         if (context.canceled)
