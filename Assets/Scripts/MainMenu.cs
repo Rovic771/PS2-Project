@@ -12,7 +12,7 @@ public class MainMenu : MonoBehaviour //fait par Aksel
     [SerializeField] private Selectable param;
     [SerializeField] private Selectable check;
     [SerializeField] private Selectable mainMenu;
-    
+    [SerializeField] private Selectable credit;
     
     
     public void newGame()
@@ -36,6 +36,10 @@ public class MainMenu : MonoBehaviour //fait par Aksel
     public void jumpToCheckpoint()
     {
         eventSystem.SetSelectedGameObject(check.gameObject);
+    }
+    public void jumpToCredit()
+    {
+        eventSystem.SetSelectedGameObject(credit.gameObject);
     }
     
     public void returntoMain()
