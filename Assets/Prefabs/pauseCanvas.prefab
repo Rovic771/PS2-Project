@@ -371,7 +371,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 4656302845427310966}
         m_TargetAssemblyTypeName: pauseMenu, Assembly-CSharp
-        m_MethodName: resume
+        m_MethodName: returntoMenu
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1073,8 +1073,8 @@ MonoBehaviour:
     m_FadeDuration: 0.1
   m_SpriteState:
     m_HighlightedSprite: {fileID: 0}
-    m_PressedSprite: {fileID: 21300000, guid: 694543178ba4fd04cbd922950e632668, type: 3}
-    m_SelectedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 21300000, guid: 694543178ba4fd04cbd922950e632668, type: 3}
     m_DisabledSprite: {fileID: 0}
   m_AnimationTriggers:
     m_NormalTrigger: Normal
