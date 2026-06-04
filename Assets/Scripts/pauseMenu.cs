@@ -8,7 +8,6 @@ public class pauseMenu : MonoBehaviour
     [SerializeField] private EventSystem eventSystem;
     [SerializeField] private Selectable param;
     [SerializeField] private Selectable check;
-    [SerializeField] private Selectable mainMenu;
 
     public void resume()
     {
