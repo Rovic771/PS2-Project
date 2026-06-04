@@ -1,8 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 using Debug = UnityEngine.Debug;
 using Quaternion = UnityEngine.Quaternion;
 using Vector2 = UnityEngine.Vector2;
@@ -60,6 +62,10 @@ public class PlayerController : MonoBehaviour
     public bool canShoot = true;
     float _flipValue = 0;
     public Vector3 posInit;
+
+    public GameObject pauseMenu;
+    [SerializeField] private Selectable pauseButton;
+    [SerializeField] private EventSystem eventSystem;
     
     public enum TypeZone
     {
@@ -111,11 +117,11 @@ public class PlayerController : MonoBehaviour
         damage = _playerData.damage;
     }
 
-    public void NewGame(InputAction.CallbackContext context)
+    public void Pause(InputAction.CallbackContext context)
     {
-        PlayerPrefs.DeleteKey("checkpointX");
-        PlayerPrefs.DeleteKey("checkpointY");
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        Time.timeScale = 0f;
+        pauseMenu.SetActive(true);
+        eventSystem.SetSelectedGameObject(pauseButton.gameObject);
     }
     
     public void OnMove(InputAction.CallbackContext context)
