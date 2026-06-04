@@ -1,10 +1,12 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class AudioManager : MonoBehaviour
 {
     [Header("Sounds")]
     [SerializeField] private List<AudioClip> sfx = new List<AudioClip>();
+    public float[] sfxVolume; 
     [SerializeField] private AudioClip mainMusic;
 
 
@@ -26,6 +28,7 @@ public class AudioManager : MonoBehaviour
    
     void Start()
     {
+        
         if (mainMusic == null)
             return;
         musicSource.clip = mainMusic;
