@@ -261,6 +261,7 @@ public class PlayerController : MonoBehaviour
             AudioManager.Instance.StopSound();
             doZone.SetActive(false);
             currentZoneActive = TypeZone.Not;
+            Debug.Log("Zone relaché " + currentZoneActive);
             doZone.GetComponent<CircleCollider2D>().enabled = false;
         }
     }
@@ -281,6 +282,7 @@ public class PlayerController : MonoBehaviour
             AudioManager.Instance.StopSound();
             reZone.SetActive(false);
             currentZoneActive = TypeZone.Not;
+            Debug.Log("Zone relaché " + currentZoneActive);
             reZone.GetComponent<CircleCollider2D>().enabled = false;
         }
     }
@@ -317,6 +319,7 @@ public class PlayerController : MonoBehaviour
     
     public void FixedUpdate()
     {
+        Debug.Log(currentZoneActive);
         if (IsGrounded() && !isJump)
         {
             coyoteTimer = coyoteTime;
