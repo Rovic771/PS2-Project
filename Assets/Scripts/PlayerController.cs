@@ -212,6 +212,7 @@ public class PlayerController : MonoBehaviour
                 Vector2 direction = (viseurStartProjectile.transform.position - viseurAncragePoint.transform.position).normalized;
                 proj.GetComponent<crocheScipt>().Launch(direction, true, damage);
                 //AudioManager.Instance.SoundExample(0, AudioManager.TypeAudio.player);
+                AudioManager.Instance.SoundExample(0, 0, AudioManager.TypeAudio.playerShotDo);
                 animator.SetTrigger("isShoot");
             }
         }
@@ -227,6 +228,7 @@ public class PlayerController : MonoBehaviour
                 Vector2 direction = (viseurStartProjectile.transform.position - viseurAncragePoint.transform.position).normalized;
                 proj.GetComponent<crocheScipt>().Launch(direction, true, damage);
                 //AudioManager.Instance.SoundExample(1);
+                AudioManager.Instance.SoundExample(1, 1, AudioManager.TypeAudio.playerShotDo);
                 animator.SetTrigger("isShoot");
             }
         }
@@ -253,7 +255,7 @@ public class PlayerController : MonoBehaviour
             ActiveColliderZone(TypeZone.Do);
             reZone.SetActive(false);
             doZone.SetActive(true);
-            //AudioManager.Instance.SoundExample(2, true);
+            AudioManager.Instance.SoundExample(2, 2, AudioManager.TypeAudio.playerZoneDo, true);
             
         }
         if (context.canceled) 
@@ -273,8 +275,7 @@ public class PlayerController : MonoBehaviour
             ActiveColliderZone(TypeZone.Re);
             doZone.SetActive(false);
             reZone.SetActive(true);
-            //AudioManager.Instance.SoundExample(3, true);
-            
+            AudioManager.Instance.SoundExample(3, 3, AudioManager.TypeAudio.playerZoneRe, true);
         }
         if (context.canceled)
         {

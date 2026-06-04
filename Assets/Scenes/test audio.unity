@@ -631,11 +631,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0e59d51ab3eb544bbc2d5be32cc74cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AudioManager
-  sfxPlayer: []
   mainMusic: {fileID: 0}
-  audioMixers: []
   musicSource: {fileID: 0}
-  sfxSource: {fileID: 1016164764}
+  sfxPlayer:
+  - {fileID: 8300000, guid: 47dfe68f0dccaa74ba4fcd41953268ab, type: 3}
+  - {fileID: 8300000, guid: 2fa3f0ad6010d374c867a6699b097220, type: 3}
+  - {fileID: 8300000, guid: 9da434e635ddaa14592b8ed5c14c1623, type: 3}
+  - {fileID: 8300000, guid: 8de67a94f81ac6f4c920706b449f83f3, type: 3}
+  audioMixers:
+  - {fileID: -4021855261744691430, guid: 968c36b39e4104048bae364cf8bd0fd9, type: 2}
+  - {fileID: -2281210121735075068, guid: 968c36b39e4104048bae364cf8bd0fd9, type: 2}
+  - {fileID: -8913974729695053777, guid: 968c36b39e4104048bae364cf8bd0fd9, type: 2}
+  - {fileID: 4188394443104840776, guid: 968c36b39e4104048bae364cf8bd0fd9, type: 2}
+  sfxSourcePlayer: {fileID: 1016164764}
 --- !u!1 &935962051
 GameObject:
   m_ObjectHideFlags: 0

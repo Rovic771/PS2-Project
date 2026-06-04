@@ -4,27 +4,12 @@ using UnityEngine.Audio;
 
 public class AudioManager : MonoBehaviour
 {
-    [Header("Sounds")]
-    [SerializeField] private List<AudioClip> sfxPlayer = new List<AudioClip>();
-    [SerializeField] private AudioClip mainMusic;
-
-    [Header("Audio Mixers")] 
-    [SerializeField] private List<AudioMixer> audioMixers = new List<AudioMixer>();
-
-    [Header("Audio Sources")] 
-    [SerializeField] private AudioSource musicSource;
-    [SerializeField] private AudioSource sfxSource;
     
     public static AudioManager Instance;
-
-    public enum TypeAudio
-    {
-        player,
-        enemy,
-        environment,
-    }
-
-   void Awake()
+    [SerializeField] private AudioClip mainMusic;
+    [SerializeField] private AudioSource musicSource;
+    
+    void Awake()
     {
         if (Instance != null && Instance != this)
         {
@@ -33,7 +18,7 @@ public class AudioManager : MonoBehaviour
 
         Instance = this;
     }
-   
+    
     void Start()
     {
         if (mainMusic == null)
@@ -42,21 +27,52 @@ public class AudioManager : MonoBehaviour
         musicSource.Play();
     }
     
+    public enum TypeAudio
+    {
+        playerShotDo,
+        playerShotRe,
+        playerZoneDo,
+        playerZoneRe,
+        enemy,
+        environment,
+    }
+    
+    [Header("Sounds Player")]
+    [SerializeField] private List<AudioClip> sfxPlayer = new List<AudioClip>();
+
+    [Header("Audio Mixers Player")] 
+    [SerializeField] private List<AudioMixerGroup> audioMixers = new List<AudioMixerGroup>();
+
+    [Header("Audio Sources Player")] 
+    [SerializeField] private AudioSource sfxSourcePlayer;
+    
+    
+    
     public void SoundExample(int _soundToplay, int _audioMixer, TypeAudio _typeAudio,bool _loop = false)
     {
-        /*
         switch (_typeAudio)
         {
-            case 
-        }*/
-        sfxSource.clip = sfxPlayer[_soundToplay];
-        sfxSource.loop = _loop;
-        sfxSource.Play();
+            case TypeAudio.playerShotDo:
+                sfxSourcePlayer.outputAudioMixerGroup = audioMixers[_audioMixer];
+                break;
+            case TypeAudio.playerShotRe:
+                sfxSourcePlayer.outputAudioMixerGroup = audioMixers[_audioMixer];
+                break;
+            case TypeAudio.playerZoneDo:
+                sfxSourcePlayer.outputAudioMixerGroup = audioMixers[_audioMixer];
+                break;
+            case TypeAudio.playerZoneRe:
+                sfxSourcePlayer.outputAudioMixerGroup = audioMixers[_audioMixer];
+                break;
+        }
+        sfxSourcePlayer.clip = sfxPlayer[_soundToplay];
+        sfxSourcePlayer.loop = _loop;
+        sfxSourcePlayer.Play();
     }
 
     public void StopSound()
     {
-        sfxSource.Stop();
+        sfxSourcePlayer.Stop();
     }
 }
 
