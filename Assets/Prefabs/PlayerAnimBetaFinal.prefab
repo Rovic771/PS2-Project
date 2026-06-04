@@ -931,8 +931,8 @@ MonoBehaviour:
   forceWallJumpX: 25
   forceWallJumpY: 20
   rb: {fileID: 5911240755402580217}
-  coyoteTime: 0.3
-  coyoteTimeWallJump: 0.5
+  coyoteTime: 0.4
+  coyoteTimeWallJump: 1
   wallCheck: {fileID: 521457123893226020}
   wallLayer:
     serializedVersion: 2
@@ -948,8 +948,6 @@ MonoBehaviour:
   doProjectile: {fileID: 7945442381689740488, guid: be16aa65d3ef27544a594ac61050e77a, type: 3}
   reProjectile: {fileID: 5687507030353344439, guid: 88e3fe6df10c38d4a88eb08e91f49afd, type: 3}
   wallSlidingSpeed: 2
-  knockbackForceX: 10
-  knockbackForceY: 10
   animator: {fileID: 4108578945805453932}
   _playerData: {fileID: 11400000, guid: a2a56b4c692cf5c4a85dda3786949ee6, type: 2}
   life: 0

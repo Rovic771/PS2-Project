@@ -39,6 +39,7 @@ Transform:
   - {fileID: 3634265304137421603}
   - {fileID: 6898102087498308081}
   - {fileID: 3465899684213702522}
+  - {fileID: 5365330771096971325}
   m_Father: {fileID: 3298222026939776114}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &6214651168147957407
@@ -118,6 +119,7 @@ MonoBehaviour:
   - {fileID: 710725891368160074}
   speed: 5
   objectActive: 0
+  currentPointIndex: 0
 --- !u!61 &5165408645748922528
 BoxCollider2D:
   m_ObjectHideFlags: 0
