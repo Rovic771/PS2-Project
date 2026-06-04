@@ -8,7 +8,8 @@ public class ShooterEnemy : Enemy
     [SerializeField] private GameObject viseurStartProjectile;
     [SerializeField] private GameObject doProjectile;
     [SerializeField] private GameObject reProjectile;
-    public bool isWalking;
+    [SerializeField] private float knockbackOnPlayerForceX = 10f;
+    [SerializeField] private float knockbackOnPlayerForceY = 10f;
     public bool canShoot = true;
     
 
@@ -26,19 +27,10 @@ public class ShooterEnemy : Enemy
         }
         GameObject proj = Instantiate(projectile, viseurStartProjectile.transform.position, Quaternion.identity);
         Vector2 direction = (viseurStartProjectile.transform.position - viseurAncragePoint.transform.position).normalized;
-        proj.GetComponent<crocheScipt>().Launch(direction, false, damage);
+        proj.GetComponent<crocheScipt>().Launch(direction, false, damage, knockbackOnPlayerForceX, knockbackOnPlayerForceY);
         canShoot = false;
     }
-
-    /*
-    public void OnTriggerStay2D(Collider2D other)
-    {
-        if (other.gameObject.layer == LayerMask.NameToLayer("Player") && !isStun && !TestIfWall())
-        {
-            playerDetected = true;
-        }
-        else playerDetected = false;
-    }*/
+    
 
     public override void Init()
     {

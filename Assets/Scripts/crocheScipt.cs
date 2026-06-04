@@ -10,11 +10,13 @@ public class crocheScipt : MonoBehaviour
     [SerializeField] private float timeBeforeDestroy = 3f;
     private Rigidbody2D rbProjectile;
     private Vector2 directionTir;
+    private float knockbackOnPlayerX;
+    private float knockbackOnPlayerY;
 
     private int damageProjectile;
     //private PlayerController _playerController;
     
-    public void Launch(Vector2 direction, bool fromPlayer, int damage)
+    public void Launch(Vector2 direction, bool fromPlayer, int damage, float kbX = 0, float kbY = 0)
     {
         if (fromPlayer)
         {
@@ -40,6 +42,8 @@ public class crocheScipt : MonoBehaviour
             
         }
 
+        knockbackOnPlayerX = kbX;
+        knockbackOnPlayerY = kbY;
         damageProjectile = damage;
         directionTir = direction.normalized;
         Destroy(gameObject, timeBeforeDestroy);
@@ -82,7 +86,7 @@ public class crocheScipt : MonoBehaviour
             }
             PlayerController playerController = other.gameObject.GetComponent<PlayerController>();
             //playerController.TakeDamage(damageProjectile);
-            playerController.KnockBack(projectileTouchFromRight);
+            playerController.KnockBack(projectileTouchFromRight, knockbackOnPlayerX, knockbackOnPlayerY);
         }
         Destroy(gameObject);
     }
