@@ -1051,7 +1051,7 @@ MonoBehaviour:
   m_LightType: 1
   m_BlendStyleIndex: 0
   m_FalloffIntensity: 0.5
-  m_Color: {r: 1, g: 0.6509804, b: 0, a: 1}
+  m_Color: {r: 0, g: 0.12156863, b: 1, a: 1}
   m_Intensity: 0.48
   m_LightVolumeIntensity: 0.14
   m_LightVolumeEnabled: 1
@@ -2101,7 +2101,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0.089488804, y: 5.0112586}
+  m_Offset: {x: -0.036228657, y: 5.0112586}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -2111,7 +2111,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 2.717482, y: 9.255567}
+  m_Size: {x: 1.5680666, y: 9.255567}
   m_EdgeRadius: 0
 --- !u!50 &4046781298449589578
 Rigidbody2D:
@@ -2182,7 +2182,7 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 128
-  knockbackOnPlayerForceX: 20
+  knockbackOnPlayerForceX: 15
   knockbackOnPlayerForceY: 20
 --- !u!114 &2569438660168182163
 MonoBehaviour:
