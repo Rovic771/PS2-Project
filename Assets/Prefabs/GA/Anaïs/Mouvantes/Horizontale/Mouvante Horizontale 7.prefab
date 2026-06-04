@@ -32,6 +32,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 8765347230559158314}
   - {fileID: 2373594613081455545}
   - {fileID: 8920558459082228647}
   - {fileID: 1641212055481348814}
@@ -227,7 +228,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 3298222026939776114}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &3023625807589704282
+--- !u!1 &2199681290716944637
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -235,9 +236,9 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 5365330771096971325}
-  - component: {fileID: 4667835390881969566}
-  - component: {fileID: 7372309841400536201}
+  - component: {fileID: 8765347230559158314}
+  - component: {fileID: 2482576427052499160}
+  - component: {fileID: 3595178648593193576}
   m_Layer: 0
   m_Name: crush_death
   m_TagString: Untagged
@@ -245,40 +246,40 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &5365330771096971325
+--- !u!4 &8765347230559158314
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3023625807589704282}
+  m_GameObject: {fileID: 2199681290716944637}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0.7413, y: -0.0569, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5612991394033435745}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4667835390881969566
+--- !u!114 &2482576427052499160
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3023625807589704282}
+  m_GameObject: {fileID: 2199681290716944637}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5d12aa5d4bcc05545b1fca1080eeac63, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Deathzone
---- !u!61 &7372309841400536201
+--- !u!61 &3595178648593193576
 BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3023625807589704282}
+  m_GameObject: {fileID: 2199681290716944637}
   m_Enabled: 1
   serializedVersion: 3
   m_Density: 1
@@ -302,11 +303,11 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0.019195557, y: 0.07279968}
+  m_Offset: {x: -0.6883774, y: 0.14280444}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -316,7 +317,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 6.6963806, y: 0.29260254}
+  m_Size: {x: 6.701523, y: 0.43261206}
   m_EdgeRadius: 0
 --- !u!1 &3308538368605665124
 GameObject:

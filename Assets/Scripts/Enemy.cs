@@ -10,7 +10,6 @@ public abstract class Enemy : MonoBehaviour
     [SerializeField] public GameObject patternPointB;
     [SerializeField] public EnemyType typeEnemy;
     [SerializeField] private float stunTime = 5;
-    [SerializeField] private GameObject stunIndicator;
     [SerializeField] public bool basicMove = true;
     public Vector2 targetPos;
     public bool playerDetected = false;
@@ -52,6 +51,7 @@ public abstract class Enemy : MonoBehaviour
         life = _enemyData.life;
         damage = _enemyData.damage;
         speed = _enemyData.speed;
+        
         Init();
     }
 
@@ -75,7 +75,6 @@ public abstract class Enemy : MonoBehaviour
         gameObject.layer = LayerMask.NameToLayer("EnemyStun");
         animator.SetBool("isStun", true);
         isStun = true;
-        stunIndicator.SetActive(true);
         StopAllCoroutines(); 
         StartCoroutine(StunTime());
     }
@@ -84,7 +83,6 @@ public abstract class Enemy : MonoBehaviour
     {
         gameObject.layer = LayerMask.NameToLayer("Enemy");
         isStun = false;
-        stunIndicator.SetActive(false);
         ResetEnemyState();
         life = _enemyData.life;
         animator.SetBool("isStun", false);

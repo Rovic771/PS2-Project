@@ -10,6 +10,7 @@ public class PlateformeMouvante : MonoBehaviour
     [SerializeField] public bool objectActive = false; 
     private Vector3 targetPos;
     public int currentPointIndex;
+    private int previousPointIndex;
 
     private void Start()
     {
@@ -22,45 +23,44 @@ public class PlateformeMouvante : MonoBehaviour
         if (objectActive)
         {
             transform.position = Vector3.MoveTowards(transform.position, targetPos, speed * Time.deltaTime);
-            if (Vector3.Distance(transform.position, targetPos) < 0.05f && points[currentPointIndex] != origine)
+            if (Vector3.Distance(transform.position, targetPos) < 0.05f)
             {
                 objectActive = false;
+                if (points[currentPointIndex] == origine)
+                {
+                    IgnoreOrigine();
+                    objectActive = true;
+                }
             }
         }
     }
 
-    /*
-    private int CurrentPoint()
+    private void IgnoreOrigine()
     {
-        if (!objectActive)
+        if (previousPointIndex < currentPointIndex)
         {
-            float distanceMin = 10000;
-            int nearestPointIndex = 0;
-            for (int i = 0; i < points.Count; i++)
-            {
-                float dist = Vector2.Distance(points[i].transform.position, transform.position);
-                if (dist < distanceMin)
-                {
-                    distanceMin = dist;
-                    nearestPointIndex = i;
-                }
-            }
-            return nearestPointIndex;
+            currentPointIndex++;
         }
-
-        return -1;
-    }*/
+        else if (previousPointIndex > currentPointIndex)
+        {
+            currentPointIndex--;
+        }
+        targetPos = points[currentPointIndex].transform.position;
+    }
 
     private void ChangeTargetPoint(string typeProjectile)
     {
-        //int currentPoint = CurrentPoint();
+        if (objectActive)
+        {
+            return;
+        }
+        
         if (typeProjectile == "Re")
         {
             if (currentPointIndex + 1 < points.Count)
             {
+                previousPointIndex = currentPointIndex;
                 currentPointIndex++;
-                targetPos = points[currentPointIndex].transform.position;
-                objectActive = true;
             }
             else
             {
@@ -71,16 +71,16 @@ public class PlateformeMouvante : MonoBehaviour
         {
             if (currentPointIndex - 1 >= 0)
             {
+                previousPointIndex = currentPointIndex;
                 currentPointIndex--;
-                targetPos = points[currentPointIndex].transform.position;
-                objectActive = true;
             }
             else
             {
                 return;
             }
         }
-        Debug.Log("TargetPos objet " + targetPos);
+        objectActive = true;
+        targetPos = points[currentPointIndex].transform.position;
     }
     
     void OnCollisionEnter2D(Collision2D other)
