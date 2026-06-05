@@ -9,7 +9,7 @@ public class AudioManager : MonoBehaviour
     [SerializeField] private AudioClip mainMusic;
 
     [Header("Audio Mixers")] 
-    [SerializeField] private List<AudioMixer> audioMixers = new List<AudioMixer>();
+    [SerializeField] private List<AudioMixerGroup> audioMixers = new List<AudioMixerGroup>();
 
     [Header("Audio Sources")] 
     [SerializeField] private AudioSource musicSource;
