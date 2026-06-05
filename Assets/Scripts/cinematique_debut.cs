@@ -53,4 +53,9 @@ public class cinematique_debut : MonoBehaviour
         }
         
     }
+
+    public void skip()
+    {
+        SceneManager.LoadScene("good assanblage 1");
+    }
 }
