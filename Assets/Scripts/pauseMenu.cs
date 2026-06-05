@@ -1,5 +1,7 @@
+using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -9,6 +11,7 @@ public class pauseMenu : MonoBehaviour
     [SerializeField] private Selectable param;
     [SerializeField] private Selectable check;
     [SerializeField] private Selectable menu;
+    
 
     public void resume()
     {
