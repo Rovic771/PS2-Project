@@ -19,7 +19,7 @@ public class MainMenu : MonoBehaviour //fait par Aksel
     {
         PlayerPrefs.SetFloat("checkpointX", 167.2f);
         PlayerPrefs.SetFloat("checkpointY", -0.5999985f);
-        SceneManager.LoadScene("good assanblage 1");
+        SceneManager.LoadScene("cinematique_début");
     }
 
     public void quitGame()
