@@ -14,9 +14,5 @@ public class AnimationRelayPlayer : MonoBehaviour
     {
         playerController.ApplyShoot();
     }
-
-    public void TriggerColliderZone(string typeZone)
-    {
-        playerController.ActiveColliderZone(typeZone);
-    }
+    
 }
