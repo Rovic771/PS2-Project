@@ -12,14 +12,14 @@ public class MainMenu : MonoBehaviour //fait par Aksel
     [SerializeField] private Selectable param;
     [SerializeField] private Selectable check;
     [SerializeField] private Selectable mainMenu;
-    
+    [SerializeField] private Selectable credit;
     
     
     public void newGame()
     {
         PlayerPrefs.SetFloat("checkpointX", 167.2f);
         PlayerPrefs.SetFloat("checkpointY", -0.5999985f);
-        SceneManager.LoadScene("good assanblage 1");
+        SceneManager.LoadScene("cinematique_début");
     }
 
     public void quitGame()
@@ -36,6 +36,10 @@ public class MainMenu : MonoBehaviour //fait par Aksel
     public void jumpToCheckpoint()
     {
         eventSystem.SetSelectedGameObject(check.gameObject);
+    }
+    public void jumpToCredit()
+    {
+        eventSystem.SetSelectedGameObject(credit.gameObject);
     }
     
     public void returntoMain()
