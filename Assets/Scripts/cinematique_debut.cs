@@ -31,24 +31,26 @@ public class cinematique_debut : MonoBehaviour
                 fullFade = true;
             }
         }
-        else if (current == 0)
+        else if (current == 0 && Mathf.Round(time) == transition)
         {
             current++;
             time = 0;
         }
         
-        if (Mathf.Round(time) == transition && current <= 3 && fullFade)
+        if (current >= 4 && fullFade)
+        {
+            print("je marche");
+            current++;
+            fullFade = false;
+            SceneManager.LoadScene("good assanblage 1");
+        }
+        
+        if (Mathf.Round(time) == transition && fullFade)
         {
             current++;
             fullFade = false;
             time = 0;
         }
-
-        if (Mathf.Round(time) == transition && current > 3 && fullFade)
-        {
-            current++;
-            fullFade = false;
-            SceneManager.LoadScene("good assanblage 1");
-        }
+        
     }
 }
