@@ -27,7 +27,7 @@ public class AudioManager : MonoBehaviour
         musicSource.Play();
     }
     
-    public enum TypeAudio
+    public enum Sound
     {
         playerShotDo,
         playerShotRe,
@@ -46,28 +46,43 @@ public class AudioManager : MonoBehaviour
     [Header("Audio Sources Player")] 
     [SerializeField] private AudioSource sfxSourcePlayer;
     
+    [Header("Sounds Enemy")]
+    [SerializeField] private List<AudioClip> sfxEnemy = new List<AudioClip>();
+
+    [Header("Audio Mixers Enemy")] 
+    [SerializeField] private List<AudioMixerGroup> audioEnemy = new List<AudioMixerGroup>();
+
+    [Header("Audio Sources Enemy")] 
+    [SerializeField] private AudioSource sfxSourceEnemy;
     
     
-    public void SoundExample(int _soundToplay, int _audioMixer, TypeAudio _typeAudio,bool _loop = false)
+    
+    public void PlaySound(int _soundToplay, int _audioMixer, Sound _sound,bool _loop = false)
     {
-        switch (_typeAudio)
+        switch (_sound)
         {
-            case TypeAudio.playerShotDo:
+            case Sound.playerShotDo:
                 sfxSourcePlayer.outputAudioMixerGroup = audioMixers[_audioMixer];
                 break;
-            case TypeAudio.playerShotRe:
+            case Sound.playerShotRe:
                 sfxSourcePlayer.outputAudioMixerGroup = audioMixers[_audioMixer];
                 break;
-            case TypeAudio.playerZoneDo:
+            case Sound.playerZoneDo:
                 sfxSourcePlayer.outputAudioMixerGroup = audioMixers[_audioMixer];
                 break;
-            case TypeAudio.playerZoneRe:
+            case Sound.playerZoneRe:
                 sfxSourcePlayer.outputAudioMixerGroup = audioMixers[_audioMixer];
                 break;
         }
-        sfxSourcePlayer.clip = sfxPlayer[_soundToplay];
-        sfxSourcePlayer.loop = _loop;
-        sfxSourcePlayer.Play();
+
+        if (_loop)
+        {
+            sfxSourcePlayer.clip = sfxPlayer[_soundToplay];
+            sfxSourcePlayer.loop = _loop;
+            sfxSourcePlayer.Play();
+            return;
+        }
+        sfxSourcePlayer.PlayOneShot(sfxPlayer[_soundToplay]);
     }
 
     public void StopSound()

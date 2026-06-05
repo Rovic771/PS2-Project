@@ -212,7 +212,7 @@ public class PlayerController : MonoBehaviour
                 Vector2 direction = (viseurStartProjectile.transform.position - viseurAncragePoint.transform.position).normalized;
                 proj.GetComponent<crocheScipt>().Launch(direction, true, damage);
                 //AudioManager.Instance.SoundExample(0, AudioManager.TypeAudio.player);
-                AudioManager.Instance.SoundExample(0, 0, AudioManager.TypeAudio.playerShotDo);
+                AudioManager.Instance.PlaySound(0, 0, AudioManager.Sound.playerShotDo);
                 animator.SetTrigger("isShoot");
             }
         }
@@ -228,7 +228,7 @@ public class PlayerController : MonoBehaviour
                 Vector2 direction = (viseurStartProjectile.transform.position - viseurAncragePoint.transform.position).normalized;
                 proj.GetComponent<crocheScipt>().Launch(direction, true, damage);
                 //AudioManager.Instance.SoundExample(1);
-                AudioManager.Instance.SoundExample(1, 1, AudioManager.TypeAudio.playerShotDo);
+                AudioManager.Instance.PlaySound(1, 1, AudioManager.Sound.playerShotDo);
                 animator.SetTrigger("isShoot");
             }
         }
@@ -255,7 +255,7 @@ public class PlayerController : MonoBehaviour
             ActiveColliderZone(TypeZone.Do);
             reZone.SetActive(false);
             doZone.SetActive(true);
-            AudioManager.Instance.SoundExample(2, 2, AudioManager.TypeAudio.playerZoneDo, true);
+            AudioManager.Instance.PlaySound(2, 2, AudioManager.Sound.playerZoneDo, true);
             
         }
         if (context.canceled) 
@@ -275,7 +275,7 @@ public class PlayerController : MonoBehaviour
             ActiveColliderZone(TypeZone.Re);
             doZone.SetActive(false);
             reZone.SetActive(true);
-            AudioManager.Instance.SoundExample(3, 3, AudioManager.TypeAudio.playerZoneRe, true);
+            AudioManager.Instance.PlaySound(3, 3, AudioManager.Sound.playerZoneRe, true);
         }
         if (context.canceled)
         {

@@ -127,6 +127,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 472037603782250736, guid: 0caefceed47cf874f8418d1a3ada3144, type: 3}
+      propertyPath: basicMove
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 596807413582547035, guid: 0caefceed47cf874f8418d1a3ada3144, type: 3}
       propertyPath: m_LocalRotation.w
       value: -0.6848554
@@ -137,7 +141,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1284697955479643792, guid: 0caefceed47cf874f8418d1a3ada3144, type: 3}
       propertyPath: m_LocalRotation.w
-      value: -0.017713891
+      value: -0.017715111
       objectReference: {fileID: 0}
     - target: {fileID: 1284697955479643792, guid: 0caefceed47cf874f8418d1a3ada3144, type: 3}
       propertyPath: m_LocalRotation.z
@@ -145,11 +149,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1288497217048457345, guid: 0caefceed47cf874f8418d1a3ada3144, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.9992962
+      value: 0.9992961
       objectReference: {fileID: 0}
     - target: {fileID: 1288497217048457345, guid: 0caefceed47cf874f8418d1a3ada3144, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.03751238
+      value: 0.0375146
       objectReference: {fileID: 0}
     - target: {fileID: 2405213666726304122, guid: 0caefceed47cf874f8418d1a3ada3144, type: 3}
       propertyPath: m_LocalRotation.w
@@ -161,19 +165,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2476805422204881594, guid: 0caefceed47cf874f8418d1a3ada3144, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.9999993
+      value: 0.9999992
       objectReference: {fileID: 0}
     - target: {fileID: 2476805422204881594, guid: 0caefceed47cf874f8418d1a3ada3144, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.0012231207
+      value: -0.0012253445
       objectReference: {fileID: 0}
     - target: {fileID: 2522891839819399668, guid: 0caefceed47cf874f8418d1a3ada3144, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.5969751
+      value: 0.59697396
       objectReference: {fileID: 0}
     - target: {fileID: 2522891839819399668, guid: 0caefceed47cf874f8418d1a3ada3144, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.8022598
+      value: -0.8022607
       objectReference: {fileID: 0}
     - target: {fileID: 2818985650790649061, guid: 0caefceed47cf874f8418d1a3ada3144, type: 3}
       propertyPath: m_LocalRotation.w
@@ -189,7 +193,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3331569183462803331, guid: 0caefceed47cf874f8418d1a3ada3144, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.21992502
+      value: -0.21992478
       objectReference: {fileID: 0}
     - target: {fileID: 3869278783864807661, guid: 0caefceed47cf874f8418d1a3ada3144, type: 3}
       propertyPath: m_LocalRotation.w
@@ -221,7 +225,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7002124135532946532, guid: 0caefceed47cf874f8418d1a3ada3144, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 6.531047
+      value: 54.7
       objectReference: {fileID: 0}
     - target: {fileID: 7002124135532946532, guid: 0caefceed47cf874f8418d1a3ada3144, type: 3}
       propertyPath: m_LocalPosition.y
@@ -644,6 +648,19 @@ MonoBehaviour:
   - {fileID: -8913974729695053777, guid: 968c36b39e4104048bae364cf8bd0fd9, type: 2}
   - {fileID: 4188394443104840776, guid: 968c36b39e4104048bae364cf8bd0fd9, type: 2}
   sfxSourcePlayer: {fileID: 1016164764}
+  sfxEnemy:
+  - {fileID: 8300000, guid: a6ecae7ec49ad1c40b3bdf619bce1094, type: 3}
+  - {fileID: 8300000, guid: 7eb35dbf0eb1fb2478e48553ae33f54b, type: 3}
+  - {fileID: 8300000, guid: 8e8511582bfb98a4f86c09b42919f24b, type: 3}
+  - {fileID: 8300000, guid: 070c9c118453e894aba4cdbd9ec8d55d, type: 3}
+  - {fileID: 8300000, guid: 14aea8954eda50f43b0d836f6df133ab, type: 3}
+  audioEnemy:
+  - {fileID: 2760719028184543505, guid: 968c36b39e4104048bae364cf8bd0fd9, type: 2}
+  - {fileID: -6736766593138386843, guid: 968c36b39e4104048bae364cf8bd0fd9, type: 2}
+  - {fileID: 8140953886996704551, guid: 968c36b39e4104048bae364cf8bd0fd9, type: 2}
+  - {fileID: -7158605371989543002, guid: 968c36b39e4104048bae364cf8bd0fd9, type: 2}
+  - {fileID: -1264392777502091213, guid: 968c36b39e4104048bae364cf8bd0fd9, type: 2}
+  sfxSourceEnemy: {fileID: 0}
 --- !u!1 &935962051
 GameObject:
   m_ObjectHideFlags: 0
@@ -684,6 +701,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2479293549365413597, guid: 1fac45bdef65d194bb36b9dcab212994, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2517005971598839266, guid: 1fac45bdef65d194bb36b9dcab212994, type: 3}
       propertyPath: m_Name
       value: PlayerAnimBetaFinal
