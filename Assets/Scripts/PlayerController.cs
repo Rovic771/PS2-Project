@@ -1,8 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 using Debug = UnityEngine.Debug;
 using Quaternion = UnityEngine.Quaternion;
 using Vector2 = UnityEngine.Vector2;
@@ -60,6 +62,10 @@ public class PlayerController : MonoBehaviour
     public bool canShoot = true;
     float _flipValue = 0;
     public Vector3 posInit;
+
+    public GameObject pauseMenu;
+    [SerializeField] private Selectable pauseButton;
+    [SerializeField] private EventSystem eventSystem;
     
     public enum TypeZone
     {
@@ -111,11 +117,11 @@ public class PlayerController : MonoBehaviour
         damage = _playerData.damage;
     }
 
-    public void NewGame(InputAction.CallbackContext context)
+    public void Pause(InputAction.CallbackContext context)
     {
-        PlayerPrefs.DeleteKey("checkpointX");
-        PlayerPrefs.DeleteKey("checkpointY");
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        Time.timeScale = 0f;
+        pauseMenu.SetActive(true);
+        eventSystem.SetSelectedGameObject(pauseButton.gameObject);
     }
     
     public void OnMove(InputAction.CallbackContext context)
@@ -211,7 +217,7 @@ public class PlayerController : MonoBehaviour
                 GameObject proj = Instantiate(doProjectile, viseurAncragePoint.transform.position, Quaternion.identity);
                 Vector2 direction = (viseurStartProjectile.transform.position - viseurAncragePoint.transform.position).normalized;
                 proj.GetComponent<crocheScipt>().Launch(direction, true, damage);
-                AudioManager.Instance.SoundExample(0);
+                //AudioManager.Instance.SoundExample(0, AudioManager.TypeAudio.player);
                 animator.SetTrigger("isShoot");
             }
         }
@@ -226,20 +232,20 @@ public class PlayerController : MonoBehaviour
                 GameObject proj = Instantiate(reProjectile, viseurAncragePoint.transform.position, Quaternion.identity);
                 Vector2 direction = (viseurStartProjectile.transform.position - viseurAncragePoint.transform.position).normalized;
                 proj.GetComponent<crocheScipt>().Launch(direction, true, damage);
-                AudioManager.Instance.SoundExample(1);
+                //AudioManager.Instance.SoundExample(1);
                 animator.SetTrigger("isShoot");
             }
         }
     }
 
-    public void ActiveColliderZone(string typeZone)
+    public void ActiveColliderZone(TypeZone _typeZone)
     {
-        switch (typeZone)
+        switch (_typeZone)
         {
-            case "do":
+            case TypeZone.Do:
                 doZone.GetComponent<CircleCollider2D>().enabled = true;
                 break;
-            case "re":
+            case TypeZone.Re:
                 reZone.GetComponent<CircleCollider2D>().enabled = true;
                 break;
         }
@@ -250,16 +256,17 @@ public class PlayerController : MonoBehaviour
         if (context.performed)
         {
             currentZoneActive = TypeZone.Do;
+            ActiveColliderZone(TypeZone.Do);
             reZone.SetActive(false);
             doZone.SetActive(true);
-            AudioManager.Instance.SoundExample(2, true);
+            //AudioManager.Instance.SoundExample(2, true);
             
         }
         if (context.canceled) 
         {
-            AudioManager.Instance.StopSound();
+            if(currentZoneActive == TypeZone.Do) currentZoneActive = TypeZone.Not;
+            if(currentZoneActive == TypeZone.Not) AudioManager.Instance.StopSound();
             doZone.SetActive(false);
-            currentZoneActive = TypeZone.Not;
             doZone.GetComponent<CircleCollider2D>().enabled = false;
         }
     }
@@ -269,16 +276,17 @@ public class PlayerController : MonoBehaviour
         if (context.performed)
         {
             currentZoneActive = TypeZone.Re;
+            ActiveColliderZone(TypeZone.Re);
             doZone.SetActive(false);
             reZone.SetActive(true);
-            AudioManager.Instance.SoundExample(3, true);
+            //AudioManager.Instance.SoundExample(3, true);
             
         }
         if (context.canceled)
         {
-            AudioManager.Instance.StopSound();
+            if(currentZoneActive == TypeZone.Re) currentZoneActive = TypeZone.Not;
+            if(currentZoneActive == TypeZone.Not) AudioManager.Instance.StopSound();
             reZone.SetActive(false);
-            currentZoneActive = TypeZone.Not;
             reZone.GetComponent<CircleCollider2D>().enabled = false;
         }
     }
@@ -315,6 +323,7 @@ public class PlayerController : MonoBehaviour
     
     public void FixedUpdate()
     {
+        Debug.Log(currentZoneActive);
         if (IsGrounded() && !isJump)
         {
             coyoteTimer = coyoteTime;
