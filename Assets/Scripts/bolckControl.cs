@@ -8,6 +8,11 @@ public class bolckControl : MonoBehaviour
 
     private void OnEnable()
     {
-        print("enabled");
+        playerInput.DeactivateInput();
+    }
+
+    private void OnDisable()
+    {
+        playerInput.ActivateInput();
     }
 }
