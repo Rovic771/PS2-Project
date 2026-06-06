@@ -227,7 +227,6 @@ public class PlayerController : MonoBehaviour
                 GameObject proj = Instantiate(reProjectile, viseurAncragePoint.transform.position, Quaternion.identity);
                 Vector2 direction = (viseurStartProjectile.transform.position - viseurAncragePoint.transform.position).normalized;
                 proj.GetComponent<crocheScipt>().Launch(direction, true, damage);
-                //AudioManager.Instance.SoundExample(1);
                 AudioManager.Instance.PlaySound(1, 1, AudioManager.Sound.playerShotDo);
                 animator.SetTrigger("isShoot");
             }
@@ -255,13 +254,13 @@ public class PlayerController : MonoBehaviour
             ActiveColliderZone(TypeZone.Do);
             reZone.SetActive(false);
             doZone.SetActive(true);
-            AudioManager.Instance.PlaySound(2, 2, AudioManager.Sound.playerZoneDo, true);
+            AudioManager.Instance.PlaySound(2, 2, AudioManager.Sound.playerZoneDo, null , true);
             
         }
         if (context.canceled) 
         {
             if(currentZoneActive == TypeZone.Do) currentZoneActive = TypeZone.Not;
-            if(currentZoneActive == TypeZone.Not) AudioManager.Instance.StopSound();
+            if(currentZoneActive == TypeZone.Not) AudioManager.Instance.StopSound(AudioManager.TypeSfxSource.player);
             doZone.SetActive(false);
             doZone.GetComponent<CircleCollider2D>().enabled = false;
         }
@@ -275,12 +274,12 @@ public class PlayerController : MonoBehaviour
             ActiveColliderZone(TypeZone.Re);
             doZone.SetActive(false);
             reZone.SetActive(true);
-            AudioManager.Instance.PlaySound(3, 3, AudioManager.Sound.playerZoneRe, true);
+            AudioManager.Instance.PlaySound(3, 3, AudioManager.Sound.playerZoneRe, null, true);
         }
         if (context.canceled)
         {
             if(currentZoneActive == TypeZone.Re) currentZoneActive = TypeZone.Not;
-            if(currentZoneActive == TypeZone.Not) AudioManager.Instance.StopSound();
+            if(currentZoneActive == TypeZone.Not) AudioManager.Instance.StopSound(AudioManager.TypeSfxSource.player);
             reZone.SetActive(false);
             reZone.GetComponent<CircleCollider2D>().enabled = false;
         }
@@ -318,7 +317,6 @@ public class PlayerController : MonoBehaviour
     
     public void FixedUpdate()
     {
-        Debug.Log(currentZoneActive);
         if (IsGrounded() && !isJump)
         {
             coyoteTimer = coyoteTime;

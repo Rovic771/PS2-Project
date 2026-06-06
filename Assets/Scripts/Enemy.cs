@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public abstract class Enemy : MonoBehaviour
@@ -24,6 +25,8 @@ public abstract class Enemy : MonoBehaviour
     public bool isFacingRight = true;
     public bool isWalking;
     public Animator animator;
+    public  ClassEnemy classEnemy;
+    public enum ClassEnemy { violon, flute }
     
     [Header("Raycast")]
     [SerializeField] Color rayColor = Color.green;
@@ -177,6 +180,16 @@ public abstract class Enemy : MonoBehaviour
         if (other.gameObject.layer == LayerMask.NameToLayer("DoProjectileAlly") && gameObject.CompareTag("DoEnemy") 
             || other.gameObject.layer == LayerMask.NameToLayer("ReProjectileAlly") && gameObject.CompareTag("ReEnemy"))
         {
+            switch (classEnemy)
+            {
+                case ClassEnemy.violon:
+                    AudioManager.Instance.PlaySound(2,6, AudioManager.Sound.enemyFluteHit, gameObject);
+                    break;
+                case ClassEnemy.flute:
+                    Debug.Log("flute");
+                    AudioManager.Instance.PlaySound(4, 8, AudioManager.Sound.enemyFluteHit, gameObject);
+                    break;
+            }
             LoseHp();
         }
     }

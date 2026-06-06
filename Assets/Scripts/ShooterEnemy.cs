@@ -18,10 +18,12 @@ public class ShooterEnemy : Enemy
         if (typeEnemy == EnemyType.Re)
         {
             projectile = reProjectile;
+            AudioManager.Instance.PlaySound(0,4, AudioManager.Sound.enemyShotRe, gameObject);
         }
         else
         {
             projectile = doProjectile;
+            AudioManager.Instance.PlaySound(1,5, AudioManager.Sound.enemyShotDo, gameObject);
         }
         GameObject proj = Instantiate(projectile, viseurStartProjectile.transform.position, Quaternion.identity);
         Vector2 direction = (viseurStartProjectile.transform.position - viseurAncragePoint.transform.position).normalized;
@@ -32,6 +34,7 @@ public class ShooterEnemy : Enemy
     public override void Init()
     {
         animator = GetComponent<Animator>();
+        classEnemy = ClassEnemy.violon;
     }
 
     public override void OnTriggerEnter2D(Collider2D other)

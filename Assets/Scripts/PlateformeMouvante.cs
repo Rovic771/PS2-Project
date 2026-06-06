@@ -103,7 +103,7 @@ public class PlateformeMouvante : MonoBehaviour
             {
                 ChangeTargetPoint("Re");
             }
-            else if(other.gameObject.layer == LayerMask.NameToLayer("DoProjectileAlly"))
+            else if(other.gameObject.layer == LayerMask.NameToLayer("DoProjectileAllyà"))
             {
                 ChangeTargetPoint("Do");
             }
