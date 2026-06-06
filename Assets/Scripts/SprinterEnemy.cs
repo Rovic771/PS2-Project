@@ -45,6 +45,7 @@ public class SprinterEnemy : Enemy
         {
             playerDetected = true;
             AudioManager.Instance.PlaySound(3, 7, AudioManager.Sound.enemyRunAttack, gameObject, true);
+            // sert plus à rien vu que tu utilises playerdetected maintenant nan?
             //playerWasDetected = true;
         }
     }

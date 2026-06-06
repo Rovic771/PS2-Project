@@ -81,6 +81,7 @@ public class PlayerController : MonoBehaviour
     {
         canShoot = false;
         isShoot = true;
+        //pareil, ca pourrait etre cool à parametrer ca
         yield return new WaitForSeconds(0.1f);
         canShoot = true;
         isShoot = false;
@@ -88,6 +89,7 @@ public class PlayerController : MonoBehaviour
 
     IEnumerator KnockbackDelay()
     {
+        // dommage le 0.2f non parametrable
         yield return new WaitForSeconds(0.2f);
         isKnockback = false;
     }
@@ -262,10 +264,12 @@ public class PlayerController : MonoBehaviour
             if(currentZoneActive == TypeZone.Do) currentZoneActive = TypeZone.Not;
             if(currentZoneActive == TypeZone.Not) AudioManager.Instance.StopSound(AudioManager.TypeSfxSource.player);
             doZone.SetActive(false);
+            // peut etre stocker directement le circle collider pour éviter tout plein de getcomponent couteux
             doZone.GetComponent<CircleCollider2D>().enabled = false;
         }
     }
     
+    // pas mal de code duppliqué DRYable
     public void ReProtectionZone(InputAction.CallbackContext context)
     {
         if (context.performed)
@@ -315,6 +319,7 @@ public class PlayerController : MonoBehaviour
         }
     }
     
+    // bieeeeen trop de code ici
     public void FixedUpdate()
     {
         if (IsGrounded() && !isJump)
@@ -455,7 +460,7 @@ public class PlayerController : MonoBehaviour
         }
     }
     
-    public void Die()//c temporaire je la mettrais autre part plus tard
+    public void Die()//c temporaire je la mettrais autre part plus tard // ui c une bonne idée oubli po
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }

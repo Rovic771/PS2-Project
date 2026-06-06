@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
+// elle famoso crochescipt
 public class crocheScipt : MonoBehaviour
 {
     [SerializeField] private float speedProjectile = 5f;
@@ -13,6 +14,7 @@ public class crocheScipt : MonoBehaviour
     private float knockbackOnPlayerX;
     private float knockbackOnPlayerY;
 
+    // pas utilisé?
     private int damageProjectile;
     //private PlayerController _playerController;
     
@@ -22,6 +24,7 @@ public class crocheScipt : MonoBehaviour
         {
             if (gameObject.CompareTag("DoProjectile"))
             {
+                // ptet voir à stocker tous ces nametolayer
                 gameObject.layer = LayerMask.NameToLayer("DoProjectileAlly");
             }
             else if (gameObject.CompareTag("ReProjectile"))
@@ -49,6 +52,8 @@ public class crocheScipt : MonoBehaviour
         Destroy(gameObject, timeBeforeDestroy);
     }
 
+    // perso j'suis team "start et awake en haut" pour avoir une logique de lecture claire:
+    // on commence -> start awake, on update, on fait nos fonctions, et à la fin, les ondestroy
     public void Awake()
     {
         rbProjectile = GetComponent<Rigidbody2D>();

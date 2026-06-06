@@ -11,6 +11,8 @@ public class Checkpoint : MonoBehaviour
 
     private void Start()
     {
+        // si t'as beaucoup de checkpoints, ca risque de pas mal allourdir la création de ta scene, et du coup le temps de chargement
+        // ( unity au lancement de ta scene appelle tous les starts / awake, du coup si ils sont fat, tu manges du temps de loading / freeze )
         _playerController = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
     }
 

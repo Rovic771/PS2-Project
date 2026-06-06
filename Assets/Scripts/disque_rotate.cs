@@ -1,5 +1,6 @@
 using UnityEngine;
 
+// gaffe aux noms de classes qui suivent pas les conventions du projet ( faut crier Aksel, mais pas trop fort c'est déja bien qu'il dev )
 public class disque_rotate : MonoBehaviour
 {
     RectTransform rectTransform;

@@ -11,9 +11,11 @@ public class AudioManager : MonoBehaviour
     
     void Awake()
     {
+        // comment instance pourrait == this ? si tu rentres dans l'awake, il y repassera pas
         if (Instance != null && Instance != this)
         {
             Destroy(this);
+            // ptet un petit return ici pour éviter que instance = this = null ( vu que tu destroy )
         }
 
         Instance = this;
@@ -60,6 +62,7 @@ public class AudioManager : MonoBehaviour
     
     
     
+    // pas giga claires tes params, je comprends pas trop la diff entre soundtoplay et sound
     public void PlaySound(int _soundToplay, int _audioMixer, Sound _sound, GameObject _enemy = null,bool _loop = false)
     {
         bool isEnemySound = false;

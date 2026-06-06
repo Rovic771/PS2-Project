@@ -7,6 +7,7 @@ public class AnimationRelayPlayer : MonoBehaviour
     
     void Start()
     {
+        // pareil que l'autre relay, forcément nul nan? ( à la limite lui un peu moins )
         if(playerController is null) playerController = GetComponentInParent<PlayerController>();
     }
 

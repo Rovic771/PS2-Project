@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 
+// la petite majuscule
 public class scrolling : MonoBehaviour
 {
     [SerializeField] private float speed;

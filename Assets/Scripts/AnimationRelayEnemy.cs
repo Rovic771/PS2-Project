@@ -6,6 +6,7 @@ public class AnimationRelayEnemy : MonoBehaviour
     
     void Start()
     {
+        // il est forcément nul hein?
         if (enemy is null) enemy = GetComponent<Enemy>();
     }
 

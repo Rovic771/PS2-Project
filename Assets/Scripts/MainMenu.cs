@@ -14,10 +14,11 @@ public class MainMenu : MonoBehaviour //fait par Aksel
     [SerializeField] private Selectable mainMenu;
     
     
-    
+    // là aussi faut dire à Aksel de faire gaffe aux conventions du projet
     public void newGame()
     {
         PlayerPrefs.SetFloat("checkpointX", 167.2f);
+        // bah ptin, c'est précis
         PlayerPrefs.SetFloat("checkpointY", -0.5999985f);
         SceneManager.LoadScene("good assanblage 1");
     }

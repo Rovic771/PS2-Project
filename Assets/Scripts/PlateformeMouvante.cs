@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
+// gaffe aux noms francais qui spawnent random
 public class PlateformeMouvante : MonoBehaviour
 {
     [SerializeField] private GameObject origine;
@@ -18,6 +19,7 @@ public class PlateformeMouvante : MonoBehaviour
         currentPointIndex = points.IndexOf(origine);
     }
     
+    // trop de code obscure pour un update
     private void FixedUpdate()
     {
         if (objectActive)
@@ -48,6 +50,8 @@ public class PlateformeMouvante : MonoBehaviour
         targetPos = points[currentPointIndex].transform.position;
     }
 
+    // pourquoi utiliser des string pour les type et pas un enum avec do re mi comme champs?
+    // les comparaisons de string sont + couteuses et moins claires / stables ( erreur de frappe, data null, ... )
     private void ChangeTargetPoint(string typeProjectile)
     {
         if (objectActive)

@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class ShooterEnemy : Enemy
 { 
+    // gaffe aux namings languages pas consistents
     [SerializeField] private GameObject viseurAncragePoint;
     [SerializeField] private GameObject viseurStartProjectile;
     [SerializeField] private GameObject doProjectile;

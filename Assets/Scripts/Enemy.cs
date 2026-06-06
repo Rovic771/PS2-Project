@@ -18,6 +18,7 @@ public abstract class Enemy : MonoBehaviour
     public float life;
     public int damage;
     public float speed;
+    // apparement inutile, autant retirer ?
     public Rigidbody2D rbEnemy;
     public bool isStun = false;
     public bool isIddle = false;
@@ -34,6 +35,15 @@ public abstract class Enemy : MonoBehaviour
     [SerializeField] private LayerMask whatToHit;
 
     
+    // pareil que le script crochescipt, je m'attends pas à voir des fonctions avant le start
+    // essais au maximum de suivre ca:
+    // variables
+    // start/awake
+    // onenable/disable
+    // updates
+    // random methods
+    // destory
+    // c'est le classique pour du dev unity
     private IEnumerator StunTime()
     {
         yield return new WaitForSeconds(stunTime);
@@ -123,6 +133,7 @@ public abstract class Enemy : MonoBehaviour
         
     }
     
+    // hésite pas à vider ton update, là actuellement je n'ai aucune moyen de savoir sans lire entierement ta fonction ce qu'elle fait
     public virtual void FixedUpdate()
     {
         if (!playerDetected && !isStun)
