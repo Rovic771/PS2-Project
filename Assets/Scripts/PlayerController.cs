@@ -31,6 +31,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private GameObject doProjectile;
     [SerializeField] private GameObject reProjectile;
     [SerializeField] private float wallSlidingSpeed = 0.2f;
+    [SerializeField] private float zoneDuration = 1.0f;
     
     [Header("Animator")]
     [SerializeField] private Animator animator;
@@ -78,6 +79,24 @@ public class PlayerController : MonoBehaviour
     private bool canFlip = true;
     public bool isKnockback = false;
 
+    IEnumerator ZoneDuration()
+    {
+        yield return new WaitForSeconds(zoneDuration);
+        switch (currentZoneActive)
+        {
+            case TypeZone.Do:
+                doZone.SetActive(false);
+                doZone.GetComponent<CircleCollider2D>().enabled = false;
+                break;
+            case TypeZone.Re:
+                reZone.SetActive(false);
+                reZone.GetComponent<CircleCollider2D>().enabled = false;
+                break;
+        }
+        currentZoneActive = TypeZone.Not;
+        if(AudioManager.Instance != null) AudioManager.Instance.StopSound(AudioManager.TypeSfxSource.player);
+    }
+    
     IEnumerator ShootDelay()
     {
         canShoot = false;
@@ -252,16 +271,17 @@ public class PlayerController : MonoBehaviour
     {
         if (context.performed)
         {
+            StartCoroutine(ZoneDuration());
             currentZoneActive = TypeZone.Do;
             ActiveColliderZone(TypeZone.Do);
             reZone.SetActive(false);
             doZone.SetActive(true);
             if(AudioManager.Instance != null) AudioManager.Instance.PlaySound(2, 2, AudioManager.Sound.playerZoneDo, null , true);
             else Debug.Log("AudioManager manquant");
-            
         }
         if (context.canceled) 
         {
+            StopCoroutine(ZoneDuration());
             if(currentZoneActive == TypeZone.Do) currentZoneActive = TypeZone.Not;
             if(currentZoneActive == TypeZone.Not && AudioManager.Instance != null) AudioManager.Instance.StopSound(AudioManager.TypeSfxSource.player);
             else Debug.Log("AudioManager manquant");
@@ -274,6 +294,7 @@ public class PlayerController : MonoBehaviour
     {
         if (context.performed)
         {
+            StartCoroutine(ZoneDuration());
             currentZoneActive = TypeZone.Re;
             ActiveColliderZone(TypeZone.Re);
             doZone.SetActive(false);
@@ -283,6 +304,7 @@ public class PlayerController : MonoBehaviour
         }
         if (context.canceled)
         {
+            StopCoroutine(ZoneDuration());
             if(currentZoneActive == TypeZone.Re) currentZoneActive = TypeZone.Not;
             if(currentZoneActive == TypeZone.Not && AudioManager.Instance != null) AudioManager.Instance.StopSound(AudioManager.TypeSfxSource.player);
             else Debug.Log("AudioManager manquant");
