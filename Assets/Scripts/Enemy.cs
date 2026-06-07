@@ -15,6 +15,7 @@ public abstract class Enemy : MonoBehaviour
     public Vector2 targetPos;
     public bool playerDetected = false;
     public GameObject player; 
+    protected PlayerController _playerController;
     public float life;
     public int damage;
     public float speed;
@@ -47,6 +48,7 @@ public abstract class Enemy : MonoBehaviour
         rbEnemy = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         player = GameObject.FindGameObjectWithTag("Player");
+        _playerController = player.GetComponent<PlayerController>();
         if (typeEnemy == EnemyType.Do) gameObject.tag = "DoEnemy";
         else if (typeEnemy == EnemyType.Re) gameObject.tag = "ReEnemy";
         

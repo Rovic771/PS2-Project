@@ -33,6 +33,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private GameObject doProjectile;
     [SerializeField] private GameObject reProjectile;
     [SerializeField] private float wallSlidingSpeed = 0.2f;
+    [SerializeField] private float zoneDuration = 1.0f;
     
     [Header("Animator")]
     [SerializeField] private Animator animator;
@@ -83,6 +84,24 @@ public class PlayerController : MonoBehaviour
     private bool canFlip = true;
     public bool isKnockback = false;
 
+    IEnumerator ZoneDuration()
+    {
+        yield return new WaitForSeconds(zoneDuration);
+        switch (currentZoneActive)
+        {
+            case TypeZone.Do:
+                doZone.SetActive(false);
+                doZone.GetComponent<CircleCollider2D>().enabled = false;
+                break;
+            case TypeZone.Re:
+                reZone.SetActive(false);
+                reZone.GetComponent<CircleCollider2D>().enabled = false;
+                break;
+        }
+        currentZoneActive = TypeZone.Not;
+        if(AudioManager.Instance != null) AudioManager.Instance.StopSound(AudioManager.TypeSfxSource.player);
+    }
+    
     IEnumerator ShootDelay()
     {
         canShoot = false;
@@ -217,8 +236,8 @@ public class PlayerController : MonoBehaviour
                 GameObject proj = Instantiate(doProjectile, viseurAncragePoint.transform.position, Quaternion.identity);
                 Vector2 direction = (viseurStartProjectile.transform.position - viseurAncragePoint.transform.position).normalized;
                 proj.GetComponent<crocheScipt>().Launch(direction, true, damage);
-                //AudioManager.Instance.SoundExample(0, AudioManager.TypeAudio.player);
-                AudioManager.Instance.PlaySound(0, 0, AudioManager.Sound.playerShotDo);
+                if(AudioManager.Instance != null) AudioManager.Instance.PlaySound(0, 0, AudioManager.Sound.playerShotDo);
+                else Debug.Log("AudioManager manquant");
                 animator.SetTrigger("isShoot");
             }
         }
@@ -233,7 +252,8 @@ public class PlayerController : MonoBehaviour
                 GameObject proj = Instantiate(reProjectile, viseurAncragePoint.transform.position, Quaternion.identity);
                 Vector2 direction = (viseurStartProjectile.transform.position - viseurAncragePoint.transform.position).normalized;
                 proj.GetComponent<crocheScipt>().Launch(direction, true, damage);
-                AudioManager.Instance.PlaySound(1, 1, AudioManager.Sound.playerShotDo);
+                if (AudioManager.Instance != null) AudioManager.Instance.PlaySound(1, 1, AudioManager.Sound.playerShotDo);
+                else Debug.Log("AudioManager manquant");
                 animator.SetTrigger("isShoot");
             }
         }
@@ -256,17 +276,20 @@ public class PlayerController : MonoBehaviour
     {
         if (context.performed)
         {
+            StartCoroutine(ZoneDuration());
             currentZoneActive = TypeZone.Do;
             ActiveColliderZone(TypeZone.Do);
             reZone.SetActive(false);
             doZone.SetActive(true);
-            AudioManager.Instance.PlaySound(2, 2, AudioManager.Sound.playerZoneDo, null , true);
-            
+            if(AudioManager.Instance != null) AudioManager.Instance.PlaySound(2, 2, AudioManager.Sound.playerZoneDo, null , true);
+            else Debug.Log("AudioManager manquant");
         }
         if (context.canceled) 
         {
+            StopCoroutine(ZoneDuration());
             if(currentZoneActive == TypeZone.Do) currentZoneActive = TypeZone.Not;
-            if(currentZoneActive == TypeZone.Not) AudioManager.Instance.StopSound(AudioManager.TypeSfxSource.player);
+            if(currentZoneActive == TypeZone.Not && AudioManager.Instance != null) AudioManager.Instance.StopSound(AudioManager.TypeSfxSource.player);
+            else Debug.Log("AudioManager manquant");
             doZone.SetActive(false);
             doZone.GetComponent<CircleCollider2D>().enabled = false;
         }
@@ -276,16 +299,20 @@ public class PlayerController : MonoBehaviour
     {
         if (context.performed)
         {
+            StartCoroutine(ZoneDuration());
             currentZoneActive = TypeZone.Re;
             ActiveColliderZone(TypeZone.Re);
             doZone.SetActive(false);
             reZone.SetActive(true);
-            AudioManager.Instance.PlaySound(3, 3, AudioManager.Sound.playerZoneRe, null, true);
+            if(AudioManager.Instance != null) AudioManager.Instance.PlaySound(3, 3, AudioManager.Sound.playerZoneRe, null, true);
+            else Debug.Log("AudioManager manquant");
         }
         if (context.canceled)
         {
+            StopCoroutine(ZoneDuration());
             if(currentZoneActive == TypeZone.Re) currentZoneActive = TypeZone.Not;
-            if(currentZoneActive == TypeZone.Not) AudioManager.Instance.StopSound(AudioManager.TypeSfxSource.player);
+            if(currentZoneActive == TypeZone.Not && AudioManager.Instance != null) AudioManager.Instance.StopSound(AudioManager.TypeSfxSource.player);
+            else Debug.Log("AudioManager manquant");
             reZone.SetActive(false);
             reZone.GetComponent<CircleCollider2D>().enabled = false;
         }
@@ -457,7 +484,9 @@ public class PlayerController : MonoBehaviour
         life -= damage;
         if (life <= 0)
         {
-            Die();
+            GetComponent<PlayerInput>().enabled = false;
+            isTargetable = false;
+            animator.SetTrigger("Ko");
         }
     }
     
