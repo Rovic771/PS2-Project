@@ -14,5 +14,10 @@ public class AnimationRelayPlayer : MonoBehaviour
     {
         playerController.ApplyShoot();
     }
+
+    public void TriggerDie()
+    {
+        playerController.Die();
+    }
     
 }

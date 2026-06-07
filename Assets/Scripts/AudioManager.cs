@@ -94,22 +94,27 @@ public class AudioManager : MonoBehaviour
                 currentTypeAudio = TypeAudio.player;
                 break;
             case Sound.enemyShotDo:
+                if(_gameObject != null) sfxSourceEnemy = _gameObject.GetComponentInParent<AudioSource>();
                 sfxSourceEnemy.outputAudioMixerGroup = audioMixers[_audioMixer];
                 currentTypeAudio = TypeAudio.enemy;
                 break;
             case Sound.enemyShotRe:
+                if(_gameObject != null) sfxSourceEnemy = _gameObject.GetComponentInParent<AudioSource>();
                 sfxSourceEnemy.outputAudioMixerGroup = audioMixers[_audioMixer];
                 currentTypeAudio = TypeAudio.enemy;
                 break;
             case Sound.enemyViolonHit:
+                if(_gameObject != null) sfxSourceEnemy = _gameObject.GetComponentInParent<AudioSource>();
                 sfxSourcePlayer.outputAudioMixerGroup = audioMixers[_audioMixer];
                 currentTypeAudio = TypeAudio.enemy;
                 break;
             case Sound.enemyFluteHit:
+                if(_gameObject != null) sfxSourceEnemy = _gameObject.GetComponentInParent<AudioSource>();
                 sfxSourceEnemy.outputAudioMixerGroup = audioMixers[_audioMixer];
                 currentTypeAudio = TypeAudio.enemy;
                 break;
             case Sound.enemyRunAttack:
+                if(_gameObject != null) sfxSourceEnemy = _gameObject.GetComponentInParent<AudioSource>();
                 sfxSourceEnemy.outputAudioMixerGroup = audioMixers[_audioMixer];
                 currentTypeAudio = TypeAudio.enemy;
                 break;
@@ -145,13 +150,11 @@ public class AudioManager : MonoBehaviour
                     sfxSourcePlayer.Play();
                     break;
                 case TypeAudio.enemy:
-                    if(_gameObject is not null) sfxSourceEnemy = _gameObject.GetComponentInParent<AudioSource>();
                     sfxSourceEnemy.clip = sfxEnemy[_soundToplay];
                     sfxSourceEnemy.loop = _loop;
                     sfxSourceEnemy.Play();
                     break;
                 case TypeAudio.environment:
-                    if(_gameObject is not null) sfxSourceEnvironment = _gameObject.GetComponentInParent<AudioSource>();
                     sfxSourceEnvironment.clip = sfxEnvironment[_soundToplay];
                     sfxSourceEnvironment.loop = _loop;
                     sfxSourceEnvironment.Play();
