@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
+using UnityEngine.SceneManagement;
 
 public class AudioManager : MonoBehaviour
 {
@@ -13,14 +14,34 @@ public class AudioManager : MonoBehaviour
     {
         if (Instance != null && Instance != this)
         {
-            Destroy(this);
+            Destroy(gameObject);
+            return;
         }
 
         Instance = this;
+        transform.SetParent(null);
+        DontDestroyOnLoad(gameObject);
+    }
+    
+    private void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    private void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        var test = GameObject.FindGameObjectWithTag("Player").GetComponent<AudioSource>();
+        if (test != null) sfxSourcePlayer = test;
     }
     
     void Start()
     {
+        Debug.Log("Start audio Manager");
+
         if (mainMusic == null)
             return;
         musicSource.clip = mainMusic;
@@ -114,6 +135,7 @@ public class AudioManager : MonoBehaviour
                 currentTypeAudio = TypeAudio.enemy;
                 break;
             case Sound.enemyRunAttack:
+                Debug.Log("Bahg + " + _gameObject.name);
                 if(_gameObject != null) sfxSourceEnemy = _gameObject.GetComponentInParent<AudioSource>();
                 sfxSourceEnemy.outputAudioMixerGroup = audioMixers[_audioMixer];
                 currentTypeAudio = TypeAudio.enemy;

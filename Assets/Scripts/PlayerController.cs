@@ -63,6 +63,7 @@ public class PlayerController : MonoBehaviour
     public bool canShoot = true;
     float _flipValue = 0;
     public Vector3 posInit;
+    public bool isTargetable = true;
 
     public GameObject pauseMenu;
     [SerializeField] private Selectable pauseButton;
