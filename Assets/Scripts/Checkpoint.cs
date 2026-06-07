@@ -16,7 +16,7 @@ public class Checkpoint : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        //AudioManager.Instance.SoundExample(9);
+        AudioManager.Instance.PlaySound(0, 9, AudioManager.Sound.checkpoint, gameObject);
         if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
         {
             PlayerPrefs.SetFloat("checkpointX", transform.position.x);
