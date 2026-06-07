@@ -10,31 +10,31 @@ public class ShooterEnemy : Enemy
     [SerializeField] private GameObject reProjectile;
     [SerializeField] private float knockbackOnPlayerForceX = 10f;
     [SerializeField] private float knockbackOnPlayerForceY = 10f;
-    public bool canShoot = true;
     
 
     public void Shoot()
     {
-        canShoot = true;
         GameObject projectile;
         if (typeEnemy == EnemyType.Re)
         {
             projectile = reProjectile;
+            AudioManager.Instance.PlaySound(0,4, AudioManager.Sound.enemyShotRe, gameObject);
         }
         else
         {
             projectile = doProjectile;
+            AudioManager.Instance.PlaySound(1,5, AudioManager.Sound.enemyShotDo, gameObject);
         }
         GameObject proj = Instantiate(projectile, viseurStartProjectile.transform.position, Quaternion.identity);
         Vector2 direction = (viseurStartProjectile.transform.position - viseurAncragePoint.transform.position).normalized;
         proj.GetComponent<crocheScipt>().Launch(direction, false, damage, knockbackOnPlayerForceX, knockbackOnPlayerForceY);
-        canShoot = false;
     }
     
 
     public override void Init()
     {
         animator = GetComponent<Animator>();
+        classEnemy = ClassEnemy.violon;
     }
 
     public override void OnTriggerEnter2D(Collider2D other)
@@ -56,7 +56,6 @@ public class ShooterEnemy : Enemy
 
     public override void ResetEnemyState()
     {
-        canShoot = true;
     }
 
     private void LookToPlayer()
@@ -71,8 +70,9 @@ public class ShooterEnemy : Enemy
     public override void FixedUpdate()
     {
         base.FixedUpdate();
+        isIddle = false;
         switch (playerDetected)
-        {
+        { 
             case true:
                 isWalking = false;
                 LookToPlayer();
@@ -85,11 +85,12 @@ public class ShooterEnemy : Enemy
                     break;
                 }
                 isWalking = false;
+                isIddle = true;
                 break;
         }
         
         animator.SetBool("isWalking", isWalking);
-        animator.SetBool("canShoot", canShoot);
         animator.SetFloat("life", life);
+        animator.SetBool("isIddle", isIddle);
     }
 }

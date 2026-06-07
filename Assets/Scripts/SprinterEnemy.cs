@@ -10,6 +10,7 @@ public class SprinterEnemy : Enemy
     [SerializeField] private float knockbackOnPlayerForceY = 10f;
     private Vector2 posInit;
     private bool playerWasDetected;
+    private bool pursuitSoundPlayed = false;
     
     
     public void OnTriggerStay2D(Collider2D other)
@@ -17,14 +18,25 @@ public class SprinterEnemy : Enemy
         if (other.gameObject.layer == LayerMask.NameToLayer("Player") && !isStun && !TestIfWall())
         {
             playerDetected = true;
+            if (!pursuitSoundPlayed)
+            {
+                AudioManager.Instance.PlaySound(3, 7, AudioManager.Sound.enemyRunAttack, gameObject, true);
+                pursuitSoundPlayed = true;
+            }
         }
-        else playerDetected = false;
+        else
+        {
+            playerDetected = false;
+            pursuitSoundPlayed = false;
+            if(AudioManager.Instance.sfxSourceEnemy != null) AudioManager.Instance.StopSound(AudioManager.TypeSfxSource.enemy);
+        }
     }
 
     public override void Init()
     {
         animator = GetComponent<Animator>();
         posInit = transform.position;
+        classEnemy = ClassEnemy.flute;
     }
 
     public override void OnTriggerEnter2D(Collider2D other)
@@ -32,6 +44,7 @@ public class SprinterEnemy : Enemy
         if (other.gameObject.layer == LayerMask.NameToLayer("Player") && !isStun && !TestIfWall())
         {
             playerDetected = true;
+            AudioManager.Instance.PlaySound(3, 7, AudioManager.Sound.enemyRunAttack, gameObject, true);
             //playerWasDetected = true;
         }
     }
@@ -40,6 +53,7 @@ public class SprinterEnemy : Enemy
     {
         if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
         {
+            if(AudioManager.Instance.sfxSourceEnemy != null) AudioManager.Instance.StopSound(AudioManager.TypeSfxSource.enemy);
             playerDetected = false;
         }
     }
@@ -62,6 +76,7 @@ public class SprinterEnemy : Enemy
             playerController.TakeDamage(damage);
             playerController.KnockBack(touchFromRight, knockbackOnPlayerForceX, knockbackOnPlayerForceY);
         }
+        
     }
 
     private void PursuitPlayer()
