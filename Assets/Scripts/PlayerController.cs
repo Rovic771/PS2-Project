@@ -82,7 +82,7 @@ public class PlayerController : MonoBehaviour
     public bool isJump;
     private float coyoteTimer;
     public static List<GameObject> currentPlateform = new List<GameObject>();
-    private bool canFlip = true;
+    public bool canFlip = true;
     public bool isKnockback = false;
 
     IEnumerator ZoneDuration()
@@ -193,6 +193,7 @@ public class PlayerController : MonoBehaviour
                 force = Vector2.up * jumpStrength;
                 isGround = false; 
                 isJump = true;
+                canFlip = true;
                 coyoteTimer = 0;
             }
         else
@@ -367,7 +368,7 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        if (IsWalled() && !wasWalled)
+        if (IsWalled() && !wasWalled && !IsGrounded())
         {
             coyoteTimer = coyoteTimeWallJump;
             wasWalled = true;
