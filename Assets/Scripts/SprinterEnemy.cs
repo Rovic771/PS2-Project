@@ -9,19 +9,19 @@ public class SprinterEnemy : Enemy
     [SerializeField] private float knockbackOnPlayerForceX = 10f;
     [SerializeField] private float knockbackOnPlayerForceY = 10f;
     private Vector2 posInit;
-    private bool playerWasDetected;
-    private bool pursuitSoundPlayed = false;
+    public bool pursuitSoundPlayed = false;
     
     
     public void OnTriggerStay2D(Collider2D other)
     {
-        if (other.gameObject.layer == LayerMask.NameToLayer("Player") && !isStun && !TestIfWall())
+        if (other.gameObject.layer == LayerMask.NameToLayer("Player") && !isStun && !TestIfWall() && _playerController.isTargetable)
         {
             playerDetected = true;
             if (!pursuitSoundPlayed)
             {
                 AudioManager.Instance.PlaySound(3, 7, AudioManager.Sound.enemyRunAttack, gameObject, true);
                 pursuitSoundPlayed = true;
+                Debug.Log("Son joué");
             }
         }
         else
@@ -41,10 +41,10 @@ public class SprinterEnemy : Enemy
 
     public override void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.gameObject.layer == LayerMask.NameToLayer("Player") && !isStun && !TestIfWall())
+        if (other.gameObject.layer == LayerMask.NameToLayer("Player") && !isStun && !TestIfWall() && _playerController.isTargetable)
         {
             playerDetected = true;
-            AudioManager.Instance.PlaySound(3, 7, AudioManager.Sound.enemyRunAttack, gameObject, true);
+            if(!pursuitSoundPlayed) AudioManager.Instance.PlaySound(3, 7, AudioManager.Sound.enemyRunAttack, gameObject, true);
             //playerWasDetected = true;
         }
     }

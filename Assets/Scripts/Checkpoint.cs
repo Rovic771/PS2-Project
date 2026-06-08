@@ -6,6 +6,7 @@ using Vector3 = UnityEngine.Vector3;
 
 public class Checkpoint : MonoBehaviour
 {
+    public bool alreadyTake = false;
     private Vector3 playerPos;
     private PlayerController _playerController;
 
@@ -16,11 +17,13 @@ public class Checkpoint : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        //AudioManager.Instance.SoundExample(9);
+        if(alreadyTake) return;
+        AudioManager.Instance.PlaySound(0, 9, AudioManager.Sound.checkpoint, gameObject);
         if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
         {
             PlayerPrefs.SetFloat("checkpointX", transform.position.x);
             PlayerPrefs.SetFloat("checkpointY", transform.position.y);
         }
+        alreadyTake = true;
     }
 }
