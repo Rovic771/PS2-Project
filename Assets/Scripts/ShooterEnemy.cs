@@ -65,7 +65,7 @@ public class ShooterEnemy : Enemy
             {
                 playerDetected = false;
                 canShoot = true;
-                StopAllCoroutines();
+                StopCoroutine(DelayShoot());
             }
         }
     }
@@ -85,7 +85,7 @@ public class ShooterEnemy : Enemy
             ResetEnemyState();
             playerDetected = false;
             canShoot = true;
-            StopAllCoroutines();
+			StopCoroutine(DelayShoot());
         }
     }
 
