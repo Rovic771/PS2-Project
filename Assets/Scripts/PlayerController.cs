@@ -65,7 +65,14 @@ public class PlayerController : MonoBehaviour
     float _flipValue = 0;
     public Vector3 posInit;
     public bool isTargetable = true;
+    
+    [Header("Audio")]
     private AudioSource _audioSource;
+    [SerializeField] private float volumeZoneDo = 1f;
+    [SerializeField] private float volumeZoneRe = 1f;
+    [SerializeField] private float volumeShotDo = 1f;
+    [SerializeField] private float volumeShotRe = 1f;
+    [SerializeField] private float volumeTakeDamage = 1f;
 
     public GameObject pauseMenu;
     [SerializeField] private Selectable pauseButton;
@@ -241,7 +248,7 @@ public class PlayerController : MonoBehaviour
                 GameObject proj = Instantiate(doProjectile, viseurAncragePoint.transform.position, Quaternion.identity);
                 Vector2 direction = (viseurStartProjectile.transform.position - viseurAncragePoint.transform.position).normalized;
                 proj.GetComponent<crocheScipt>().Launch(direction, true, damage);
-                AudioManager.Instance.PlaySoundPlayer(AudioManager.PlayerSound.AttackDo, 0.35f);
+                AudioManager.Instance.PlaySoundPlayer(AudioManager.PlayerSound.AttackDo, volumeShotDo);
                 animator.SetTrigger("isShoot");
             }
         }
@@ -256,7 +263,7 @@ public class PlayerController : MonoBehaviour
                 GameObject proj = Instantiate(reProjectile, viseurAncragePoint.transform.position, Quaternion.identity);
                 Vector2 direction = (viseurStartProjectile.transform.position - viseurAncragePoint.transform.position).normalized;
                 proj.GetComponent<crocheScipt>().Launch(direction, true, damage);
-                AudioManager.Instance.PlaySoundPlayer(AudioManager.PlayerSound.AttackRé, 0.3f);
+                AudioManager.Instance.PlaySoundPlayer(AudioManager.PlayerSound.AttackRé, volumeShotRe);
                 animator.SetTrigger("isShoot");
             }
         }
@@ -286,11 +293,12 @@ public class PlayerController : MonoBehaviour
             doZone.SetActive(true);
             _audioSource.clip = AudioManager.Instance.PlayerClips[(int)AudioManager.PlayerSound.ZoneDo];
             _audioSource.loop = true;
+            _audioSource.volume = volumeZoneDo;
             _audioSource.Play();
         }
         if (context.canceled) 
         {
-            StopCoroutine(ZoneDuration());
+            StopAllCoroutines();
             if(currentZoneActive == TypeZone.Do) currentZoneActive = TypeZone.Not;
             _audioSource.clip = null;
             doZone.SetActive(false);
@@ -309,11 +317,12 @@ public class PlayerController : MonoBehaviour
             reZone.SetActive(true);
             _audioSource.clip = AudioManager.Instance.PlayerClips[(int)AudioManager.PlayerSound.ZoneRé];
             _audioSource.loop = true;
+            _audioSource.volume = volumeZoneRe;
             _audioSource.Play();
         }
         if (context.canceled)
         {
-            StopCoroutine(ZoneDuration());
+            StopAllCoroutines();
             if(currentZoneActive == TypeZone.Re) currentZoneActive = TypeZone.Not;
             _audioSource.clip = null;
             reZone.SetActive(false);
@@ -484,7 +493,7 @@ public class PlayerController : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
-        AudioManager.Instance.PlaySoundPlayer(AudioManager.PlayerSound.PlayerHit, 1);
+        AudioManager.Instance.PlaySoundPlayer(AudioManager.PlayerSound.PlayerHit, volumeTakeDamage);
         life -= damage;
         if (life <= 0)
         {
@@ -494,7 +503,7 @@ public class PlayerController : MonoBehaviour
         }
     }
     
-    public void Die()//c temporaire je la mettrais autre part plus tard
+    public void Die()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }

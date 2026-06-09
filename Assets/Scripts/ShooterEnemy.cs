@@ -11,6 +11,10 @@ public class ShooterEnemy : Enemy
     [SerializeField] private float knockbackOnPlayerForceX = 10f;
     [SerializeField] private float knockbackOnPlayerForceY = 10f;
     
+    [Header("Audio")]
+    [SerializeField] private float volumeAttackDo = 1f;
+    [SerializeField] private float volumeAttackRe = 1f;
+    
 
     public void Shoot()
     {
@@ -18,14 +22,12 @@ public class ShooterEnemy : Enemy
         if (typeEnemy == EnemyType.Re)
         {
             projectile = reProjectile;
-            //AudioManager.Instance.PlaySound(0,4, AudioManager.Sound.enemyShotRe, gameObject);
-            AudioManager.Instance.PlaySoundEnemy(AudioManager.EnemySound.AttackRé, 1);
+            AudioManager.Instance.PlaySoundEnemy(AudioManager.EnemySound.AttackRé, volumeAttackRe);
         }
         else
         {
             projectile = doProjectile;
-            //AudioManager.Instance.PlaySound(1,5, AudioManager.Sound.enemyShotDo, gameObject);
-            AudioManager.Instance.PlaySoundEnemy(AudioManager.EnemySound.AttackDo, 1);
+            AudioManager.Instance.PlaySoundEnemy(AudioManager.EnemySound.AttackDo, volumeAttackDo);
         }
         GameObject proj = Instantiate(projectile, viseurStartProjectile.transform.position, Quaternion.identity);
         Vector2 direction = (viseurStartProjectile.transform.position - viseurAncragePoint.transform.position).normalized;

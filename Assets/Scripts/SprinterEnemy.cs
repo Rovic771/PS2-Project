@@ -9,8 +9,12 @@ public class SprinterEnemy : Enemy
     [SerializeField] private float knockbackOnPlayerForceX = 10f;
     [SerializeField] private float knockbackOnPlayerForceY = 10f;
     private Vector2 posInit;
-    private AudioSource _audioSource;
+    
     public bool pursuitSoundPlayed = false;
+    
+    [Header("Audio")]
+    private AudioSource _audioSource;
+    [SerializeField] private float volumeAttack = 1f;
     
     
     public void OnTriggerStay2D(Collider2D other)
@@ -22,9 +26,9 @@ public class SprinterEnemy : Enemy
             {
                 _audioSource.clip = AudioManager.Instance.EnemyClips[2];
                 _audioSource.loop = true;
+                _audioSource.volume = volumeAttack;
                 _audioSource.Play();
                 pursuitSoundPlayed = true;
-                Debug.Log("Son Sprinter joué avefe");
             }
         }
         else if(other.gameObject.layer == LayerMask.NameToLayer("Player"))
@@ -55,6 +59,7 @@ public class SprinterEnemy : Enemy
             {
                 _audioSource.clip = AudioManager.Instance.EnemyClips[2];
                 _audioSource.loop = true;
+                _audioSource.volume = volumeAttack;
                 _audioSource.Play();
                 pursuitSoundPlayed = true;
             }

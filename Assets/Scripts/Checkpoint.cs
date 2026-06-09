@@ -10,6 +10,9 @@ public class Checkpoint : MonoBehaviour
     private Vector3 playerPos;
     private PlayerController _playerController;
 
+    [Header("Audio")] 
+    [SerializeField] private float volumeCheckpoint = 1f;
+
     private void Start()
     {
         _playerController = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
@@ -18,7 +21,7 @@ public class Checkpoint : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D other)
     {
         if(alreadyTake) return;
-        AudioManager.Instance.PlaySoundEnvironment(AudioManager.EnvironmentSound.Checkpoint, 1);
+        AudioManager.Instance.PlaySoundEnvironment(AudioManager.EnvironmentSound.Checkpoint, volumeCheckpoint);
         if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
         {
             PlayerPrefs.SetFloat("checkpointX", transform.position.x);
