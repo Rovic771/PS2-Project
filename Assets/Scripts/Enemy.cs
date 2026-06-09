@@ -33,6 +33,9 @@ public abstract class Enemy : MonoBehaviour
     [SerializeField] Color rayColor = Color.green;
     [SerializeField] private Transform rayCastOrigin;
     [SerializeField] private LayerMask whatToHit;
+    
+    [Header("Audio")]
+    [SerializeField] private float volumeHit = 1f;
 
     
     private IEnumerator StunTime()
@@ -185,10 +188,10 @@ public abstract class Enemy : MonoBehaviour
             switch (classEnemy)
             {
                 case ClassEnemy.violon:
-                    AudioManager.Instance.PlaySoundEnemy(AudioManager.EnemySound.HitViolon, 1);
+                    AudioManager.Instance.PlaySoundEnemy(AudioManager.EnemySound.HitViolon, volumeHit);
                     break;
                 case ClassEnemy.flute:
-                    AudioManager.Instance.PlaySoundEnemy(AudioManager.EnemySound.HitFlute, 1);
+                    AudioManager.Instance.PlaySoundEnemy(AudioManager.EnemySound.HitFlute, volumeHit);
                     break;
             }
             LoseHp();
