@@ -36,6 +36,7 @@ public abstract class Enemy : MonoBehaviour
     
     [Header("Audio")]
     [SerializeField] private float volumeHit = 1f;
+    public AudioSource _audioSource;
 
     
     private IEnumerator StunTime()
@@ -50,6 +51,7 @@ public abstract class Enemy : MonoBehaviour
     {
         rbEnemy = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
+        _audioSource = GetComponentInParent<AudioSource>();
         player = GameObject.FindGameObjectWithTag("Player");
         _playerController = player.GetComponent<PlayerController>();
         if (typeEnemy == EnemyType.Do) gameObject.tag = "DoEnemy";

@@ -13,7 +13,6 @@ public class SprinterEnemy : Enemy
     public bool pursuitSoundPlayed = false;
     
     [Header("Audio")]
-    private AudioSource _audioSource;
     [SerializeField] private float volumeAttack = 1f;
     
     
@@ -27,7 +26,7 @@ public class SprinterEnemy : Enemy
                 _audioSource.clip = AudioManager.Instance.EnemyClips[2];
                 _audioSource.loop = true;
                 _audioSource.volume = volumeAttack;
-                _audioSource.Play();
+                //_audioSource.Play();
                 pursuitSoundPlayed = true;
             }
         }
@@ -46,7 +45,6 @@ public class SprinterEnemy : Enemy
     {
         animator = GetComponent<Animator>();
         posInit = transform.position;
-        _audioSource = GetComponentInParent<AudioSource>();
         classEnemy = ClassEnemy.flute;
     }
 
@@ -150,6 +148,7 @@ public class SprinterEnemy : Enemy
             isWalking = false;
             isIddle = true;
         }
+        
         //Debug.Log(IsGrounded());
         animator.SetBool("isIddle", isIddle);
         animator.SetBool("isWalking", isWalking);

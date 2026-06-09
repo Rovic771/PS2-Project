@@ -35,6 +35,7 @@ public class AudioManager : MonoBehaviour
     {
         AttackDo,
         AttackRé,
+        AttackFlute,
         HitFlute,
         HitViolon,
     }
