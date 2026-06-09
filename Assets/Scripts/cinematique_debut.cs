@@ -37,11 +37,10 @@ public class cinematique_debut : MonoBehaviour
             time = 0;
         }
         
-        if (current >= 4 && fullFade)
+        if (Mathf.Round(time) == transition && current >= 4 && fullFade)
         {
             print("je marche");
             current++;
-            fullFade = false;
             SceneManager.LoadScene("good assanblage 1");
         }
         
