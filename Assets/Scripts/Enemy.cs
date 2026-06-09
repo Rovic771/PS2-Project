@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 
 public abstract class Enemy : MonoBehaviour
 {
@@ -28,6 +29,8 @@ public abstract class Enemy : MonoBehaviour
     public Animator animator;
     public  ClassEnemy classEnemy;
     public enum ClassEnemy { violon, flute }
+
+    private Light2D glowEnemy;
     
     [Header("Raycast")]
     [SerializeField] Color rayColor = Color.green;
@@ -49,6 +52,7 @@ public abstract class Enemy : MonoBehaviour
     public enum EnemyType { Do, Re }
     private void Start()
     {
+        glowEnemy = GetComponentInChildren<Light2D>();
         rbEnemy = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         _audioSource = GetComponentInParent<AudioSource>();
@@ -82,6 +86,7 @@ public abstract class Enemy : MonoBehaviour
     public virtual void Stun()
     {
         if (isStun) return;
+        glowEnemy.enabled = false;
         gameObject.layer = LayerMask.NameToLayer("EnemyStun");
         animator.SetBool("isStun", true);
         isStun = true;
@@ -91,6 +96,7 @@ public abstract class Enemy : MonoBehaviour
 
     public void EndStun()
     {
+        glowEnemy.enabled = true;
         gameObject.layer = LayerMask.NameToLayer("Enemy");
         isStun = false;
         ResetEnemyState();
