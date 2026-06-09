@@ -9,6 +9,7 @@ public class Checkpoint : MonoBehaviour
     public bool alreadyTake = false;
     private Vector3 playerPos;
     private PlayerController _playerController;
+    private Animator _animator;
 
     [Header("Audio")] 
     [SerializeField] private float volumeCheckpoint = 1f;
@@ -16,6 +17,7 @@ public class Checkpoint : MonoBehaviour
     private void Start()
     {
         _playerController = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
+        _animator = GetComponent<Animator>();
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -28,5 +30,6 @@ public class Checkpoint : MonoBehaviour
             PlayerPrefs.SetFloat("checkpointY", transform.position.y);
         }
         alreadyTake = true;
+        _animator.SetTrigger("takeCheckPoint");
     }
 }
