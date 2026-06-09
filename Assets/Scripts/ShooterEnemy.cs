@@ -18,12 +18,14 @@ public class ShooterEnemy : Enemy
         if (typeEnemy == EnemyType.Re)
         {
             projectile = reProjectile;
-            AudioManager.Instance.PlaySound(0,4, AudioManager.Sound.enemyShotRe, gameObject);
+            //AudioManager.Instance.PlaySound(0,4, AudioManager.Sound.enemyShotRe, gameObject);
+            AudioManager.Instance.PlaySoundEnemy(AudioManager.EnemySound.AttackRé, 1);
         }
         else
         {
             projectile = doProjectile;
-            AudioManager.Instance.PlaySound(1,5, AudioManager.Sound.enemyShotDo, gameObject);
+            //AudioManager.Instance.PlaySound(1,5, AudioManager.Sound.enemyShotDo, gameObject);
+            AudioManager.Instance.PlaySoundEnemy(AudioManager.EnemySound.AttackDo, 1);
         }
         GameObject proj = Instantiate(projectile, viseurStartProjectile.transform.position, Quaternion.identity);
         Vector2 direction = (viseurStartProjectile.transform.position - viseurAncragePoint.transform.position).normalized;
@@ -35,6 +37,21 @@ public class ShooterEnemy : Enemy
     {
         animator = GetComponent<Animator>();
         classEnemy = ClassEnemy.violon;
+    }
+
+    public void OnTriggerStay2D(Collider2D other)
+    {
+        if (other.gameObject.layer == LayerMask.NameToLayer("Player") && !isStun && !TestIfWall())
+        {
+            playerDetected = true;
+        }
+        else if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
+        {
+            if (isStun || TestIfWall())
+            {
+                playerDetected = false;
+            }
+        }
     }
 
     public override void OnTriggerEnter2D(Collider2D other)

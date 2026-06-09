@@ -46,30 +46,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AudioManager
   mainMusic: {fileID: 0}
   musicSource: {fileID: 0}
-  audioMixers:
-  - {fileID: -4021855261744691430, guid: 968c36b39e4104048bae364cf8bd0fd9, type: 2}
-  - {fileID: -2281210121735075068, guid: 968c36b39e4104048bae364cf8bd0fd9, type: 2}
-  - {fileID: -8913974729695053777, guid: 968c36b39e4104048bae364cf8bd0fd9, type: 2}
-  - {fileID: 4188394443104840776, guid: 968c36b39e4104048bae364cf8bd0fd9, type: 2}
-  - {fileID: -6736766593138386843, guid: 968c36b39e4104048bae364cf8bd0fd9, type: 2}
-  - {fileID: 8140953886996704551, guid: 968c36b39e4104048bae364cf8bd0fd9, type: 2}
-  - {fileID: 2760719028184543505, guid: 968c36b39e4104048bae364cf8bd0fd9, type: 2}
-  - {fileID: -1264392777502091213, guid: 968c36b39e4104048bae364cf8bd0fd9, type: 2}
-  - {fileID: -7158605371989543002, guid: 968c36b39e4104048bae364cf8bd0fd9, type: 2}
-  - {fileID: 2934070533811915053, guid: 968c36b39e4104048bae364cf8bd0fd9, type: 2}
-  sfxPlayer:
+  sfxAudioManager: {fileID: 0}
+  EnemyClips:
+  - {fileID: 8300000, guid: 8e8511582bfb98a4f86c09b42919f24b, type: 3}
+  - {fileID: 8300000, guid: 7eb35dbf0eb1fb2478e48553ae33f54b, type: 3}
+  - {fileID: 8300000, guid: 14aea8954eda50f43b0d836f6df133ab, type: 3}
+  - {fileID: 8300000, guid: 070c9c118453e894aba4cdbd9ec8d55d, type: 3}
+  - {fileID: 8300000, guid: a6ecae7ec49ad1c40b3bdf619bce1094, type: 3}
+  PlayerClips:
   - {fileID: 8300000, guid: 47dfe68f0dccaa74ba4fcd41953268ab, type: 3}
   - {fileID: 8300000, guid: 2fa3f0ad6010d374c867a6699b097220, type: 3}
   - {fileID: 8300000, guid: 9da434e635ddaa14592b8ed5c14c1623, type: 3}
   - {fileID: 8300000, guid: 8de67a94f81ac6f4c920706b449f83f3, type: 3}
-  sfxSourcePlayer: {fileID: 0}
-  sfxEnemy:
-  - {fileID: 8300000, guid: 8e8511582bfb98a4f86c09b42919f24b, type: 3}
-  - {fileID: 8300000, guid: 7eb35dbf0eb1fb2478e48553ae33f54b, type: 3}
-  - {fileID: 8300000, guid: a6ecae7ec49ad1c40b3bdf619bce1094, type: 3}
-  - {fileID: 8300000, guid: 14aea8954eda50f43b0d836f6df133ab, type: 3}
-  - {fileID: 8300000, guid: 070c9c118453e894aba4cdbd9ec8d55d, type: 3}
-  sfxSourceEnemy: {fileID: 0}
-  sfxEnvironment:
+  - {fileID: 8300000, guid: 8b969663cc5ae5d4ea10992710746820, type: 3}
+  EnvironmentClips:
   - {fileID: 8300000, guid: 7761b39a957d1fe4aa21f4e039a9b0fb, type: 3}
-  sfxSourceEnvironment: {fileID: 0}
