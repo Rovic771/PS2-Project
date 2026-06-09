@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -64,6 +65,7 @@ public class PlayerController : MonoBehaviour
     float _flipValue = 0;
     public Vector3 posInit;
     public bool isTargetable = true;
+    private AudioSource _audioSource;
 
     public GameObject pauseMenu;
     [SerializeField] private Selectable pauseButton;
@@ -100,7 +102,7 @@ public class PlayerController : MonoBehaviour
                 break;
         }
         currentZoneActive = TypeZone.Not;
-        if(AudioManager.Instance != null) AudioManager.Instance.StopSound(AudioManager.TypeSfxSource.player);
+        _audioSource.clip = null;
     }
     
     IEnumerator ShootDelay()
@@ -135,6 +137,7 @@ public class PlayerController : MonoBehaviour
 
         life = _playerData.life;
         damage = _playerData.damage;
+        _audioSource = GetComponent<AudioSource>();
     }
 
     public void Pause(InputAction.CallbackContext context)
@@ -238,8 +241,7 @@ public class PlayerController : MonoBehaviour
                 GameObject proj = Instantiate(doProjectile, viseurAncragePoint.transform.position, Quaternion.identity);
                 Vector2 direction = (viseurStartProjectile.transform.position - viseurAncragePoint.transform.position).normalized;
                 proj.GetComponent<crocheScipt>().Launch(direction, true, damage);
-                if(AudioManager.Instance != null) AudioManager.Instance.PlaySound(0, 0, AudioManager.Sound.playerShotDo);
-                else Debug.Log("AudioManager manquant");
+                AudioManager.Instance.PlaySoundPlayer(AudioManager.PlayerSound.AttackDo, 1);
                 animator.SetTrigger("isShoot");
             }
         }
@@ -254,8 +256,7 @@ public class PlayerController : MonoBehaviour
                 GameObject proj = Instantiate(reProjectile, viseurAncragePoint.transform.position, Quaternion.identity);
                 Vector2 direction = (viseurStartProjectile.transform.position - viseurAncragePoint.transform.position).normalized;
                 proj.GetComponent<crocheScipt>().Launch(direction, true, damage);
-                if (AudioManager.Instance != null) AudioManager.Instance.PlaySound(1, 1, AudioManager.Sound.playerShotDo);
-                else Debug.Log("AudioManager manquant");
+                AudioManager.Instance.PlaySoundPlayer(AudioManager.PlayerSound.AttackRé, 1);
                 animator.SetTrigger("isShoot");
             }
         }
@@ -283,15 +284,15 @@ public class PlayerController : MonoBehaviour
             ActiveColliderZone(TypeZone.Do);
             reZone.SetActive(false);
             doZone.SetActive(true);
-            if(AudioManager.Instance != null) AudioManager.Instance.PlaySound(2, 2, AudioManager.Sound.playerZoneDo, null , true);
-            else Debug.Log("AudioManager manquant");
+            _audioSource.clip = AudioManager.Instance.PlayerClips[(int)AudioManager.PlayerSound.ZoneDo];
+            _audioSource.loop = true;
+            _audioSource.Play();
         }
         if (context.canceled) 
         {
             StopCoroutine(ZoneDuration());
             if(currentZoneActive == TypeZone.Do) currentZoneActive = TypeZone.Not;
-            if(currentZoneActive == TypeZone.Not && AudioManager.Instance != null) AudioManager.Instance.StopSound(AudioManager.TypeSfxSource.player);
-            else Debug.Log("AudioManager manquant");
+            _audioSource.clip = null;
             doZone.SetActive(false);
             doZone.GetComponent<CircleCollider2D>().enabled = false;
         }
@@ -306,15 +307,15 @@ public class PlayerController : MonoBehaviour
             ActiveColliderZone(TypeZone.Re);
             doZone.SetActive(false);
             reZone.SetActive(true);
-            if(AudioManager.Instance != null) AudioManager.Instance.PlaySound(3, 3, AudioManager.Sound.playerZoneRe, null, true);
-            else Debug.Log("AudioManager manquant");
+            _audioSource.clip = AudioManager.Instance.PlayerClips[(int)AudioManager.PlayerSound.ZoneRé];
+            _audioSource.loop = true;
+            _audioSource.Play();
         }
         if (context.canceled)
         {
             StopCoroutine(ZoneDuration());
             if(currentZoneActive == TypeZone.Re) currentZoneActive = TypeZone.Not;
-            if(currentZoneActive == TypeZone.Not && AudioManager.Instance != null) AudioManager.Instance.StopSound(AudioManager.TypeSfxSource.player);
-            else Debug.Log("AudioManager manquant");
+            _audioSource.clip = null;
             reZone.SetActive(false);
             reZone.GetComponent<CircleCollider2D>().enabled = false;
         }
@@ -483,6 +484,7 @@ public class PlayerController : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
+        AudioManager.Instance.PlaySoundPlayer(AudioManager.PlayerSound.PlayerHit, 1);
         life -= damage;
         if (life <= 0)
         {

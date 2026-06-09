@@ -185,11 +185,10 @@ public abstract class Enemy : MonoBehaviour
             switch (classEnemy)
             {
                 case ClassEnemy.violon:
-                    AudioManager.Instance.PlaySound(2,6, AudioManager.Sound.enemyFluteHit, gameObject);
+                    AudioManager.Instance.PlaySoundEnemy(AudioManager.EnemySound.HitViolon, 1);
                     break;
                 case ClassEnemy.flute:
-                    Debug.Log("flute");
-                    AudioManager.Instance.PlaySound(4, 8, AudioManager.Sound.enemyFluteHit, gameObject);
+                    AudioManager.Instance.PlaySoundEnemy(AudioManager.EnemySound.HitFlute, 1);
                     break;
             }
             LoseHp();
