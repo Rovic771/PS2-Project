@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class credit : MonoBehaviour
 {
@@ -19,6 +20,11 @@ public class credit : MonoBehaviour
         if (time > 5)
         {
             rect.localPosition = new Vector3(rect.localPosition.x, rect.localPosition.y + speed, rect.localPosition.z);
+        }
+        
+        if (time > 89)
+        {
+            SceneManager.LoadScene("menu");
         }
     }
 }
