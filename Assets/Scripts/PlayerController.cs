@@ -241,7 +241,7 @@ public class PlayerController : MonoBehaviour
                 GameObject proj = Instantiate(doProjectile, viseurAncragePoint.transform.position, Quaternion.identity);
                 Vector2 direction = (viseurStartProjectile.transform.position - viseurAncragePoint.transform.position).normalized;
                 proj.GetComponent<crocheScipt>().Launch(direction, true, damage);
-                AudioManager.Instance.PlaySoundPlayer(AudioManager.PlayerSound.AttackDo, 1);
+                AudioManager.Instance.PlaySoundPlayer(AudioManager.PlayerSound.AttackDo, 0.35f);
                 animator.SetTrigger("isShoot");
             }
         }
@@ -256,7 +256,7 @@ public class PlayerController : MonoBehaviour
                 GameObject proj = Instantiate(reProjectile, viseurAncragePoint.transform.position, Quaternion.identity);
                 Vector2 direction = (viseurStartProjectile.transform.position - viseurAncragePoint.transform.position).normalized;
                 proj.GetComponent<crocheScipt>().Launch(direction, true, damage);
-                AudioManager.Instance.PlaySoundPlayer(AudioManager.PlayerSound.AttackRé, 1);
+                AudioManager.Instance.PlaySoundPlayer(AudioManager.PlayerSound.AttackRé, 0.3f);
                 animator.SetTrigger("isShoot");
             }
         }
