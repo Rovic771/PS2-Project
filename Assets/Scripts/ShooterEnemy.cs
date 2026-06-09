@@ -11,7 +11,7 @@ public class ShooterEnemy : Enemy
     [SerializeField] private float knockbackOnPlayerForceX = 10f;
     [SerializeField] private float knockbackOnPlayerForceY = 10f;
     [SerializeField] private float delayShoot;
-    private bool canShoot;
+    private bool canShoot = true;
     
     [Header("Audio")]
     [SerializeField] private float volumeAttackDo = 1f;
