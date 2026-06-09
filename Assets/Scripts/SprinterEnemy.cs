@@ -26,7 +26,7 @@ public class SprinterEnemy : Enemy
                 _audioSource.clip = AudioManager.Instance.EnemyClips[2];
                 _audioSource.loop = true;
                 _audioSource.volume = volumeAttack;
-                //_audioSource.Play();
+                _audioSource.Play();
                 pursuitSoundPlayed = true;
             }
         }
