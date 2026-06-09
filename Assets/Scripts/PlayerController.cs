@@ -193,7 +193,6 @@ public class PlayerController : MonoBehaviour
                 force = Vector2.up * jumpStrength;
                 isGround = false; 
                 isJump = true;
-                canFlip = true;
                 coyoteTimer = 0;
             }
         else
@@ -352,12 +351,13 @@ public class PlayerController : MonoBehaviour
     
     public void FixedUpdate()
     {
-        if (IsGrounded() && !isJump)
+        if (IsGrounded() && !isJump ||IsGrounded() && IsWalled())
         {
             coyoteTimer = coyoteTime;
             isGround = true;
             canDoubleJump = true;
             isFall = false;
+            canFlip = true;
         }
         else
         {
