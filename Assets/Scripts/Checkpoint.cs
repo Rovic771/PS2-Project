@@ -23,13 +23,14 @@ public class Checkpoint : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D other)
     {
         if(alreadyTake) return;
-        AudioManager.Instance.PlaySoundEnvironment(AudioManager.EnvironmentSound.Checkpoint, volumeCheckpoint);
         if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
         {
+            AudioManager.Instance.PlaySoundEnvironment(AudioManager.EnvironmentSound.Checkpoint, volumeCheckpoint);
             PlayerPrefs.SetFloat("checkpointX", transform.position.x);
             PlayerPrefs.SetFloat("checkpointY", transform.position.y);
+            alreadyTake = true;
+            _animator.SetTrigger("takeCheckPoint");
         }
-        alreadyTake = true;
-        _animator.SetTrigger("takeCheckPoint");
+        
     }
 }
