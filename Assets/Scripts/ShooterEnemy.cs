@@ -10,24 +10,40 @@ public class ShooterEnemy : Enemy
     [SerializeField] private GameObject reProjectile;
     [SerializeField] private float knockbackOnPlayerForceX = 10f;
     [SerializeField] private float knockbackOnPlayerForceY = 10f;
+    [SerializeField] private float delayShoot;
+    private bool canShoot;
     
+    [Header("Audio")]
+    [SerializeField] private float volumeAttackDo = 1f;
+    [SerializeField] private float volumeAttackRe = 1f;
+
+    private IEnumerator DelayShoot()
+    {
+        canShoot = false;
+        yield return new WaitForSeconds(delayShoot);
+        canShoot = true;
+    }
 
     public void Shoot()
     {
         GameObject projectile;
-        if (typeEnemy == EnemyType.Re)
+        if (canShoot)
         {
-            projectile = reProjectile;
-            AudioManager.Instance.PlaySound(0,4, AudioManager.Sound.enemyShotRe, gameObject);
+            if (typeEnemy == EnemyType.Re)
+            {
+                projectile = reProjectile;
+                AudioManager.Instance.PlaySoundEnemy(AudioManager.EnemySound.AttackRé, volumeAttackRe);
+            }
+            else
+            {
+                projectile = doProjectile;
+                AudioManager.Instance.PlaySoundEnemy(AudioManager.EnemySound.AttackDo, volumeAttackDo);
+            }
+            GameObject proj = Instantiate(projectile, viseurStartProjectile.transform.position, Quaternion.identity);
+            Vector2 direction = (viseurStartProjectile.transform.position - viseurAncragePoint.transform.position).normalized;
+            proj.GetComponent<crocheScipt>().Launch(direction, false, damage, knockbackOnPlayerForceX, knockbackOnPlayerForceY);
+            StartCoroutine(DelayShoot());
         }
-        else
-        {
-            projectile = doProjectile;
-            AudioManager.Instance.PlaySound(1,5, AudioManager.Sound.enemyShotDo, gameObject);
-        }
-        GameObject proj = Instantiate(projectile, viseurStartProjectile.transform.position, Quaternion.identity);
-        Vector2 direction = (viseurStartProjectile.transform.position - viseurAncragePoint.transform.position).normalized;
-        proj.GetComponent<crocheScipt>().Launch(direction, false, damage, knockbackOnPlayerForceX, knockbackOnPlayerForceY);
     }
     
 
@@ -35,6 +51,23 @@ public class ShooterEnemy : Enemy
     {
         animator = GetComponent<Animator>();
         classEnemy = ClassEnemy.violon;
+    }
+
+    public void OnTriggerStay2D(Collider2D other)
+    {
+        if (other.gameObject.layer == LayerMask.NameToLayer("Player") && !isStun && !TestIfWall())
+        {
+            playerDetected = true;
+        }
+        else if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
+        {
+            if (isStun || TestIfWall())
+            {
+                playerDetected = false;
+                canShoot = true;
+                StopAllCoroutines();
+            }
+        }
     }
 
     public override void OnTriggerEnter2D(Collider2D other)
@@ -51,6 +84,8 @@ public class ShooterEnemy : Enemy
         {
             ResetEnemyState();
             playerDetected = false;
+            canShoot = true;
+            StopAllCoroutines();
         }
     }
 
@@ -92,5 +127,6 @@ public class ShooterEnemy : Enemy
         animator.SetBool("isWalking", isWalking);
         animator.SetFloat("life", life);
         animator.SetBool("isIddle", isIddle);
+        animator.SetBool("canShoot", canShoot);
     }
 }

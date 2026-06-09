@@ -1,7 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Audio;
-using UnityEngine.SceneManagement;
 
 public class AudioManager : MonoBehaviour
 {
@@ -23,181 +21,55 @@ public class AudioManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
     
-    private void OnEnable()
-    {
-        SceneManager.sceneLoaded += OnSceneLoaded;
-    }
-
-    private void OnDisable()
-    {
-        SceneManager.sceneLoaded -= OnSceneLoaded;
-    }
-    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-    {
-        var test = GameObject.FindGameObjectWithTag("Player").GetComponent<AudioSource>();
-        if (test != null) sfxSourcePlayer = test;
-    }
-    
     void Start()
     {
-        Debug.Log("Start audio Manager");
-
         if (mainMusic == null)
             return;
         musicSource.clip = mainMusic;
         musicSource.Play();
     }
+    [SerializeField] private AudioSource sfxAudioManager;
     
-    public enum Sound
+    
+    public enum EnemySound
     {
-        playerShotDo,
-        playerShotRe,
-        playerZoneDo,
-        playerZoneRe,
-        enemyShotDo,
-        enemyShotRe,
-        enemyViolonHit,
-        enemyRunAttack,
-        enemyFluteHit,
-        checkpoint,
+        AttackDo,
+        AttackRé,
+        HitFlute,
+        HitViolon,
     }
-    
-    public enum TypeSfxSource{player, enemy}
-    
-    [Header("Audio Mixers")] 
-    [SerializeField] private List<AudioMixerGroup> audioMixers = new List<AudioMixerGroup>();
-    
-    [Header("Sounds Player")]
-    [SerializeField] private List<AudioClip> sfxPlayer = new List<AudioClip>();
 
-    [Header("Audio Sources Player")] 
-    [SerializeField] private AudioSource sfxSourcePlayer;
-    
-    [Header("Sounds Enemy")]
-    [SerializeField] private List<AudioClip> sfxEnemy = new List<AudioClip>();
-    
-    [Header("Audio Sources Enemy")] 
-    [SerializeField] public AudioSource sfxSourceEnemy;
-    
-    [Header("Sounds Environment")]
-    [SerializeField] private List<AudioClip> sfxEnvironment = new List<AudioClip>();
-    
-    [Header("Audio Sources Environment")] 
-    [SerializeField] public AudioSource sfxSourceEnvironment;
-
-
-    private enum TypeAudio
+    public enum PlayerSound
     {
-        player,
-        enemy,
-        environment
+        AttackDo,
+        AttackRé,
+        ZoneDo,
+        ZoneRé,
+        PlayerHit
     }
-    
-    public void PlaySound(int _soundToplay, int _audioMixer, Sound _sound, GameObject _gameObject = null,bool _loop = false)
-    {
-        TypeAudio currentTypeAudio = TypeAudio.player;
-        switch (_sound)
-        {
-            case Sound.playerShotDo:
-                sfxSourcePlayer.outputAudioMixerGroup = audioMixers[_audioMixer];
-                currentTypeAudio = TypeAudio.player;
-                break;
-            case Sound.playerShotRe:
-                sfxSourcePlayer.outputAudioMixerGroup = audioMixers[_audioMixer];
-                currentTypeAudio = TypeAudio.player;
-                break;
-            case Sound.playerZoneDo:
-                sfxSourcePlayer.outputAudioMixerGroup = audioMixers[_audioMixer];
-                currentTypeAudio = TypeAudio.player;
-                break;
-            case Sound.playerZoneRe:
-                sfxSourcePlayer.outputAudioMixerGroup = audioMixers[_audioMixer];
-                currentTypeAudio = TypeAudio.player;
-                break;
-            case Sound.enemyShotDo:
-                if(_gameObject != null) sfxSourceEnemy = _gameObject.GetComponentInParent<AudioSource>();
-                sfxSourceEnemy.outputAudioMixerGroup = audioMixers[_audioMixer];
-                currentTypeAudio = TypeAudio.enemy;
-                break;
-            case Sound.enemyShotRe:
-                if(_gameObject != null) sfxSourceEnemy = _gameObject.GetComponentInParent<AudioSource>();
-                sfxSourceEnemy.outputAudioMixerGroup = audioMixers[_audioMixer];
-                currentTypeAudio = TypeAudio.enemy;
-                break;
-            case Sound.enemyViolonHit:
-                if(_gameObject != null) sfxSourceEnemy = _gameObject.GetComponentInParent<AudioSource>();
-                sfxSourcePlayer.outputAudioMixerGroup = audioMixers[_audioMixer];
-                currentTypeAudio = TypeAudio.enemy;
-                break;
-            case Sound.enemyFluteHit:
-                if(_gameObject != null) sfxSourceEnemy = _gameObject.GetComponentInParent<AudioSource>();
-                sfxSourceEnemy.outputAudioMixerGroup = audioMixers[_audioMixer];
-                currentTypeAudio = TypeAudio.enemy;
-                break;
-            case Sound.enemyRunAttack:
-                Debug.Log("Bahg + " + _gameObject.name);
-                if(_gameObject != null) sfxSourceEnemy = _gameObject.GetComponentInParent<AudioSource>();
-                sfxSourceEnemy.outputAudioMixerGroup = audioMixers[_audioMixer];
-                currentTypeAudio = TypeAudio.enemy;
-                break;
-            case Sound.checkpoint:
-                if(_gameObject is not null) sfxSourceEnvironment = _gameObject.GetComponentInParent<AudioSource>();
-                sfxSourceEnvironment.outputAudioMixerGroup = audioMixers[_audioMixer];
-                currentTypeAudio = TypeAudio.environment;
-                break;
-        }
 
-        if (!_loop)
-        {
-            switch (currentTypeAudio)
-            {
-                case TypeAudio.player:
-                    sfxSourcePlayer.PlayOneShot(sfxPlayer[_soundToplay]);
-                    break;
-                case TypeAudio.enemy:
-                    sfxSourceEnemy.PlayOneShot(sfxEnemy[_soundToplay]);
-                    break;
-                case TypeAudio.environment:
-                    sfxSourceEnvironment.PlayOneShot(sfxEnvironment[_soundToplay]);
-                    break;
-            }
-        }
-        else
-        {
-            switch (currentTypeAudio)
-            {
-                case TypeAudio.player:
-                    sfxSourcePlayer.clip = sfxPlayer[_soundToplay];
-                    sfxSourcePlayer.loop = _loop;
-                    sfxSourcePlayer.Play();
-                    break;
-                case TypeAudio.enemy:
-                    sfxSourceEnemy.clip = sfxEnemy[_soundToplay];
-                    sfxSourceEnemy.loop = _loop;
-                    sfxSourceEnemy.Play();
-                    break;
-                case TypeAudio.environment:
-                    sfxSourceEnvironment.clip = sfxEnvironment[_soundToplay];
-                    sfxSourceEnvironment.loop = _loop;
-                    sfxSourceEnvironment.Play();
-                    break;
-            }
-        }
-    }
-    
-    
-    public void StopSound(TypeSfxSource _typeSfx)
+    public enum EnvironmentSound
     {
-        switch (_typeSfx)
-        {
-            case TypeSfxSource.player:
-                sfxSourcePlayer.Stop();
-                break;
-            case TypeSfxSource.enemy:
-                if (sfxSourceEnemy != null)
-                    sfxSourceEnemy.Stop();
-                break;
-        }
+        Checkpoint,
+    }
+
+    [SerializeField] public List<AudioClip> EnemyClips = new List<AudioClip>();
+    [SerializeField] public List<AudioClip> PlayerClips = new List<AudioClip>();
+    [SerializeField] public List<AudioClip> EnvironmentClips = new List<AudioClip>();
+
+    public void PlaySoundEnemy(EnemySound son, float volume)
+    {
+        sfxAudioManager.PlayOneShot(EnemyClips[(int)son], volume);
+    }
+
+    public void PlaySoundPlayer(PlayerSound son, float volume)
+    {
+        sfxAudioManager.PlayOneShot(PlayerClips[(int)son], volume);
+    }
+
+    public void PlaySoundEnvironment(EnvironmentSound son, float volume)
+    {
+        sfxAudioManager.PlayOneShot(EnvironmentClips[(int)son], volume);
     }
 }
 
