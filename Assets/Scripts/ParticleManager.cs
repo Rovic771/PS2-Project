@@ -26,6 +26,7 @@ public class ParticleManager : MonoBehaviour
             {
                 particle.gameObject.SetActive(true);
             }
+            if(particle.gameObject == null) allParticles.Remove(particle);
         }
     }
 }
